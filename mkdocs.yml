@@ -1,0 +1,6 @@
+site_name: Revenexx Go
+site_description: "Revenexx Go SDK."
+docs_dir: docs
+
+theme:
+  name: material

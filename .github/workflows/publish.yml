@@ -1,0 +1,51 @@
+name: Publish Go Module
+
+# Go modules are not pushed to a registry. They are consumed directly from the
+# git repository via git tags and the public Go module proxy (proxy.golang.org).
+# "Publishing" therefore means: a release/tag exists and the tagged commit
+# builds cleanly with a module path that matches this repository. This workflow
+# validates the tagged release builds, then warms the module proxy so that the
+# new version is immediately resolvable by `go get`.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.22.5'
+
+    - name: Tidy modules
+      run: go mod tidy
+
+    - name: Vet
+      run: go vet ./...
+
+    - name: Build
+      run: go build ./...
+
+    - name: Warm the module proxy
+      # Ask the public Go proxy to fetch the tagged version so it becomes
+      # immediately available to consumers running `go get`.
+      run: |
+        MODULE="$(go list -m)"
+        VERSION="${{ github.event.release.tag_name }}"
+        if [ -z "$VERSION" ]; then
+          VERSION="${{ github.ref_name }}"
+        fi
+        if [ -n "$VERSION" ]; then
+          echo "Warming proxy for ${MODULE}@${VERSION}"
+          curl -fsS "https://proxy.golang.org/${MODULE}/@v/${VERSION}.info" || true
+        fi

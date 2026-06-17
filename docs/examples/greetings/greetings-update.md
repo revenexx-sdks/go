@@ -1,0 +1,24 @@
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/revenexx-sdks/go/client"
+    "github.com/revenexx-sdks/go/greetings"
+)
+
+client := client.New(
+    client.WithEndpoint("https://api.revenexx.com")
+    client.WithApiKeyAuth("<API_KEY>")
+)
+
+service := greetings.New(client)
+
+response, error := service.GreetingsUpdate(
+    "",
+    greetings.WithGreetingsUpdateLocale(""),
+    greetings.WithGreetingsUpdateMessage(""),
+    greetings.WithGreetingsUpdateMetadata(map[string]interface{}{}),
+    greetings.WithGreetingsUpdateName(""),
+)
+```

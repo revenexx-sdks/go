@@ -1,0 +1,25 @@
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/revenexx-sdks/go/client"
+    "github.com/revenexx-sdks/go/carts"
+)
+
+client := client.New(
+    client.WithEndpoint("https://api.revenexx.com")
+    client.WithApiKeyAuth("<API_KEY>")
+)
+
+service := carts.New(client)
+
+response, error := service.CartsUpdate(
+    "",
+    carts.WithCartsUpdateChannelId(""),
+    carts.WithCartsUpdateCurrency(""),
+    carts.WithCartsUpdateMarketId(""),
+    carts.WithCartsUpdateMetadata(map[string]interface{}{}),
+    carts.WithCartsUpdateName(""),
+)
+```
