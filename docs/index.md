@@ -25,99 +25,118 @@ To install using `go get`:
 go get github.com/revenexx-sdks/go
 ```
 
-## Testing the SDK
-
-* Clone this repo.
-* Create a project and within this project a collection.
-* Configure the documents in the collection to have a attribute `key` = `hello`.
-* Then inject these environment variables:
-
-  ```bash
-  export YOUR_ENDPOINT=https://<REGION>.cloud.revenexx-sdks.io/v1
-  export YOUR_PROJECT_ID=616a09..0180
-  export YOUR_KEY=7055781..cd95
-  export DATABASE_ID=616a09..0180
-  export COLLECTION_ID=616a09..20180
-  ```
-
-* Create `main.go` file with:
-
-	```go
-	package main
-
-	import (
-		"log"
-		"os"
-		"time"
-
-		"github.com/revenexx-sdks/go/appwrite"
-		"github.com/revenexx-sdks/go/id"
-	)
-
-	func main() {
-		client := appwrite.NewClient(
-			appwrite.WithEndpoint(os.Getenv("YOUR_ENDPOINT")),
-			appwrite.WithProject(os.Getenv("YOUR_PROJECT_ID")),
-			appwrite.WithKey(os.Getenv("YOUR_KEY")),
-		)
-
-		databases := appwrite.NewDatabases(client)
-
-		data := map[string]interface{}{
-			"hello": "world",
-		}
-		doc, err := databases.CreateDocument(
-			os.Getenv("DATABASE_ID"),
-			os.Getenv("COLLECTION_ID"),
-			id.Unique(),
-			data,
-		)
-		if err != nil {
-			log.Printf("Error creating document: %v", err)
-		}
-
-		log.Printf("Created document: %v", doc)
-	}
-	```
-
-* After that, run the following
-
-  ```bash
-  go run main.go
-  ```
-
-* You should see the following output:
-
-  ```bash
-  2021/10/16 03:41:17 Created document: map[$collection:616a095b20180 $id:616a2dbd4df16 $permissions:map[read:[] write:[]] hello:world]
-  ```
-
 ## Getting Started
 
 ### Init your SDK
 
+Initialize your client with your Revenexx API endpoint and your credentials. The client is created with functional options and supports two authentication methods:
+
+- **API key** — a gateway-managed scoped key (`rvxk_…`), set via `client.WithApiKeyAuth()`. Intended for server-side or trusted environments.
+- **Bearer token** — a Zitadel-issued JWT for interactive callers, set via `client.WithBearerAuth()`. The value is sent as the `Authorization` header verbatim, so include the `Bearer ` prefix.
+
+To scope requests to a tenant, add `client.WithTenant("<TENANT_SLUG>")`, which sends the `X-Revenexx-Tenant` header on every request.
+
 ```go
 import (
-    "github.com/revenexx-sdks/go/revenexx"
+    "github.com/revenexx-sdks/go/client"
 )
 
-client := revenexx.NewClient(
-    revenexx.WithEndpoint("https://revenexx.com/v1"), // Your API Endpoint
-    revenexx.WithProject("<PROJECT_ID>"),              // Your project ID
+c := client.New(
+    client.WithEndpoint("https://api.revenexx.com"), // Your Revenexx API endpoint
+    client.WithTenant("<TENANT_SLUG>"),              // Your tenant slug
+    client.WithApiKeyAuth("rvxk_..."),               // Your scoped API key
 )
 ```
 
 ### Make Your First Request
 
-```go
-account := revenexx.NewAccount(client)
+Once your client is set up, create any of the Revenexx services with it and send a request. Every service method returns its response together with an `error`. Full documentation for every service method can be found in the [API References](https://revenexx.com/docs).
 
-user, err := account.Get()
+```go
+import (
+    "fmt"
+    "log"
+
+    "github.com/revenexx-sdks/go/client"
+    "github.com/revenexx-sdks/go/products"
+)
+
+service := products.New(c)
+
+response, err := service.ProductsList()
 if err != nil {
     log.Fatal(err)
 }
-fmt.Println(user)
+fmt.Println(response)
 ```
+
+### Full Example
+
+```go
+package main
+
+import (
+    "fmt"
+    "log"
+
+    "github.com/revenexx-sdks/go/client"
+    "github.com/revenexx-sdks/go/products"
+)
+
+func main() {
+    c := client.New(
+        client.WithEndpoint("https://api.revenexx.com"),
+        client.WithTenant("<TENANT_SLUG>"),
+        client.WithApiKeyAuth("rvxk_..."),
+    )
+
+    service := products.New(c)
+
+    // List products
+    list, err := service.ProductsList()
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println(list)
+
+    // Fetch a single product
+    product, err := service.ProductsGet("<PRODUCT_ID>")
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println(product)
+}
+```
+
+### Error Handling
+
+When a request fails, the Revenexx Go SDK returns a `*client.RevenexxAPIRevenexxError` as the `error` value. Type-assert the error to inspect it, or simply present its message.
+
+```go
+import (
+    "fmt"
+
+    "github.com/revenexx-sdks/go/client"
+    "github.com/revenexx-sdks/go/products"
+)
+
+service := products.New(c)
+
+if _, err := service.ProductsGet("<PRODUCT_ID>"); err != nil {
+    if apiErr, ok := err.(*client.RevenexxAPIRevenexxError); ok {
+        fmt.Println(apiErr.Error())
+    } else {
+        fmt.Println(err)
+    }
+}
+```
+
+### Learn more
+
+You can use the following resources to learn more and get help
+
+- 📜 [Revenexx Docs](https://revenexx.com/docs)
+- 💬 [Discord Community](https://revenexx.com/discord)
 
 ## Contribution
 

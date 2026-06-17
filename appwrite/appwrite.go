@@ -131,6 +131,15 @@ func WithChunkSize(size int64) client.ClientOption {
 	}
 }
 
+// WithTenant sets the X-Revenexx-Tenant header sent on every request,
+// scoping calls to the given tenant.
+func WithTenant(value string) client.ClientOption {
+	return func(clt *client.Client) error {
+		clt.Headers["X-Revenexx-Tenant"] = value
+		return nil
+	}
+}
+
 // Helper method to construct NewClient()
 // 
 // A gateway-managed scoped API key (rvxk_…).
