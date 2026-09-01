@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// AttributesList Model
+// AttributeList Attributes List
 type AttributeList struct {
     // List of attributes.
     Attributes []map[string]any `json:"attributes"`

@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// AlgoArgon2 Model
+// AlgoArgon2 AlgoArgon2
 type AlgoArgon2 struct {
     // Memory used to compute hash.
     MemoryCost int `json:"memoryCost"`

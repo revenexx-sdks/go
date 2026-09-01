@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/revenexx-sdks/go/client"
 	"github.com/revenexx-sdks/go/models"
+	"github.com/revenexx-sdks/go/file"
 	"strings"
 )
 
@@ -1130,7 +1131,7 @@ func (srv *Apps) WithAppsCreateDeploymentEntrypoint(v string) AppsCreateDeployme
 // archive containing the App source. Phase 2 will extract the
 // manifest from this archive and validate it against the App
 // Registry before kicking off the build.
-func (srv *Apps) AppsCreateDeployment(FunctionId string, Activate bool, Code string, optionalSetters ...AppsCreateDeploymentOption)(*models.Deployment, error) {
+func (srv *Apps) AppsCreateDeployment(FunctionId string, Activate bool, Code file.InputFile, optionalSetters ...AppsCreateDeploymentOption)(*models.Deployment, error) {
 	r := strings.NewReplacer("{functionId}", FunctionId)
 	path := r.Replace("/v1/apps/{functionId}/deployments")
 	options := AppsCreateDeploymentOptions{}.New()
@@ -1150,6 +1151,8 @@ func (srv *Apps) AppsCreateDeployment(FunctionId string, Activate bool, Code str
 	headers := map[string]interface{}{
 		"content-type": "multipart/form-data",
 	}
+
+    paramName := "code"
 
 
     uploadId := ""

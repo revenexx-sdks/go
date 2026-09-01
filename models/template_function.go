@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// TemplateFunction Model
+// TemplateFunction Template Function
 type TemplateFunction struct {
     // Function execution schedult in CRON format.
     Cron string `json:"cron"`

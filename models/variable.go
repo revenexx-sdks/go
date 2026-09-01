@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Variable Model
+// Variable Variable
 type Variable struct {
     // Variable creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

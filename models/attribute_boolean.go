@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// AttributeBoolean Model
+// AttributeBoolean AttributeBoolean
 type AttributeBoolean struct {
     // Attribute creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

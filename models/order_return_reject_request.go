@@ -5,11 +5,12 @@ import (
     "errors"
 )
 
-// Model
+// OrderReturnRejectRequest model.
 type OrderReturnRejectRequest struct {
-    // Fallback for 'resolution'.
+    // Free-text fallback for 'resolution' — a sentence about this one return,
+    // not a value out of the set.
     Reason string `json:"reason"`
-    // Why the return was rejected.
+    // Why the return was refused.
     Resolution string `json:"resolution"`
 
     // Used by Decode() method

@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Identity Model
+// Identity Identity
 type Identity struct {
     // Identity creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

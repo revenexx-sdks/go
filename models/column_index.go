@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Index Model
+// ColumnIndex Index
 type ColumnIndex struct {
     // Index creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

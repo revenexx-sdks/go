@@ -8,15 +8,17 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := carts.New(client)
 
 response, error := service.CartsClaim(
     "",
-    "",
+    "a1b2c3d4e5f6",
+    carts.WithCartsClaimStrategy("merge"),
     carts.WithCartsClaimTargetCartId(""),
 )
 ```

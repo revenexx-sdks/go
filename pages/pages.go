@@ -19,1332 +19,85 @@ func New(clt client.Client) *Pages {
 	}
 }
 
-
-// PagesDeliveryMenus
-func (srv *Pages) PagesDeliveryMenus()(*interface{}, error) {
-	path := "/v1/pages/delivery/menus"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// PagesDeliveryPage
-func (srv *Pages) PagesDeliveryPage()(*models.DeliveryPage, error) {
-	path := "/v1/pages/delivery/page"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.DeliveryPage{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.DeliveryPage
-	parsed, ok := resp.Result.(models.DeliveryPage)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// PagesDeliveryPages
-func (srv *Pages) PagesDeliveryPages()(*interface{}, error) {
-	path := "/v1/pages/delivery/pages"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// PagesDeliveryPreview
-func (srv *Pages) PagesDeliveryPreview(Token string)(*models.DeliveryPage, error) {
-	r := strings.NewReplacer("{token}", Token)
-	path := r.Replace("/v1/pages/delivery/preview/{token}")
-	params := map[string]interface{}{}
-	params["token"] = Token
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.DeliveryPage{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.DeliveryPage
-	parsed, ok := resp.Result.(models.DeliveryPage)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// PagesEditorEditStates
-func (srv *Pages) PagesEditorEditStates()(*interface{}, error) {
-	path := "/v1/pages/editor/edit-states"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// PagesEditorNotificationsList
-func (srv *Pages) PagesEditorNotificationsList()(*interface{}, error) {
-	path := "/v1/pages/editor/notifications"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// PagesEditorNotificationsMarkAllRead
-func (srv *Pages) PagesEditorNotificationsMarkAllRead()(*interface{}, error) {
-	path := "/v1/pages/editor/notifications/mark-all-read"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// PagesEditorNotificationsUnreadCount
-func (srv *Pages) PagesEditorNotificationsUnreadCount()(*interface{}, error) {
-	path := "/v1/pages/editor/notifications/unread-count"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type PagesEditorTranslateOptions struct {
-	Items []interface{}
+type PagesLibraryListOptions struct {
+	Limit int
+	Offset int
+	Order string
+	Bundles string
+	Text string
 	enabledSetters map[string]bool
 }
-func (options PagesEditorTranslateOptions) New() *PagesEditorTranslateOptions {
+func (options PagesLibraryListOptions) New() *PagesLibraryListOptions {
 	options.enabledSetters = map[string]bool{
-		"Items": false,
+		"Limit": false,
+		"Offset": false,
+		"Order": false,
+		"Bundles": false,
+		"Text": false,
 	}
 	return &options
 }
-type PagesEditorTranslateOption func(*PagesEditorTranslateOptions)
-func (srv *Pages) WithPagesEditorTranslateItems(v []interface{}) PagesEditorTranslateOption {
-	return func(o *PagesEditorTranslateOptions) {
-		o.Items = v
-		o.enabledSetters["Items"] = true
+type PagesLibraryListOption func(*PagesLibraryListOptions)
+func (srv *Pages) WithPagesLibraryListLimit(v int) PagesLibraryListOption {
+	return func(o *PagesLibraryListOptions) {
+		o.Limit = v
+		o.enabledSetters["Limit"] = true
+	}
+}
+func (srv *Pages) WithPagesLibraryListOffset(v int) PagesLibraryListOption {
+	return func(o *PagesLibraryListOptions) {
+		o.Offset = v
+		o.enabledSetters["Offset"] = true
+	}
+}
+func (srv *Pages) WithPagesLibraryListOrder(v string) PagesLibraryListOption {
+	return func(o *PagesLibraryListOptions) {
+		o.Order = v
+		o.enabledSetters["Order"] = true
+	}
+}
+func (srv *Pages) WithPagesLibraryListBundles(v string) PagesLibraryListOption {
+	return func(o *PagesLibraryListOptions) {
+		o.Bundles = v
+		o.enabledSetters["Bundles"] = true
+	}
+}
+func (srv *Pages) WithPagesLibraryListText(v string) PagesLibraryListOption {
+	return func(o *PagesLibraryListOptions) {
+		o.Text = v
+		o.enabledSetters["Text"] = true
 	}
 }
 	
-// PagesEditorTranslate
-func (srv *Pages) PagesEditorTranslate(optionalSetters ...PagesEditorTranslateOption)(*interface{}, error) {
-	path := "/v1/pages/editor/translate"
-	options := PagesEditorTranslateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	if options.enabledSetters["Items"] {
-		params["items"] = options.Items
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// PagesEditorUserSettingsGet
-func (srv *Pages) PagesEditorUserSettingsGet()(*interface{}, error) {
-	path := "/v1/pages/editor/user-settings"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type PagesEditorUserSettingsPutOptions struct {
-	Settings interface{}
-	enabledSetters map[string]bool
-}
-func (options PagesEditorUserSettingsPutOptions) New() *PagesEditorUserSettingsPutOptions {
-	options.enabledSetters = map[string]bool{
-		"Settings": false,
-	}
-	return &options
-}
-type PagesEditorUserSettingsPutOption func(*PagesEditorUserSettingsPutOptions)
-func (srv *Pages) WithPagesEditorUserSettingsPutSettings(v interface{}) PagesEditorUserSettingsPutOption {
-	return func(o *PagesEditorUserSettingsPutOptions) {
-		o.Settings = v
-		o.enabledSetters["Settings"] = true
-	}
-}
-	
-// PagesEditorUserSettingsPut
-func (srv *Pages) PagesEditorUserSettingsPut(optionalSetters ...PagesEditorUserSettingsPutOption)(*interface{}, error) {
-	path := "/v1/pages/editor/user-settings"
-	options := PagesEditorUserSettingsPutOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	if options.enabledSetters["Settings"] {
-		params["settings"] = options.Settings
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// PagesEditorUsers
-func (srv *Pages) PagesEditorUsers()(*interface{}, error) {
-	path := "/v1/pages/editor/users"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// PagesEditorCommentsList
-func (srv *Pages) PagesEditorCommentsList(PageId string)(*interface{}, error) {
-	r := strings.NewReplacer("{pageId}", PageId)
-	path := r.Replace("/v1/pages/editor/{page_id}/comments")
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type PagesEditorCommentsCreateOptions struct {
-	BlockUuids []string
-	ParentUuid string
-	enabledSetters map[string]bool
-}
-func (options PagesEditorCommentsCreateOptions) New() *PagesEditorCommentsCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"BlockUuids": false,
-		"ParentUuid": false,
-	}
-	return &options
-}
-type PagesEditorCommentsCreateOption func(*PagesEditorCommentsCreateOptions)
-func (srv *Pages) WithPagesEditorCommentsCreateBlockUuids(v []string) PagesEditorCommentsCreateOption {
-	return func(o *PagesEditorCommentsCreateOptions) {
-		o.BlockUuids = v
-		o.enabledSetters["BlockUuids"] = true
-	}
-}
-func (srv *Pages) WithPagesEditorCommentsCreateParentUuid(v string) PagesEditorCommentsCreateOption {
-	return func(o *PagesEditorCommentsCreateOptions) {
-		o.ParentUuid = v
-		o.enabledSetters["ParentUuid"] = true
-	}
-}
-					
-// PagesEditorCommentsCreate
-func (srv *Pages) PagesEditorCommentsCreate(PageId string, Body string, optionalSetters ...PagesEditorCommentsCreateOption)(*interface{}, error) {
-	r := strings.NewReplacer("{pageId}", PageId)
-	path := r.Replace("/v1/pages/editor/{page_id}/comments")
-	options := PagesEditorCommentsCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	params["body"] = Body
-	if options.enabledSetters["BlockUuids"] {
-		params["blockUuids"] = options.BlockUuids
-	}
-	if options.enabledSetters["ParentUuid"] {
-		params["parentUuid"] = options.ParentUuid
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-			
-// PagesEditorCommentsDelete
-func (srv *Pages) PagesEditorCommentsDelete(PageId string, Uuid string)(*interface{}, error) {
-	r := strings.NewReplacer("{pageId}", PageId, "{uuid}", Uuid)
-	path := r.Replace("/v1/pages/editor/{page_id}/comments/{uuid}")
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	params["uuid"] = Uuid
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-					
-// PagesEditorCommentsUpdate
-func (srv *Pages) PagesEditorCommentsUpdate(PageId string, Uuid string, Body string)(*interface{}, error) {
-	r := strings.NewReplacer("{pageId}", PageId, "{uuid}", Uuid)
-	path := r.Replace("/v1/pages/editor/{page_id}/comments/{uuid}")
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	params["uuid"] = Uuid
-	params["body"] = Body
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-			
-// PagesEditorCommentsResolve
-func (srv *Pages) PagesEditorCommentsResolve(PageId string, Uuid string)(*interface{}, error) {
-	r := strings.NewReplacer("{pageId}", PageId, "{uuid}", Uuid)
-	path := r.Replace("/v1/pages/editor/{page_id}/comments/{uuid}/resolve")
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	params["uuid"] = Uuid
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-					
-// PagesEditorCommentsToggleTask
-func (srv *Pages) PagesEditorCommentsToggleTask(PageId string, Uuid string, TaskIndex int)(*models.Comment, error) {
-	r := strings.NewReplacer("{pageId}", PageId, "{uuid}", Uuid)
-	path := r.Replace("/v1/pages/editor/{page_id}/comments/{uuid}/toggle-task")
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	params["uuid"] = Uuid
-	params["taskIndex"] = TaskIndex
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Comment{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Comment
-	parsed, ok := resp.Result.(models.Comment)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-			
-// PagesEditorCommentsUnresolve
-func (srv *Pages) PagesEditorCommentsUnresolve(PageId string, Uuid string)(*interface{}, error) {
-	r := strings.NewReplacer("{pageId}", PageId, "{uuid}", Uuid)
-	path := r.Replace("/v1/pages/editor/{page_id}/comments/{uuid}/unresolve")
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	params["uuid"] = Uuid
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type PagesEditorHistoryOptions struct {
-	Langcode string
-	enabledSetters map[string]bool
-}
-func (options PagesEditorHistoryOptions) New() *PagesEditorHistoryOptions {
-	options.enabledSetters = map[string]bool{
-		"Langcode": false,
-	}
-	return &options
-}
-type PagesEditorHistoryOption func(*PagesEditorHistoryOptions)
-func (srv *Pages) WithPagesEditorHistoryLangcode(v string) PagesEditorHistoryOption {
-	return func(o *PagesEditorHistoryOptions) {
-		o.Langcode = v
-		o.enabledSetters["Langcode"] = true
-	}
-}
-					
-// PagesEditorHistory
-func (srv *Pages) PagesEditorHistory(PageId string, Index int, optionalSetters ...PagesEditorHistoryOption)(*models.MutationResponse, error) {
-	r := strings.NewReplacer("{pageId}", PageId)
-	path := r.Replace("/v1/pages/editor/{page_id}/history")
-	options := PagesEditorHistoryOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	params["index"] = Index
-	if options.enabledSetters["Langcode"] {
-		params["langcode"] = options.Langcode
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.MutationResponse{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.MutationResponse
-	parsed, ok := resp.Result.(models.MutationResponse)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// PagesEditorLastChanged
-func (srv *Pages) PagesEditorLastChanged(PageId string)(*interface{}, error) {
-	r := strings.NewReplacer("{pageId}", PageId)
-	path := r.Replace("/v1/pages/editor/{page_id}/last-changed")
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type PagesEditorMutationStatusOptions struct {
-	Langcode string
-	enabledSetters map[string]bool
-}
-func (options PagesEditorMutationStatusOptions) New() *PagesEditorMutationStatusOptions {
-	options.enabledSetters = map[string]bool{
-		"Langcode": false,
-	}
-	return &options
-}
-type PagesEditorMutationStatusOption func(*PagesEditorMutationStatusOptions)
-func (srv *Pages) WithPagesEditorMutationStatusLangcode(v string) PagesEditorMutationStatusOption {
-	return func(o *PagesEditorMutationStatusOptions) {
-		o.Langcode = v
-		o.enabledSetters["Langcode"] = true
-	}
-}
-							
-// PagesEditorMutationStatus
-func (srv *Pages) PagesEditorMutationStatus(PageId string, Enabled bool, Index int, optionalSetters ...PagesEditorMutationStatusOption)(*models.MutationResponse, error) {
-	r := strings.NewReplacer("{pageId}", PageId)
-	path := r.Replace("/v1/pages/editor/{page_id}/mutation-status")
-	options := PagesEditorMutationStatusOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	params["enabled"] = Enabled
-	params["index"] = Index
-	if options.enabledSetters["Langcode"] {
-		params["langcode"] = options.Langcode
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.MutationResponse{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.MutationResponse
-	parsed, ok := resp.Result.(models.MutationResponse)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type PagesEditorMutateOptions struct {
-	Langcode string
-	Payload interface{}
-	enabledSetters map[string]bool
-}
-func (options PagesEditorMutateOptions) New() *PagesEditorMutateOptions {
-	options.enabledSetters = map[string]bool{
-		"Langcode": false,
-		"Payload": false,
-	}
-	return &options
-}
-type PagesEditorMutateOption func(*PagesEditorMutateOptions)
-func (srv *Pages) WithPagesEditorMutateLangcode(v string) PagesEditorMutateOption {
-	return func(o *PagesEditorMutateOptions) {
-		o.Langcode = v
-		o.enabledSetters["Langcode"] = true
-	}
-}
-func (srv *Pages) WithPagesEditorMutatePayload(v interface{}) PagesEditorMutateOption {
-	return func(o *PagesEditorMutateOptions) {
-		o.Payload = v
-		o.enabledSetters["Payload"] = true
-	}
-}
-					
-// PagesEditorMutate
-func (srv *Pages) PagesEditorMutate(PageId string, Plugin string, optionalSetters ...PagesEditorMutateOption)(*models.MutationResponse, error) {
-	r := strings.NewReplacer("{pageId}", PageId)
-	path := r.Replace("/v1/pages/editor/{page_id}/mutations")
-	options := PagesEditorMutateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	params["plugin"] = Plugin
-	if options.enabledSetters["Langcode"] {
-		params["langcode"] = options.Langcode
-	}
-	if options.enabledSetters["Payload"] {
-		params["payload"] = options.Payload
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.MutationResponse{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.MutationResponse
-	parsed, ok := resp.Result.(models.MutationResponse)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type PagesEditorPreviewGrantOptions struct {
-	TtlHours int
-	enabledSetters map[string]bool
-}
-func (options PagesEditorPreviewGrantOptions) New() *PagesEditorPreviewGrantOptions {
-	options.enabledSetters = map[string]bool{
-		"TtlHours": false,
-	}
-	return &options
-}
-type PagesEditorPreviewGrantOption func(*PagesEditorPreviewGrantOptions)
-func (srv *Pages) WithPagesEditorPreviewGrantTtlHours(v int) PagesEditorPreviewGrantOption {
-	return func(o *PagesEditorPreviewGrantOptions) {
-		o.TtlHours = v
-		o.enabledSetters["TtlHours"] = true
-	}
-}
-			
-// PagesEditorPreviewGrant
-func (srv *Pages) PagesEditorPreviewGrant(PageId string, optionalSetters ...PagesEditorPreviewGrantOption)(*interface{}, error) {
-	r := strings.NewReplacer("{pageId}", PageId)
-	path := r.Replace("/v1/pages/editor/{page_id}/preview-grant")
-	options := PagesEditorPreviewGrantOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	if options.enabledSetters["TtlHours"] {
-		params["ttlHours"] = options.TtlHours
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type PagesEditorPublishOptions struct {
-	Force bool
-	Label string
-	enabledSetters map[string]bool
-}
-func (options PagesEditorPublishOptions) New() *PagesEditorPublishOptions {
-	options.enabledSetters = map[string]bool{
-		"Force": false,
-		"Label": false,
-	}
-	return &options
-}
-type PagesEditorPublishOption func(*PagesEditorPublishOptions)
-func (srv *Pages) WithPagesEditorPublishForce(v bool) PagesEditorPublishOption {
-	return func(o *PagesEditorPublishOptions) {
-		o.Force = v
-		o.enabledSetters["Force"] = true
-	}
-}
-func (srv *Pages) WithPagesEditorPublishLabel(v string) PagesEditorPublishOption {
-	return func(o *PagesEditorPublishOptions) {
-		o.Label = v
-		o.enabledSetters["Label"] = true
-	}
-}
-			
-// PagesEditorPublish
-func (srv *Pages) PagesEditorPublish(PageId string, optionalSetters ...PagesEditorPublishOption)(*models.MutationResponse, error) {
-	r := strings.NewReplacer("{pageId}", PageId)
-	path := r.Replace("/v1/pages/editor/{page_id}/publish")
-	options := PagesEditorPublishOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	if options.enabledSetters["Force"] {
-		params["force"] = options.Force
-	}
-	if options.enabledSetters["Label"] {
-		params["label"] = options.Label
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.MutationResponse{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.MutationResponse
-	parsed, ok := resp.Result.(models.MutationResponse)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// PagesEditorRevert
-func (srv *Pages) PagesEditorRevert(PageId string)(*models.MutationResponse, error) {
-	r := strings.NewReplacer("{pageId}", PageId)
-	path := r.Replace("/v1/pages/editor/{page_id}/revert")
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.MutationResponse{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.MutationResponse
-	parsed, ok := resp.Result.(models.MutationResponse)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-			
-// PagesEditorSchedule
-func (srv *Pages) PagesEditorSchedule(PageId string, ScheduledAt string)(*interface{}, error) {
-	r := strings.NewReplacer("{pageId}", PageId)
-	path := r.Replace("/v1/pages/editor/{page_id}/schedule")
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	params["scheduledAt"] = ScheduledAt
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// PagesEditorState
-func (srv *Pages) PagesEditorState(PageId string)(*models.EditorState, error) {
-	r := strings.NewReplacer("{pageId}", PageId)
-	path := r.Replace("/v1/pages/editor/{page_id}/state")
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.EditorState{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.EditorState
-	parsed, ok := resp.Result.(models.EditorState)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// PagesEditorTakeOwnership
-func (srv *Pages) PagesEditorTakeOwnership(PageId string)(*models.MutationResponse, error) {
-	r := strings.NewReplacer("{pageId}", PageId)
-	path := r.Replace("/v1/pages/editor/{page_id}/take-ownership")
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.MutationResponse{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.MutationResponse
-	parsed, ok := resp.Result.(models.MutationResponse)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type PagesEditorTemplatesCreateOptions struct {
-	Description string
-	FieldName string
-	IsDefault bool
-	PageBundle string
-	enabledSetters map[string]bool
-}
-func (options PagesEditorTemplatesCreateOptions) New() *PagesEditorTemplatesCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"Description": false,
-		"FieldName": false,
-		"IsDefault": false,
-		"PageBundle": false,
-	}
-	return &options
-}
-type PagesEditorTemplatesCreateOption func(*PagesEditorTemplatesCreateOptions)
-func (srv *Pages) WithPagesEditorTemplatesCreateDescription(v string) PagesEditorTemplatesCreateOption {
-	return func(o *PagesEditorTemplatesCreateOptions) {
-		o.Description = v
-		o.enabledSetters["Description"] = true
-	}
-}
-func (srv *Pages) WithPagesEditorTemplatesCreateFieldName(v string) PagesEditorTemplatesCreateOption {
-	return func(o *PagesEditorTemplatesCreateOptions) {
-		o.FieldName = v
-		o.enabledSetters["FieldName"] = true
-	}
-}
-func (srv *Pages) WithPagesEditorTemplatesCreateIsDefault(v bool) PagesEditorTemplatesCreateOption {
-	return func(o *PagesEditorTemplatesCreateOptions) {
-		o.IsDefault = v
-		o.enabledSetters["IsDefault"] = true
-	}
-}
-func (srv *Pages) WithPagesEditorTemplatesCreatePageBundle(v string) PagesEditorTemplatesCreateOption {
-	return func(o *PagesEditorTemplatesCreateOptions) {
-		o.PageBundle = v
-		o.enabledSetters["PageBundle"] = true
-	}
-}
-							
-// PagesEditorTemplatesCreate
-func (srv *Pages) PagesEditorTemplatesCreate(PageId string, Label string, Uuids []string, optionalSetters ...PagesEditorTemplatesCreateOption)(*models.Template, error) {
-	r := strings.NewReplacer("{pageId}", PageId)
-	path := r.Replace("/v1/pages/editor/{page_id}/templates")
-	options := PagesEditorTemplatesCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	params["label"] = Label
-	params["uuids"] = Uuids
-	if options.enabledSetters["Description"] {
-		params["description"] = options.Description
-	}
-	if options.enabledSetters["FieldName"] {
-		params["fieldName"] = options.FieldName
-	}
-	if options.enabledSetters["IsDefault"] {
-		params["isDefault"] = options.IsDefault
-	}
-	if options.enabledSetters["PageBundle"] {
-		params["pageBundle"] = options.PageBundle
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Template{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Template
-	parsed, ok := resp.Result.(models.Template)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// PagesEditorUnschedule
-func (srv *Pages) PagesEditorUnschedule(PageId string)(*interface{}, error) {
-	r := strings.NewReplacer("{pageId}", PageId)
-	path := r.Replace("/v1/pages/editor/{page_id}/unschedule")
-	params := map[string]interface{}{}
-	params["page_id"] = PageId
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// PagesLibraryList
-func (srv *Pages) PagesLibraryList()(*interface{}, error) {
+// PagesLibraryList the pool an editor picks a reusable block from. A library
+// item is ONE block subtree that many pages share BY REFERENCE — edit the
+// item and every page using it changes — which is what separates it from a
+// template, the other reusable thing here, which copies instead and is at
+// `GET /pages/templates`. So the two filters are the two questions the picker
+// asks: `bundles` narrows to the block types that fit the field being filled,
+// `text` matches the label a person gave the item.
+func (srv *Pages) PagesLibraryList(optionalSetters ...PagesLibraryListOption)(*interface{}, error) {
 	path := "/v1/pages/library"
+	options := PagesLibraryListOptions{}.New()
+	for _, opt := range optionalSetters {
+		opt(options)
+	}
 	params := map[string]interface{}{}
+	if options.enabledSetters["Limit"] {
+		params["limit"] = options.Limit
+	}
+	if options.enabledSetters["Offset"] {
+		params["offset"] = options.Offset
+	}
+	if options.enabledSetters["Order"] {
+		params["order"] = options.Order
+	}
+	if options.enabledSetters["Bundles"] {
+		params["bundles"] = options.Bundles
+	}
+	if options.enabledSetters["Text"] {
+		params["text"] = options.Text
+	}
 	headers := map[string]interface{}{
 	}
 
@@ -1372,8 +125,15 @@ func (srv *Pages) PagesLibraryList()(*interface{}, error) {
 
 }
 	
-// PagesLibraryDelete
-func (srv *Pages) PagesLibraryDelete(Id string)(*interface{}, error) {
+// PagesLibraryDelete retires a reusable block. It leaves the picker and every
+// list, but the blocks pointing at it keep their `library_item_id` — the
+// FK's `set null` belongs to a hard delete, and this writes a tombstone.
+// Delivery then skips the expansion for a struck item rather than failing on
+// it, so a page that used it falls back to the block content stored in its
+// own published revision: nothing breaks, but the pages quietly stop tracking
+// each other. Nothing here tells you which pages those are, so establish that
+// before striking it.
+func (srv *Pages) PagesLibraryDelete(Id string)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/pages/library/{id}")
 	params := map[string]interface{}{}
@@ -1388,16 +148,17 @@ func (srv *Pages) PagesLibraryDelete(Id string)(*interface{}, error) {
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		var parsed interface{}
+		parsed := models.Error{}.New(bytes)
 
-		err = json.Unmarshal(bytes, &parsed)
+		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
 			return nil, err
 		}
-		return &parsed, nil
+
+		return parsed, nil
 	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -1405,8 +166,12 @@ func (srv *Pages) PagesLibraryDelete(Id string)(*interface{}, error) {
 
 }
 	
-// PagesLibraryGet
-func (srv *Pages) PagesLibraryGet(Id string)(*models.LibraryItem, error) {
+// PagesLibraryGet the stored subtree behind one reusable block, so a picker
+// can preview what dropping it into a page would produce. Because delivery
+// expands the reference against THIS row at read time, what comes back is
+// also what every page already using the item is currently rendering —
+// which makes this the call to make before editing one.
+func (srv *Pages) PagesLibraryGet(Id string)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/pages/library/{id}")
 	params := map[string]interface{}{}
@@ -1421,7 +186,7 @@ func (srv *Pages) PagesLibraryGet(Id string)(*models.LibraryItem, error) {
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.LibraryItem{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -1430,8 +195,8 @@ func (srv *Pages) PagesLibraryGet(Id string)(*models.LibraryItem, error) {
 
 		return parsed, nil
 	}
-	var parsed models.LibraryItem
-	parsed, ok := resp.Result.(models.LibraryItem)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -1472,8 +237,16 @@ func (srv *Pages) WithPagesLibraryUpdateTree(v interface{}) PagesLibraryUpdateOp
 	}
 }
 			
-// PagesLibraryUpdate
-func (srv *Pages) PagesLibraryUpdate(Id string, optionalSetters ...PagesLibraryUpdateOption)(*models.LibraryItem, error) {
+// PagesLibraryUpdate the one write in this app whose blast radius is not a
+// single page. Delivery expands a library reference against this row every
+// time it serves, so replacing `tree` re-renders every page that points at
+// the item — published ones included — without any of them being edited,
+// republished or even touched. Nothing warns you first and no revision
+// records it, because the pages did not change; the item did. Changing
+// `label` or `bundle` only moves the item around the picker. Detaching one
+// page from the item, so it keeps a copy of its own, is an editor mutation
+// and not this route.
+func (srv *Pages) PagesLibraryUpdate(Id string, optionalSetters ...PagesLibraryUpdateOption)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/pages/library/{id}")
 	options := PagesLibraryUpdateOptions{}.New()
@@ -1502,7 +275,7 @@ func (srv *Pages) PagesLibraryUpdate(Id string, optionalSetters ...PagesLibraryU
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.LibraryItem{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -1511,19 +284,69 @@ func (srv *Pages) PagesLibraryUpdate(Id string, optionalSetters ...PagesLibraryU
 
 		return parsed, nil
 	}
-	var parsed models.LibraryItem
-	parsed, ok := resp.Result.(models.LibraryItem)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
 	return &parsed, nil
 
 }
-
-// PagesMenusList
-func (srv *Pages) PagesMenusList()(*interface{}, error) {
+type PagesMenusListOptions struct {
+	Limit int
+	Offset int
+	Order string
+	enabledSetters map[string]bool
+}
+func (options PagesMenusListOptions) New() *PagesMenusListOptions {
+	options.enabledSetters = map[string]bool{
+		"Limit": false,
+		"Offset": false,
+		"Order": false,
+	}
+	return &options
+}
+type PagesMenusListOption func(*PagesMenusListOptions)
+func (srv *Pages) WithPagesMenusListLimit(v int) PagesMenusListOption {
+	return func(o *PagesMenusListOptions) {
+		o.Limit = v
+		o.enabledSetters["Limit"] = true
+	}
+}
+func (srv *Pages) WithPagesMenusListOffset(v int) PagesMenusListOption {
+	return func(o *PagesMenusListOptions) {
+		o.Offset = v
+		o.enabledSetters["Offset"] = true
+	}
+}
+func (srv *Pages) WithPagesMenusListOrder(v string) PagesMenusListOption {
+	return func(o *PagesMenusListOptions) {
+		o.Order = v
+		o.enabledSetters["Order"] = true
+	}
+}
+	
+// PagesMenusList the management view of the menus a tenant keeps — `main`,
+// `footer`, `account` and whatever else the theme asks for, each with the key
+// it is looked up by. This route reads no filter at all — a `?menu_key=` is
+// ignored, which the empty `filter` echo shows — so fetch a page and pick,
+// or address one by id.
+func (srv *Pages) PagesMenusList(optionalSetters ...PagesMenusListOption)(*interface{}, error) {
 	path := "/v1/pages/menus"
+	options := PagesMenusListOptions{}.New()
+	for _, opt := range optionalSetters {
+		opt(options)
+	}
 	params := map[string]interface{}{}
+	if options.enabledSetters["Limit"] {
+		params["limit"] = options.Limit
+	}
+	if options.enabledSetters["Offset"] {
+		params["offset"] = options.Offset
+	}
+	if options.enabledSetters["Order"] {
+		params["order"] = options.Order
+	}
 	headers := map[string]interface{}{
 	}
 
@@ -1551,7 +374,7 @@ func (srv *Pages) PagesMenusList()(*interface{}, error) {
 
 }
 type PagesMenusUpsertOptions struct {
-	Items []interface{}
+	Items []models.PageMenuItem
 	enabledSetters map[string]bool
 }
 func (options PagesMenusUpsertOptions) New() *PagesMenusUpsertOptions {
@@ -1561,15 +384,23 @@ func (options PagesMenusUpsertOptions) New() *PagesMenusUpsertOptions {
 	return &options
 }
 type PagesMenusUpsertOption func(*PagesMenusUpsertOptions)
-func (srv *Pages) WithPagesMenusUpsertItems(v []interface{}) PagesMenusUpsertOption {
+func (srv *Pages) WithPagesMenusUpsertItems(v []models.PageMenuItem) PagesMenusUpsertOption {
 	return func(o *PagesMenusUpsertOptions) {
 		o.Items = v
 		o.enabledSetters["Items"] = true
 	}
 }
 					
-// PagesMenusUpsert
-func (srv *Pages) PagesMenusUpsert(Label string, MenuKey string, optionalSetters ...PagesMenusUpsertOption)(*models.Menu, error) {
+// PagesMenusUpsert writes a menu by its KEY rather than by its id, which is
+// what makes theme seeding safe to repeat: a key the tenant already has has
+// its label and items replaced in place, a key it does not have is created.
+// `items` is replaced wholesale and never merged, so sending an empty list
+// empties the navigation. One caveat worth reading before you rely on the
+// idempotence: the key's uniqueness is this route's doing and not the
+// database's — `menu_key` carries an index but no unique constraint — so
+// a duplicate key created any other way leaves this route updating whichever
+// row it finds first.
+func (srv *Pages) PagesMenusUpsert(Label string, MenuKey string, optionalSetters ...PagesMenusUpsertOption)(*models.Error, error) {
 	path := "/v1/pages/menus"
 	options := PagesMenusUpsertOptions{}.New()
 	for _, opt := range optionalSetters {
@@ -1592,7 +423,7 @@ func (srv *Pages) PagesMenusUpsert(Label string, MenuKey string, optionalSetters
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.Menu{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -1601,8 +432,8 @@ func (srv *Pages) PagesMenusUpsert(Label string, MenuKey string, optionalSetters
 
 		return parsed, nil
 	}
-	var parsed models.Menu
-	parsed, ok := resp.Result.(models.Menu)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -1610,8 +441,13 @@ func (srv *Pages) PagesMenusUpsert(Label string, MenuKey string, optionalSetters
 
 }
 	
-// PagesMenusDelete
-func (srv *Pages) PagesMenusDelete(Id string)(*interface{}, error) {
+// PagesMenusDelete writes the tombstone. The menu drops out of the management
+// list and out of `GET /pages/delivery/menus` in the same moment, so a theme
+// that reads its key gets nothing back and renders nothing — there is no
+// fallback and no error a storefront could act on. The key is free
+// immediately, which means re-seeding the theme is the way back. Check what
+// reads the key before striking it.
+func (srv *Pages) PagesMenusDelete(Id string)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/pages/menus/{id}")
 	params := map[string]interface{}{}
@@ -1626,16 +462,17 @@ func (srv *Pages) PagesMenusDelete(Id string)(*interface{}, error) {
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		var parsed interface{}
+		parsed := models.Error{}.New(bytes)
 
-		err = json.Unmarshal(bytes, &parsed)
+		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
 			return nil, err
 		}
-		return &parsed, nil
+
+		return parsed, nil
 	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -1643,8 +480,12 @@ func (srv *Pages) PagesMenusDelete(Id string)(*interface{}, error) {
 
 }
 	
-// PagesMenusGet
-func (srv *Pages) PagesMenusGet(Id string)(*models.Menu, error) {
+// PagesMenusGet one menu and its whole item tree — the ordered links a
+// theme renders as its header, footer or account navigation. `items` is
+// nested, not one level, so this is the entire navigation for that key in a
+// single read. Addressed by ROW ID here; the key a theme knows it by is
+// `menu_key` on the body, and the route that works by key is the upsert.
+func (srv *Pages) PagesMenusGet(Id string)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/pages/menus/{id}")
 	params := map[string]interface{}{}
@@ -1659,7 +500,7 @@ func (srv *Pages) PagesMenusGet(Id string)(*models.Menu, error) {
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.Menu{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -1668,8 +509,8 @@ func (srv *Pages) PagesMenusGet(Id string)(*models.Menu, error) {
 
 		return parsed, nil
 	}
-	var parsed models.Menu
-	parsed, ok := resp.Result.(models.Menu)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -1677,7 +518,7 @@ func (srv *Pages) PagesMenusGet(Id string)(*models.Menu, error) {
 
 }
 type PagesMenusUpdateOptions struct {
-	Items []interface{}
+	Items []models.PageMenuItem
 	Label string
 	enabledSetters map[string]bool
 }
@@ -1689,7 +530,7 @@ func (options PagesMenusUpdateOptions) New() *PagesMenusUpdateOptions {
 	return &options
 }
 type PagesMenusUpdateOption func(*PagesMenusUpdateOptions)
-func (srv *Pages) WithPagesMenusUpdateItems(v []interface{}) PagesMenusUpdateOption {
+func (srv *Pages) WithPagesMenusUpdateItems(v []models.PageMenuItem) PagesMenusUpdateOption {
 	return func(o *PagesMenusUpdateOptions) {
 		o.Items = v
 		o.enabledSetters["Items"] = true
@@ -1702,8 +543,13 @@ func (srv *Pages) WithPagesMenusUpdateLabel(v string) PagesMenusUpdateOption {
 	}
 }
 			
-// PagesMenusUpdate
-func (srv *Pages) PagesMenusUpdate(Id string, optionalSetters ...PagesMenusUpdateOption)(*models.Menu, error) {
+// PagesMenusUpdate the same write as the upsert, for a caller that already
+// holds the row id — use this when editing a menu a person picked from a
+// list, and the upsert when reconciling a theme's defaults. `menu_key` is
+// deliberately not editable here: the key is the handle every theme reads the
+// menu by, so changing it would empty whatever is rendering that key without
+// anything reporting an error.
+func (srv *Pages) PagesMenusUpdate(Id string, optionalSetters ...PagesMenusUpdateOption)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/pages/menus/{id}")
 	options := PagesMenusUpdateOptions{}.New()
@@ -1729,7 +575,7 @@ func (srv *Pages) PagesMenusUpdate(Id string, optionalSetters ...PagesMenusUpdat
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.Menu{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -1738,19 +584,105 @@ func (srv *Pages) PagesMenusUpdate(Id string, optionalSetters ...PagesMenusUpdat
 
 		return parsed, nil
 	}
-	var parsed models.Menu
-	parsed, ok := resp.Result.(models.Menu)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
 	return &parsed, nil
 
 }
-
-// PagesPagesList
-func (srv *Pages) PagesPagesList()(*interface{}, error) {
+type PagesPagesListOptions struct {
+	Limit int
+	Offset int
+	Order string
+	Bundle string
+	Status string
+	Q string
+	enabledSetters map[string]bool
+}
+func (options PagesPagesListOptions) New() *PagesPagesListOptions {
+	options.enabledSetters = map[string]bool{
+		"Limit": false,
+		"Offset": false,
+		"Order": false,
+		"Bundle": false,
+		"Status": false,
+		"Q": false,
+	}
+	return &options
+}
+type PagesPagesListOption func(*PagesPagesListOptions)
+func (srv *Pages) WithPagesPagesListLimit(v int) PagesPagesListOption {
+	return func(o *PagesPagesListOptions) {
+		o.Limit = v
+		o.enabledSetters["Limit"] = true
+	}
+}
+func (srv *Pages) WithPagesPagesListOffset(v int) PagesPagesListOption {
+	return func(o *PagesPagesListOptions) {
+		o.Offset = v
+		o.enabledSetters["Offset"] = true
+	}
+}
+func (srv *Pages) WithPagesPagesListOrder(v string) PagesPagesListOption {
+	return func(o *PagesPagesListOptions) {
+		o.Order = v
+		o.enabledSetters["Order"] = true
+	}
+}
+func (srv *Pages) WithPagesPagesListBundle(v string) PagesPagesListOption {
+	return func(o *PagesPagesListOptions) {
+		o.Bundle = v
+		o.enabledSetters["Bundle"] = true
+	}
+}
+func (srv *Pages) WithPagesPagesListStatus(v string) PagesPagesListOption {
+	return func(o *PagesPagesListOptions) {
+		o.Status = v
+		o.enabledSetters["Status"] = true
+	}
+}
+func (srv *Pages) WithPagesPagesListQ(v string) PagesPagesListOption {
+	return func(o *PagesPagesListOptions) {
+		o.Q = v
+		o.enabledSetters["Q"] = true
+	}
+}
+	
+// PagesPagesList the EDITORIAL index — every live page of the tenant,
+// whatever its status, newest change first. This is the list the Cockpit
+// shows a person: drafts and archived pages are in it, and a row here says
+// nothing about whether a visitor can see the page, because a published
+// status without a published revision still delivers nothing. A storefront
+// wants `GET /pages/delivery/pages` instead, which answers only what is
+// actually servable. Soft-deleted pages are never returned and the predicate
+// is this route's own, not something a caller can switch off.
+func (srv *Pages) PagesPagesList(optionalSetters ...PagesPagesListOption)(*interface{}, error) {
 	path := "/v1/pages/pages"
+	options := PagesPagesListOptions{}.New()
+	for _, opt := range optionalSetters {
+		opt(options)
+	}
 	params := map[string]interface{}{}
+	if options.enabledSetters["Limit"] {
+		params["limit"] = options.Limit
+	}
+	if options.enabledSetters["Offset"] {
+		params["offset"] = options.Offset
+	}
+	if options.enabledSetters["Order"] {
+		params["order"] = options.Order
+	}
+	if options.enabledSetters["Bundle"] {
+		params["bundle"] = options.Bundle
+	}
+	if options.enabledSetters["Status"] {
+		params["status"] = options.Status
+	}
+	if options.enabledSetters["Q"] {
+		params["q"] = options.Q
+	}
 	headers := map[string]interface{}{
 	}
 
@@ -1827,8 +759,15 @@ func (srv *Pages) WithPagesPagesCreateSourceLanguage(v string) PagesPagesCreateO
 	}
 }
 			
-// PagesPagesCreate
-func (srv *Pages) PagesPagesCreate(Title string, optionalSetters ...PagesPagesCreateOption)(*models.Page, error) {
+// PagesPagesCreate writes two rows, not one: the page itself and the
+// translation row for its source language, so a page is never without the
+// language it was authored in and `GET /pages/delivery/page?slug=` can match
+// a localized URL from the first moment. Everything the caller leaves out
+// comes from the tenant's settings, not from a literal in this app: `bundle`
+// from default_page_bundle, `sourceLanguage` from default_source_language
+// (resolved for the request's market), and the status of both the page and
+// its source translation from default_page_status (draft | published).
+func (srv *Pages) PagesPagesCreate(Title string, optionalSetters ...PagesPagesCreateOption)(*models.Error, error) {
 	path := "/v1/pages/pages"
 	options := PagesPagesCreateOptions{}.New()
 	for _, opt := range optionalSetters {
@@ -1862,7 +801,7 @@ func (srv *Pages) PagesPagesCreate(Title string, optionalSetters ...PagesPagesCr
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.Page{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -1871,8 +810,8 @@ func (srv *Pages) PagesPagesCreate(Title string, optionalSetters ...PagesPagesCr
 
 		return parsed, nil
 	}
-	var parsed models.Page
-	parsed, ok := resp.Result.(models.Page)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -1880,8 +819,15 @@ func (srv *Pages) PagesPagesCreate(Title string, optionalSetters ...PagesPagesCr
 
 }
 	
-// PagesPagesDelete
-func (srv *Pages) PagesPagesDelete(Id string)(*interface{}, error) {
+// PagesPagesDelete writes a tombstone. The page leaves every list, every read
+// and all delivery at once, and its slug is immediately free for another page
+// — the unique index counts live rows only. Nothing is erased: the
+// translations, blocks, edit state, revisions, comments and preview grants
+// that hang off the page all keep their rows, because their `on delete
+// cascade` belongs to a hard delete and this is not one. So a page can be
+// brought back intact by clearing `deleted_at` — but not through this app,
+// which publishes no route that does it.
+func (srv *Pages) PagesPagesDelete(Id string)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/pages/pages/{id}")
 	params := map[string]interface{}{}
@@ -1896,16 +842,17 @@ func (srv *Pages) PagesPagesDelete(Id string)(*interface{}, error) {
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		var parsed interface{}
+		parsed := models.Error{}.New(bytes)
 
-		err = json.Unmarshal(bytes, &parsed)
+		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
 			return nil, err
 		}
-		return &parsed, nil
+
+		return parsed, nil
 	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -1913,8 +860,14 @@ func (srv *Pages) PagesPagesDelete(Id string)(*interface{}, error) {
 
 }
 	
-// PagesPagesGet
-func (srv *Pages) PagesPagesGet(Id string)(*models.Page, error) {
+// PagesPagesGet one page RECORD: what it is called, where it routes, what
+// type it is, which revision is live. Not its content — the blocks are not
+// on this row and no expansion here returns them. The editor reads them with
+// `GET /pages/editor/{page_id}/state`, a renderer with `GET
+// /pages/delivery/page`. A soft-deleted page answers 404 exactly like one
+// that never existed, so this is also the check for whether an id is still
+// good.
+func (srv *Pages) PagesPagesGet(Id string)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/pages/pages/{id}")
 	params := map[string]interface{}{}
@@ -1929,7 +882,7 @@ func (srv *Pages) PagesPagesGet(Id string)(*models.Page, error) {
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.Page{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -1938,8 +891,8 @@ func (srv *Pages) PagesPagesGet(Id string)(*models.Page, error) {
 
 		return parsed, nil
 	}
-	var parsed models.Page
-	parsed, ok := resp.Result.(models.Page)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -1996,8 +949,17 @@ func (srv *Pages) WithPagesPagesUpdateTitle(v string) PagesPagesUpdateOption {
 	}
 }
 			
-// PagesPagesUpdate
-func (srv *Pages) PagesPagesUpdate(Id string, optionalSetters ...PagesPagesUpdateOption)(*models.Page, error) {
+// PagesPagesUpdate corrects the page RECORD — the five fields an editor
+// changes without opening the visual editor, which are `title`, `slug`,
+// `status`, `meta` and `bundle`, and no others. Anything else in the body is
+// dropped rather than refused, and the block tree is unreachable from here by
+// design: content moves only through the editor's mutation log, so a caller
+// cannot half-edit a page behind the undo history's back. Two consequences
+// worth knowing before you call it: a slug is unique among live pages, so
+// claiming one that is held answers 409; and setting `status` to published
+// does NOT put anything in front of a visitor — delivery needs a revision,
+// which only `POST /pages/editor/{page_id}/publish` writes.
+func (srv *Pages) PagesPagesUpdate(Id string, optionalSetters ...PagesPagesUpdateOption)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/pages/pages/{id}")
 	options := PagesPagesUpdateOptions{}.New()
@@ -2032,7 +994,7 @@ func (srv *Pages) PagesPagesUpdate(Id string, optionalSetters ...PagesPagesUpdat
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.Page{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -2041,21 +1003,115 @@ func (srv *Pages) PagesPagesUpdate(Id string, optionalSetters ...PagesPagesUpdat
 
 		return parsed, nil
 	}
-	var parsed models.Page
-	parsed, ok := resp.Result.(models.Page)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
 	return &parsed, nil
 
 }
-	
-// PagesPagesRevisions
-func (srv *Pages) PagesPagesRevisions(Id string)(*interface{}, error) {
+type PagesPagesRevisionsOptions struct {
+	Limit int
+	Offset int
+	Order string
+	Label string
+	CreatedBy string
+	CreatedByName string
+	CreatedAt string
+	enabledSetters map[string]bool
+}
+func (options PagesPagesRevisionsOptions) New() *PagesPagesRevisionsOptions {
+	options.enabledSetters = map[string]bool{
+		"Limit": false,
+		"Offset": false,
+		"Order": false,
+		"Label": false,
+		"CreatedBy": false,
+		"CreatedByName": false,
+		"CreatedAt": false,
+	}
+	return &options
+}
+type PagesPagesRevisionsOption func(*PagesPagesRevisionsOptions)
+func (srv *Pages) WithPagesPagesRevisionsLimit(v int) PagesPagesRevisionsOption {
+	return func(o *PagesPagesRevisionsOptions) {
+		o.Limit = v
+		o.enabledSetters["Limit"] = true
+	}
+}
+func (srv *Pages) WithPagesPagesRevisionsOffset(v int) PagesPagesRevisionsOption {
+	return func(o *PagesPagesRevisionsOptions) {
+		o.Offset = v
+		o.enabledSetters["Offset"] = true
+	}
+}
+func (srv *Pages) WithPagesPagesRevisionsOrder(v string) PagesPagesRevisionsOption {
+	return func(o *PagesPagesRevisionsOptions) {
+		o.Order = v
+		o.enabledSetters["Order"] = true
+	}
+}
+func (srv *Pages) WithPagesPagesRevisionsLabel(v string) PagesPagesRevisionsOption {
+	return func(o *PagesPagesRevisionsOptions) {
+		o.Label = v
+		o.enabledSetters["Label"] = true
+	}
+}
+func (srv *Pages) WithPagesPagesRevisionsCreatedBy(v string) PagesPagesRevisionsOption {
+	return func(o *PagesPagesRevisionsOptions) {
+		o.CreatedBy = v
+		o.enabledSetters["CreatedBy"] = true
+	}
+}
+func (srv *Pages) WithPagesPagesRevisionsCreatedByName(v string) PagesPagesRevisionsOption {
+	return func(o *PagesPagesRevisionsOptions) {
+		o.CreatedByName = v
+		o.enabledSetters["CreatedByName"] = true
+	}
+}
+func (srv *Pages) WithPagesPagesRevisionsCreatedAt(v string) PagesPagesRevisionsOption {
+	return func(o *PagesPagesRevisionsOptions) {
+		o.CreatedAt = v
+		o.enabledSetters["CreatedAt"] = true
+	}
+}
+			
+// PagesPagesRevisions one entry per publication, newest first, which is the
+// order a history is read in and the one this route sorts by unless `order`
+// says otherwise. The `snapshot` — the whole published page, in every
+// language — is deliberately not in the index: it is page-sized, and
+// nothing that renders a history needs it.
+func (srv *Pages) PagesPagesRevisions(Id string, optionalSetters ...PagesPagesRevisionsOption)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/pages/pages/{id}/revisions")
+	options := PagesPagesRevisionsOptions{}.New()
+	for _, opt := range optionalSetters {
+		opt(options)
+	}
 	params := map[string]interface{}{}
 	params["id"] = Id
+	if options.enabledSetters["Limit"] {
+		params["limit"] = options.Limit
+	}
+	if options.enabledSetters["Offset"] {
+		params["offset"] = options.Offset
+	}
+	if options.enabledSetters["Order"] {
+		params["order"] = options.Order
+	}
+	if options.enabledSetters["Label"] {
+		params["label"] = options.Label
+	}
+	if options.enabledSetters["CreatedBy"] {
+		params["created_by"] = options.CreatedBy
+	}
+	if options.enabledSetters["CreatedByName"] {
+		params["created_by_name"] = options.CreatedByName
+	}
+	if options.enabledSetters["CreatedAt"] {
+		params["created_at"] = options.CreatedAt
+	}
 	headers := map[string]interface{}{
 	}
 
@@ -2066,16 +1122,17 @@ func (srv *Pages) PagesPagesRevisions(Id string)(*interface{}, error) {
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		var parsed interface{}
+		parsed := models.Error{}.New(bytes)
 
-		err = json.Unmarshal(bytes, &parsed)
+		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
 			return nil, err
 		}
-		return &parsed, nil
+
+		return parsed, nil
 	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -2108,8 +1165,15 @@ func (srv *Pages) WithPagesSeedPages(v []interface{}) PagesSeedOption {
 	}
 }
 	
-// PagesSeed
-func (srv *Pages) PagesSeed(optionalSetters ...PagesSeedOption)(*interface{}, error) {
+// PagesSeed the target of a theme activation hook: hand it the theme's
+// default pages and menus and it creates whatever is missing. Idempotent by
+// `slug` and by menu key — a slug or a key the tenant already holds is
+// skipped rather than rewritten, so re-running after a theme update adds only
+// the new ones and never overwrites what an editor has since changed. A
+// seeded page is published on the spot, immediately servable by delivery: the
+// default_page_status setting deliberately does not apply, because a theme
+// that activates with invisible pages looks broken.
+func (srv *Pages) PagesSeed(optionalSetters ...PagesSeedOption)(*models.SeedResult, error) {
 	path := "/v1/pages/seed"
 	options := PagesSeedOptions{}.New()
 	for _, opt := range optionalSetters {
@@ -2133,27 +1197,176 @@ func (srv *Pages) PagesSeed(optionalSetters ...PagesSeedOption)(*interface{}, er
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		var parsed interface{}
+		parsed := models.SeedResult{}.New(bytes)
 
-		err = json.Unmarshal(bytes, &parsed)
+		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
 			return nil, err
 		}
-		return &parsed, nil
+
+		return parsed, nil
 	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
+	var parsed models.SeedResult
+	parsed, ok := resp.Result.(models.SeedResult)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
 	return &parsed, nil
 
 }
-
-// PagesTemplatesList
-func (srv *Pages) PagesTemplatesList()(*interface{}, error) {
+type PagesTemplatesListOptions struct {
+	Limit int
+	Offset int
+	Order string
+	Id string
+	Label string
+	Description string
+	PageBundle string
+	FieldName string
+	IsDefault bool
+	CreatedBy string
+	CreatedAt string
+	UpdatedAt string
+	enabledSetters map[string]bool
+}
+func (options PagesTemplatesListOptions) New() *PagesTemplatesListOptions {
+	options.enabledSetters = map[string]bool{
+		"Limit": false,
+		"Offset": false,
+		"Order": false,
+		"Id": false,
+		"Label": false,
+		"Description": false,
+		"PageBundle": false,
+		"FieldName": false,
+		"IsDefault": false,
+		"CreatedBy": false,
+		"CreatedAt": false,
+		"UpdatedAt": false,
+	}
+	return &options
+}
+type PagesTemplatesListOption func(*PagesTemplatesListOptions)
+func (srv *Pages) WithPagesTemplatesListLimit(v int) PagesTemplatesListOption {
+	return func(o *PagesTemplatesListOptions) {
+		o.Limit = v
+		o.enabledSetters["Limit"] = true
+	}
+}
+func (srv *Pages) WithPagesTemplatesListOffset(v int) PagesTemplatesListOption {
+	return func(o *PagesTemplatesListOptions) {
+		o.Offset = v
+		o.enabledSetters["Offset"] = true
+	}
+}
+func (srv *Pages) WithPagesTemplatesListOrder(v string) PagesTemplatesListOption {
+	return func(o *PagesTemplatesListOptions) {
+		o.Order = v
+		o.enabledSetters["Order"] = true
+	}
+}
+func (srv *Pages) WithPagesTemplatesListId(v string) PagesTemplatesListOption {
+	return func(o *PagesTemplatesListOptions) {
+		o.Id = v
+		o.enabledSetters["Id"] = true
+	}
+}
+func (srv *Pages) WithPagesTemplatesListLabel(v string) PagesTemplatesListOption {
+	return func(o *PagesTemplatesListOptions) {
+		o.Label = v
+		o.enabledSetters["Label"] = true
+	}
+}
+func (srv *Pages) WithPagesTemplatesListDescription(v string) PagesTemplatesListOption {
+	return func(o *PagesTemplatesListOptions) {
+		o.Description = v
+		o.enabledSetters["Description"] = true
+	}
+}
+func (srv *Pages) WithPagesTemplatesListPageBundle(v string) PagesTemplatesListOption {
+	return func(o *PagesTemplatesListOptions) {
+		o.PageBundle = v
+		o.enabledSetters["PageBundle"] = true
+	}
+}
+func (srv *Pages) WithPagesTemplatesListFieldName(v string) PagesTemplatesListOption {
+	return func(o *PagesTemplatesListOptions) {
+		o.FieldName = v
+		o.enabledSetters["FieldName"] = true
+	}
+}
+func (srv *Pages) WithPagesTemplatesListIsDefault(v bool) PagesTemplatesListOption {
+	return func(o *PagesTemplatesListOptions) {
+		o.IsDefault = v
+		o.enabledSetters["IsDefault"] = true
+	}
+}
+func (srv *Pages) WithPagesTemplatesListCreatedBy(v string) PagesTemplatesListOption {
+	return func(o *PagesTemplatesListOptions) {
+		o.CreatedBy = v
+		o.enabledSetters["CreatedBy"] = true
+	}
+}
+func (srv *Pages) WithPagesTemplatesListCreatedAt(v string) PagesTemplatesListOption {
+	return func(o *PagesTemplatesListOptions) {
+		o.CreatedAt = v
+		o.enabledSetters["CreatedAt"] = true
+	}
+}
+func (srv *Pages) WithPagesTemplatesListUpdatedAt(v string) PagesTemplatesListOption {
+	return func(o *PagesTemplatesListOptions) {
+		o.UpdatedAt = v
+		o.enabledSetters["UpdatedAt"] = true
+	}
+}
+	
+// PagesTemplatesList every column of a template is an exact-match filter
+// here: `?page_bundle=standard&field_name=content` is how a picker asks for
+// the templates offered in one place, and `?is_default=true` is how a "new
+// page" flow finds the one to start from.
+func (srv *Pages) PagesTemplatesList(optionalSetters ...PagesTemplatesListOption)(*interface{}, error) {
 	path := "/v1/pages/templates"
+	options := PagesTemplatesListOptions{}.New()
+	for _, opt := range optionalSetters {
+		opt(options)
+	}
 	params := map[string]interface{}{}
+	if options.enabledSetters["Limit"] {
+		params["limit"] = options.Limit
+	}
+	if options.enabledSetters["Offset"] {
+		params["offset"] = options.Offset
+	}
+	if options.enabledSetters["Order"] {
+		params["order"] = options.Order
+	}
+	if options.enabledSetters["Id"] {
+		params["id"] = options.Id
+	}
+	if options.enabledSetters["Label"] {
+		params["label"] = options.Label
+	}
+	if options.enabledSetters["Description"] {
+		params["description"] = options.Description
+	}
+	if options.enabledSetters["PageBundle"] {
+		params["page_bundle"] = options.PageBundle
+	}
+	if options.enabledSetters["FieldName"] {
+		params["field_name"] = options.FieldName
+	}
+	if options.enabledSetters["IsDefault"] {
+		params["is_default"] = options.IsDefault
+	}
+	if options.enabledSetters["CreatedBy"] {
+		params["created_by"] = options.CreatedBy
+	}
+	if options.enabledSetters["CreatedAt"] {
+		params["created_at"] = options.CreatedAt
+	}
+	if options.enabledSetters["UpdatedAt"] {
+		params["updated_at"] = options.UpdatedAt
+	}
 	headers := map[string]interface{}{
 	}
 
@@ -2181,8 +1394,12 @@ func (srv *Pages) PagesTemplatesList()(*interface{}, error) {
 
 }
 	
-// PagesTemplatesDelete
-func (srv *Pages) PagesTemplatesDelete(Id string)(*interface{}, error) {
+// PagesTemplatesDelete removes the template row outright. This is the one
+// delete in the app that is not a tombstone — `templates` carries no
+// `deleted_at` — so it cannot be undone and the id will not come back.
+// Nothing else breaks by it: pages built from the template hold their own
+// copy of the blocks and never referenced the row.
+func (srv *Pages) PagesTemplatesDelete(Id string)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/pages/templates/{id}")
 	params := map[string]interface{}{}
@@ -2197,16 +1414,17 @@ func (srv *Pages) PagesTemplatesDelete(Id string)(*interface{}, error) {
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		var parsed interface{}
+		parsed := models.Error{}.New(bytes)
 
-		err = json.Unmarshal(bytes, &parsed)
+		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
 			return nil, err
 		}
-		return &parsed, nil
+
+		return parsed, nil
 	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -2214,8 +1432,12 @@ func (srv *Pages) PagesTemplatesDelete(Id string)(*interface{}, error) {
 
 }
 	
-// PagesTemplatesGet
-func (srv *Pages) PagesTemplatesGet(Id string)(*models.Template, error) {
+// PagesTemplatesGet the blocks a page would START from if an editor picked
+// this template — read it to preview the insert. A template is a COPY
+// source, the opposite of a library item: nothing links back from the pages
+// already built from it, so this tells you what future pages get and nothing
+// about existing ones.
+func (srv *Pages) PagesTemplatesGet(Id string)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/pages/templates/{id}")
 	params := map[string]interface{}{}
@@ -2230,7 +1452,7 @@ func (srv *Pages) PagesTemplatesGet(Id string)(*models.Template, error) {
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.Template{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -2239,8 +1461,8 @@ func (srv *Pages) PagesTemplatesGet(Id string)(*models.Template, error) {
 
 		return parsed, nil
 	}
-	var parsed models.Template
-	parsed, ok := resp.Result.(models.Template)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -2253,7 +1475,7 @@ type PagesTemplatesUpdateOptions struct {
 	IsDefault bool
 	Label string
 	PageBundle string
-	Tree []interface{}
+	Tree []models.PageBlockTree
 	enabledSetters map[string]bool
 }
 func (options PagesTemplatesUpdateOptions) New() *PagesTemplatesUpdateOptions {
@@ -2298,15 +1520,22 @@ func (srv *Pages) WithPagesTemplatesUpdatePageBundle(v string) PagesTemplatesUpd
 		o.enabledSetters["PageBundle"] = true
 	}
 }
-func (srv *Pages) WithPagesTemplatesUpdateTree(v []interface{}) PagesTemplatesUpdateOption {
+func (srv *Pages) WithPagesTemplatesUpdateTree(v []models.PageBlockTree) PagesTemplatesUpdateOption {
 	return func(o *PagesTemplatesUpdateOptions) {
 		o.Tree = v
 		o.enabledSetters["Tree"] = true
 	}
 }
 			
-// PagesTemplatesUpdate
-func (srv *Pages) PagesTemplatesUpdate(Id string, optionalSetters ...PagesTemplatesUpdateOption)(*models.Template, error) {
+// PagesTemplatesUpdate edits what a future page will start from. Because
+// templates copy rather than share, this reaches nothing that already exists
+// — pages built from it keep the blocks they were handed, which is exactly
+// the property that makes a template safe to edit and a library item
+// dangerous. `is_default` is the one field with an effect past the picker: it
+// decides what a new page of `page_bundle` starts with, and nothing here
+// stops two templates of the same bundle from both claiming it, so which one
+// wins is left to whoever reads the list.
+func (srv *Pages) PagesTemplatesUpdate(Id string, optionalSetters ...PagesTemplatesUpdateOption)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/pages/templates/{id}")
 	options := PagesTemplatesUpdateOptions{}.New()
@@ -2344,7 +1573,7 @@ func (srv *Pages) PagesTemplatesUpdate(Id string, optionalSetters ...PagesTempla
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.Template{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -2353,8 +1582,90 @@ func (srv *Pages) PagesTemplatesUpdate(Id string, optionalSetters ...PagesTempla
 
 		return parsed, nil
 	}
-	var parsed models.Template
-	parsed, ok := resp.Result.(models.Template)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
+	if !ok {
+		return nil, errors.New("unexpected response type")
+	}
+	return &parsed, nil
+
+}
+
+// PagesVocabulariesList discovery for the vocabulary routes: the enums this
+// app publishes, each with its name, its title and what it is for, and none
+// of them unpacked — the permitted values are not on this route, only on
+// the one that serves a single vocabulary. Names: edit-state-statuses,
+// page-statuses, translation-statuses. Fetch one with GET
+// /pages/vocabularies/{name}; a client holding the qualified pair
+// 'pages.<name>' builds that URL from the pair alone.
+func (srv *Pages) PagesVocabulariesList()(*models.PagesVocabularyIndex, error) {
+	path := "/v1/pages/vocabularies"
+	params := map[string]interface{}{}
+	headers := map[string]interface{}{
+	}
+
+	resp, err := srv.client.Call("GET", path, headers, params)
+	if err != nil {
+		return nil, err
+	}
+	if strings.HasPrefix(resp.Type, "application/json") {
+		bytes := []byte(resp.Result.(string))
+
+		parsed := models.PagesVocabularyIndex{}.New(bytes)
+
+		err = json.Unmarshal(bytes, parsed)
+		if err != nil {
+			return nil, err
+		}
+
+		return parsed, nil
+	}
+	var parsed models.PagesVocabularyIndex
+	parsed, ok := resp.Result.(models.PagesVocabularyIndex)
+	if !ok {
+		return nil, errors.New("unexpected response type")
+	}
+	return &parsed, nil
+
+}
+	
+// PagesVocabulariesGet one vocabulary unpacked: every value the column
+// permits, each with the title to show for it, the sentence explaining it and
+// the badge tone to render it in — everything a select or a status pill
+// needs, so nothing downstream keeps its own copy of the labels. The values
+// are read out of the column's CHECK constraint, so the served set IS the
+// enforced set and the two cannot drift — a value added to the constraint
+// appears here even before anyone labels it, titled from its own key. Values
+// come back in constraint order, which is the order a select should offer.
+// 'closed' says the set is exhaustive, so a value outside it is stale data
+// rather than a missing label. Names: edit-state-statuses, page-statuses,
+// translation-statuses.
+func (srv *Pages) PagesVocabulariesGet(Name string)(*models.Error, error) {
+	r := strings.NewReplacer("{name}", Name)
+	path := r.Replace("/v1/pages/vocabularies/{name}")
+	params := map[string]interface{}{}
+	params["name"] = Name
+	headers := map[string]interface{}{
+	}
+
+	resp, err := srv.client.Call("GET", path, headers, params)
+	if err != nil {
+		return nil, err
+	}
+	if strings.HasPrefix(resp.Type, "application/json") {
+		bytes := []byte(resp.Result.(string))
+
+		parsed := models.Error{}.New(bytes)
+
+		err = json.Unmarshal(bytes, parsed)
+		if err != nil {
+			return nil, err
+		}
+
+		return parsed, nil
+	}
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}

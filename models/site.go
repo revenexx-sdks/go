@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Site Model
+// Site Site
 type Site struct {
     // Site creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`
@@ -29,8 +29,8 @@ type Site struct {
     DeploymentScreenshotLight string `json:"deploymentScreenshotLight"`
     // Site enabled.
     Enabled bool `json:"enabled"`
-    // Name of fallback file to use instead of 404 page. If null, Appwrite 404
-    // page will be displayed.
+    // Name of the fallback file to serve instead of a 404 page. If null, the site
+    // runtime's built-in 404 page is served.
     FallbackFile string `json:"fallbackFile"`
     // Site framework.
     Framework string `json:"framework"`

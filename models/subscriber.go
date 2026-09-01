@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Subscriber Model
+// Subscriber Subscriber
 type Subscriber struct {
     // Subscriber creation time in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

@@ -5,11 +5,11 @@ import (
     "errors"
 )
 
-// HealthTime Model
+// HealthTime Health Time
 type HealthTime struct {
     // Difference of unix remote and local timestamps in milliseconds.
     Diff int `json:"diff"`
-    // Current unix timestamp of local server where Appwrite runs.
+    // Current unix timestamp of the core service host.
     LocalTime int `json:"localTime"`
     // Current unix timestamp on trustful remote server.
     RemoteTime int `json:"remoteTime"`

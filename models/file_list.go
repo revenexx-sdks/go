@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// FilesList Model
+// FileList Files List
 type FileList struct {
     // List of files.
     Files []File `json:"files"`

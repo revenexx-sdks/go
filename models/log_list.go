@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// LogsList Model
+// LogList Logs List
 type LogList struct {
     // List of logs.
     Logs []Log `json:"logs"`

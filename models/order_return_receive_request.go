@@ -5,7 +5,8 @@ import (
     "errors"
 )
 
-// NoPayloadReceivingIsAPureStateTransitionRegisteredReceived Model
+// OrderReturnReceiveRequest No payload — receiving is a pure state
+// transition (registered → received).
 type OrderReturnReceiveRequest struct {
 
     // Used by Decode() method

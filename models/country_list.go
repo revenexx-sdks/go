@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// CountriesList Model
+// CountryList Countries List
 type CountryList struct {
     // List of countries.
     Countries []Country `json:"countries"`

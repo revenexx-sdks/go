@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// JWT Model
+// Jwt JWT
 type Jwt struct {
     // JWT encoded string.
     Jwt string `json:"jwt"`

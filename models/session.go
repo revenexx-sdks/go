@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Session Model
+// Session Session
 type Session struct {
     // Session creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`
@@ -13,8 +13,9 @@ type Session struct {
     Id string `json:"$id"`
     // Session update date in ISO 8601 format.
     UpdatedAt string `json:"$updatedAt"`
-    // Client code name. View list of [available
-    // options](https://github.com/appwrite/appwrite/blob/master/docs/lists/clients.json).
+    // Client code name. A short code such as `CH` for Chrome, derived from the
+    // request's User-Agent by the core service; the full code list is not part of
+    // this API.
     ClientCode string `json:"clientCode"`
     // Client engine name.
     ClientEngine string `json:"clientEngine"`
@@ -47,8 +48,9 @@ type Session struct {
     // Most recent date in ISO 8601 format when the session successfully passed
     // MFA challenge.
     MfaUpdatedAt string `json:"mfaUpdatedAt"`
-    // Operating system code name. View list of [available
-    // options](https://github.com/appwrite/appwrite/blob/master/docs/lists/os.json).
+    // Operating system code name. A short code such as `AND` for Android, derived
+    // from the request's User-Agent by the core service; the full code list is
+    // not part of this API.
     OsCode string `json:"osCode"`
     // Operating system name.
     OsName string `json:"osName"`

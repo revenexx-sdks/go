@@ -5,12 +5,15 @@ import (
     "errors"
 )
 
-// Model
+// ChannelDefaults model.
 type ChannelDefaults struct {
     // Channel codes created by this call.
     Created []string `json:"created"`
     // Default channel codes that already existed.
     Existing []string `json:"existing"`
+    // The same answer for the channel types, which are seeded first because the
+    // seeded channel carries one.
+    Types ChannelTypeDefaults `json:"types"`
 
     // Used by Decode() method
     data []byte

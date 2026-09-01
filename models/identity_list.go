@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// IdentitiesList Model
+// IdentityList Identities List
 type IdentityList struct {
     // List of identities.
     Identities []Identity `json:"identities"`

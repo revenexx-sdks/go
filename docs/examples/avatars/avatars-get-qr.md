@@ -8,16 +8,17 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := avatars.New(client)
 
 response, error := service.AvatarsGetQR(
     "",
-    avatars.WithAvatarsGetQRSize(0),
-    avatars.WithAvatarsGetQRMargin(0),
-    avatars.WithAvatarsGetQRDownload(false),
+    avatars.WithAvatarsGetQRSize(1),
+    avatars.WithAvatarsGetQRMargin(1),
+    avatars.WithAvatarsGetQRDownload(true),
 )
 ```

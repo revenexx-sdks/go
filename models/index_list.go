@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// IndexesList Model
+// IndexList Indexes List
 type IndexList struct {
     // List of indexes.
     Indexes []Index `json:"indexes"`

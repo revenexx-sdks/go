@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// TransactionList Model
+// TransactionList Transaction List
 type TransactionList struct {
     // Total number of transactions that matched your query.
     Total int `json:"total"`

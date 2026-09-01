@@ -5,14 +5,18 @@ import (
     "errors"
 )
 
-// CreateOrUpdateTheMenuIdentifiedByMenuKeyIdempotentPerTenantItemsIsTheOrderedNavTreeLabelToItems
-// Model
+// MenuUpsertRequest Create or replace the menu identified by menuKey
+// (idempotent per tenant). `items` is written wholesale — there is no
+// per-entry edit, so send the whole tree every time.
 type MenuUpsertRequest struct {
-    // Ordered menu entries ({ label, to?, items? }).
-    Items []interface{} `json:"items"`
-    // 
+    // The ordered navigation tree. Replaces the stored one completely.
+    Items []PageMenuItem `json:"items"`
+    // What this menu is called for the people who edit it. Required on a create;
+    // an update keeps the label it had when this is left out.
     Label string `json:"label"`
-    // Stable menu identifier, e.g. "main", "footer", "account".
+    // The stable slot the theme asks for this menu by. Idempotency is keyed on
+    // it: sending an existing key replaces that menu instead of creating a second
+    // one.
     MenuKey string `json:"menuKey"`
 
     // Used by Decode() method

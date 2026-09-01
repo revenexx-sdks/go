@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// TeamsList Model
+// TeamList Teams List
 type TeamList struct {
     // List of teams.
     Teams []Team `json:"teams"`

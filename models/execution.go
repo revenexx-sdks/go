@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Execution Model
+// Execution Execution
 type Execution struct {
     // Execution creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

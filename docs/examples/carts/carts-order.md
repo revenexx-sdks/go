@@ -8,14 +8,15 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := carts.New(client)
 
 response, error := service.CartsOrder(
     "",
-    carts.WithCartsOrderOrderRef(""),
+    carts.WithCartsOrderOrderRef("SO-10042"),
 )
 ```

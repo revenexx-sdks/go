@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Phone Model
+// Phone Phone
 type Phone struct {
     // Phone code.
     Code string `json:"code"`

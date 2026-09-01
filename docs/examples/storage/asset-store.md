@@ -8,21 +8,22 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := storage.New(client)
 
 response, error := service.AssetStore(
-    "",
+    file.NewInputFile("/path/to/file.png", "file.png"),
     storage.WithAssetStoreAltText(""),
     storage.WithAssetStoreDescription(""),
     storage.WithAssetStoreDisplayName(""),
     storage.WithAssetStoreFolderId(""),
-    storage.WithAssetStoreKeepArchive(false),
+    storage.WithAssetStoreKeepArchive(true),
     storage.WithAssetStoreTags([]interface{}{}),
-    storage.WithAssetStoreUnpack(false),
-    storage.WithAssetStoreVisibility(""),
+    storage.WithAssetStoreUnpack(true),
+    storage.WithAssetStoreVisibility("public"),
 )
 ```

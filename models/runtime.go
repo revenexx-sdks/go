@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Runtime Model
+// Runtime Runtime
 type Runtime struct {
     // Runtime ID.
     Id string `json:"$id"`

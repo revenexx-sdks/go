@@ -8,8 +8,9 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := orders.New(client)
@@ -17,13 +18,15 @@ service := orders.New(client)
 response, error := service.OrdersNumberRangesUpdate(
     "",
     orders.WithOrdersNumberRangesUpdateChannelId(""),
-    orders.WithOrdersNumberRangesUpdateCode(""),
-    orders.WithOrdersNumberRangesUpdateCounter(0),
-    orders.WithOrdersNumberRangesUpdateMetadata(map[string]interface{}{}),
-    orders.WithOrdersNumberRangesUpdatePadding(0),
-    orders.WithOrdersNumberRangesUpdatePositionStep(0),
-    orders.WithOrdersNumberRangesUpdatePrefix(""),
-    orders.WithOrdersNumberRangesUpdateStep(0),
+    orders.WithOrdersNumberRangesUpdateCode("order"),
+    orders.WithOrdersNumberRangesUpdateCounter(123),
+    orders.WithOrdersNumberRangesUpdateMetadata(map[string]interface{}{
+        "owner": "erp-sync"
+    }),
+    orders.WithOrdersNumberRangesUpdatePadding(6),
+    orders.WithOrdersNumberRangesUpdatePositionStep(10),
+    orders.WithOrdersNumberRangesUpdatePrefix("ORD-"),
+    orders.WithOrdersNumberRangesUpdateStep(1),
     orders.WithOrdersNumberRangesUpdateSuffix(""),
 )
 ```

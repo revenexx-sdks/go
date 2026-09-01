@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Provider Model
+// Provider Provider
 type Provider struct {
     // Provider creation time in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// DatabasesList Model
+// DatabaseList Databases List
 type DatabaseList struct {
     // List of databases.
     Databases []Database `json:"databases"`

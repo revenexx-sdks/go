@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// AlgoMD5 Model
+// AlgoMd5 AlgoMD5
 type AlgoMd5 struct {
     // Algo type.
     Type string `json:"type"`

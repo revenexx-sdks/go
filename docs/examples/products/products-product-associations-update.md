@@ -8,8 +8,9 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := products.New(client)
@@ -17,9 +18,9 @@ service := products.New(client)
 response, error := service.ProductsProductAssociationsUpdate(
     "",
     products.WithProductsProductAssociationsUpdateAssociationTypeId(""),
-    products.WithProductsProductAssociationsUpdatePosition(0),
+    products.WithProductsProductAssociationsUpdatePosition(1),
     products.WithProductsProductAssociationsUpdateProductId(""),
-    products.WithProductsProductAssociationsUpdateQuantity(0),
+    products.WithProductsProductAssociationsUpdateQuantity(4),
     products.WithProductsProductAssociationsUpdateTargetProductId(""),
 )
 ```

@@ -5,9 +5,9 @@ import (
     "errors"
 )
 
-// Model
+// OrderReturnCompleteRequest model.
 type OrderReturnCompleteRequest struct {
-    // How the return was settled (refund, replacement, …).
+    // How the return was settled. Omitted = settled without recording how.
     Resolution string `json:"resolution"`
 
     // Used by Decode() method

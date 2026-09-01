@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// ProviderList Model
+// ProviderList Provider list
 type ProviderList struct {
     // List of providers.
     Providers []Provider `json:"providers"`

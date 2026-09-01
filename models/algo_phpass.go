@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// AlgoPHPass Model
+// AlgoPhpass AlgoPHPass
 type AlgoPhpass struct {
     // Algo type.
     Type string `json:"type"`

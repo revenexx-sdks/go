@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Deployment Model
+// Deployment Deployment
 type Deployment struct {
     // Deployment creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// ColumnIndexesList Model
+// ColumnIndexList Column Indexes List
 type ColumnIndexList struct {
     // List of indexes.
     Indexes []ColumnIndex `json:"indexes"`

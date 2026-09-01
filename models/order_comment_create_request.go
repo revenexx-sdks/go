@@ -5,13 +5,18 @@ import (
     "errors"
 )
 
-// Model
+// OrderCommentCreateRequest model.
 type OrderCommentCreateRequest struct {
-    // 
+    // Who wrote it, as the caller reported it. Free text; not resolved against a
+    // user directory.
     Author string `json:"author"`
-    // 
+    // The comment itself. Plain text; this app neither renders nor sanitizes it.
     Body string `json:"body"`
-    // Default 'internal'.
+    // Who may see it: 'internal' is a note between operators, 'customer' is meant
+    // to be shown in the customer's order view. Nothing here enforces that —
+    // this app labels the comment and the client showing it decides. Defaults to
+    // the tenant's default_comment_visibility. Defaults to the tenant's
+    // default_comment_visibility setting, which is 'internal' out of the box.
     Visibility string `json:"visibility"`
 
     // Used by Decode() method

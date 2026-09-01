@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// AlgoScryptModified Model
+// AlgoScryptModified AlgoScryptModified
 type AlgoScryptModified struct {
     // Salt used to compute hash.
     Salt string `json:"salt"`

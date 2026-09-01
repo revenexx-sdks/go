@@ -5,11 +5,14 @@ import (
     "errors"
 )
 
-// Model
+// SeedRequest A theme's starting content. Both lists are optional; sending
+// neither is a no-op.
 type SeedRequest struct {
-    // 
+    // The menus to create. One with no key or no label is reported under
+    // `skipped`.
     Menus []interface{} `json:"menus"`
-    // 
+    // The pages to create. One that has no `slug` or no `title` is reported under
+    // `skipped` rather than refused, so one bad entry never loses the rest.
     Pages []interface{} `json:"pages"`
 
     // Used by Decode() method

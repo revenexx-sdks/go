@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// SitesList Model
+// SiteList Sites List
 type SiteList struct {
     // List of sites.
     Sites []Site `json:"sites"`

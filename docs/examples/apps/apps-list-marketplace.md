@@ -8,15 +8,16 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := apps.New(client)
 
 response, error := service.AppsListMarketplace(
     apps.WithAppsListMarketplaceSearch(""),
-    apps.WithAppsListMarketplacePerPage(0),
-    apps.WithAppsListMarketplacePage(0),
+    apps.WithAppsListMarketplacePerPage(1),
+    apps.WithAppsListMarketplacePage(1),
 )
 ```

@@ -8,8 +8,9 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := orders.New(client)
@@ -17,7 +18,7 @@ service := orders.New(client)
 response, error := service.OrdersReturnsReject(
     "",
     "",
-    orders.WithOrdersReturnsRejectReason(""),
-    orders.WithOrdersReturnsRejectResolution(""),
+    orders.WithOrdersReturnsRejectReason("Returned outside the agreed window"),
+    orders.WithOrdersReturnsRejectResolution("wear_and_tear"),
 )
 ```

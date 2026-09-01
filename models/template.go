@@ -5,28 +5,66 @@ import (
     "errors"
 )
 
-// Model
+// Template model.
 type Template struct {
+    // 
+    BodyHtml string `json:"body_html"`
+    // 
+    BodyText string `json:"body_text"`
+    // 
+    Channel string `json:"channel"`
+    // 
+    ContentSid string `json:"content_sid"`
     // 
     CreatedAt string `json:"created_at"`
     // 
-    CreatedBy string `json:"created_by"`
+    Design []interface{} `json:"design"`
     // 
-    Description string `json:"description"`
+    Enabled bool `json:"enabled"`
     // 
-    FieldName string `json:"field_name"`
+    HasUnpublishedChanges string `json:"has_unpublished_changes"`
     // 
     Id string `json:"id"`
     // 
-    IsDefault bool `json:"is_default"`
+    IsPublished string `json:"is_published"`
     // 
-    Label string `json:"label"`
+    Key string `json:"key"`
     // 
-    PageBundle string `json:"page_bundle"`
+    LayoutId string `json:"layout_id"`
     // 
-    Tree interface{} `json:"tree"`
+    LifecycleState string `json:"lifecycle_state"`
+    // 
+    Locale string `json:"locale"`
+    // 
+    Markets []interface{} `json:"markets"`
+    // 
+    MessageClass string `json:"message_class"`
+    // 
+    PublishedVersionId string `json:"published_version_id"`
+    // 
+    SourceLibraryKey string `json:"source_library_key"`
+    // 
+    Subject string `json:"subject"`
+    // 
+    TenantId string `json:"tenant_id"`
+    // 
+    TestMode bool `json:"test_mode"`
+    // 
+    Title string `json:"title"`
     // 
     UpdatedAt string `json:"updated_at"`
+    // 
+    UsesRawHtml string `json:"uses_raw_html"`
+    // 
+    ValidFrom string `json:"valid_from"`
+    // 
+    ValidUntil string `json:"valid_until"`
+    // 
+    VariableDefaults []interface{} `json:"variable_defaults"`
+    // 
+    Variables []interface{} `json:"variables"`
+    // 
+    WhatsappCategory string `json:"whatsapp_category"`
 
     // Used by Decode() method
     data []byte

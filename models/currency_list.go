@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// CurrenciesList Model
+// CurrencyList Currencies List
 type CurrencyList struct {
     // List of currencies.
     Currencies []Currency `json:"currencies"`

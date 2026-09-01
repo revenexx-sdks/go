@@ -1,0 +1,29 @@
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/revenexx-sdks/go/client"
+    "github.com/revenexx-sdks/go/products_data_model"
+)
+
+client := client.New(
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
+)
+
+service := products_data_model.New(client)
+
+response, error := service.ProductsFamilyAttributesUpdate(
+    "",
+    products_data_model.WithProductsFamilyAttributesUpdateAttributeId(""),
+    products_data_model.WithProductsFamilyAttributesUpdateFamilyId(""),
+    products_data_model.WithProductsFamilyAttributesUpdateIsRequired(true),
+    products_data_model.WithProductsFamilyAttributesUpdatePosition(1),
+    products_data_model.WithProductsFamilyAttributesUpdateRequiredChannels(map[string]interface{}[
+        "shop",
+        "b2b"
+    ]),
+)
+```

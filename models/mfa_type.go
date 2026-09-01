@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// MFAType Model
+// MfaType MFAType
 type MfaType struct {
     // Secret token used for TOTP factor.
     Secret string `json:"secret"`

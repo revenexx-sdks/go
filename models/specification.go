@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Specification Model
+// Specification Specification
 type Specification struct {
     // Number of CPUs.
     Cpus float64 `json:"cpus"`

@@ -5,12 +5,11 @@ import (
     "errors"
 )
 
-// CollectionsList Model
+// CollectionList model.
 type CollectionList struct {
-    // List of collections.
-    Collections []Collection `json:"collections"`
-    // Total number of collections that matched your query.
-    Total int `json:"total"`
+    // Public collection names the tenant owns. These are the values accepted for
+    // the `collection` path parameter.
+    Collections []string `json:"collections"`
 
     // Used by Decode() method
     data []byte

@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Database Model
+// Database Database
 type Database struct {
     // Database creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

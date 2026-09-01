@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// UsersList Model
+// UserList Users List
 type UserList struct {
     // Total number of users that matched your query.
     Total int `json:"total"`

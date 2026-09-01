@@ -8,8 +8,9 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := apps.New(client)
@@ -17,21 +18,21 @@ service := apps.New(client)
 response, error := service.AppsCreate(
     "",
     "",
-    "",
-    apps.WithAppsCreateCommands(""),
-    apps.WithAppsCreateEnabled(false),
-    apps.WithAppsCreateEntrypoint(""),
+    "node-18.0",
+    apps.WithAppsCreateCommands("npm install"),
+    apps.WithAppsCreateEnabled(true),
+    apps.WithAppsCreateEntrypoint("src/main.js"),
     apps.WithAppsCreateEvents([]interface{}{}),
-    apps.WithAppsCreateExecute([]interface{}{}),
+    apps.WithAppsCreateExecute(interface{}{"any"}),
     apps.WithAppsCreateInstallationId(""),
-    apps.WithAppsCreateLogging(false),
-    apps.WithAppsCreateProviderBranch(""),
+    apps.WithAppsCreateLogging(true),
+    apps.WithAppsCreateProviderBranch("main"),
     apps.WithAppsCreateProviderRepositoryId(""),
     apps.WithAppsCreateProviderRootDirectory(""),
-    apps.WithAppsCreateProviderSilentMode(false),
-    apps.WithAppsCreateSchedule(""),
+    apps.WithAppsCreateProviderSilentMode(true),
+    apps.WithAppsCreateSchedule("0 3 * * *"),
     apps.WithAppsCreateScopes([]interface{}{}),
-    apps.WithAppsCreateSpecification(""),
-    apps.WithAppsCreateTimeout(0),
+    apps.WithAppsCreateSpecification("s-1vcpu-512mb"),
+    apps.WithAppsCreateTimeout(1),
 )
 ```

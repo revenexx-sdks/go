@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// MFARecoveryCodes Model
+// MfaRecoveryCodes MFA Recovery Codes
 type MfaRecoveryCodes struct {
     // Recovery codes.
     RecoveryCodes []string `json:"recoveryCodes"`

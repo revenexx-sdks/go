@@ -8,32 +8,33 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := avatars.New(client)
 
 response, error := service.AvatarsGetScreenshot(
-    "",
+    "https://example.com",
     avatars.WithAvatarsGetScreenshotHeaders(map[string]interface{}{}),
-    avatars.WithAvatarsGetScreenshotViewportWidth(0),
-    avatars.WithAvatarsGetScreenshotViewportHeight(0),
-    avatars.WithAvatarsGetScreenshotScale(0),
-    avatars.WithAvatarsGetScreenshotTheme(""),
-    avatars.WithAvatarsGetScreenshotUserAgent(""),
-    avatars.WithAvatarsGetScreenshotFullpage(false),
-    avatars.WithAvatarsGetScreenshotLocale(""),
-    avatars.WithAvatarsGetScreenshotTimezone(""),
-    avatars.WithAvatarsGetScreenshotLatitude(0),
-    avatars.WithAvatarsGetScreenshotLongitude(0),
-    avatars.WithAvatarsGetScreenshotAccuracy(0),
-    avatars.WithAvatarsGetScreenshotTouch(false),
+    avatars.WithAvatarsGetScreenshotViewportWidth(1),
+    avatars.WithAvatarsGetScreenshotViewportHeight(1),
+    avatars.WithAvatarsGetScreenshotScale(1),
+    avatars.WithAvatarsGetScreenshotTheme("light"),
+    avatars.WithAvatarsGetScreenshotUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15"),
+    avatars.WithAvatarsGetScreenshotFullpage(true),
+    avatars.WithAvatarsGetScreenshotLocale("en-US"),
+    avatars.WithAvatarsGetScreenshotTimezone("Africa/Abidjan"),
+    avatars.WithAvatarsGetScreenshotLatitude(9.99),
+    avatars.WithAvatarsGetScreenshotLongitude(9.99),
+    avatars.WithAvatarsGetScreenshotAccuracy(9.99),
+    avatars.WithAvatarsGetScreenshotTouch(true),
     avatars.WithAvatarsGetScreenshotPermissions([]interface{}{}),
-    avatars.WithAvatarsGetScreenshotSleep(0),
-    avatars.WithAvatarsGetScreenshotWidth(0),
-    avatars.WithAvatarsGetScreenshotHeight(0),
-    avatars.WithAvatarsGetScreenshotQuality(0),
-    avatars.WithAvatarsGetScreenshotOutput(""),
+    avatars.WithAvatarsGetScreenshotSleep(1),
+    avatars.WithAvatarsGetScreenshotWidth(1),
+    avatars.WithAvatarsGetScreenshotHeight(1),
+    avatars.WithAvatarsGetScreenshotQuality(1),
+    avatars.WithAvatarsGetScreenshotOutput("jpg"),
 )
 ```

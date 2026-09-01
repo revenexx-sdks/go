@@ -8,8 +8,9 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := apps.New(client)
@@ -17,21 +18,21 @@ service := apps.New(client)
 response, error := service.AppsUpdate(
     "",
     "",
-    apps.WithAppsUpdateCommands(""),
-    apps.WithAppsUpdateEnabled(false),
-    apps.WithAppsUpdateEntrypoint(""),
+    apps.WithAppsUpdateCommands("npm install"),
+    apps.WithAppsUpdateEnabled(true),
+    apps.WithAppsUpdateEntrypoint("src/main.js"),
     apps.WithAppsUpdateEvents([]interface{}{}),
-    apps.WithAppsUpdateExecute([]interface{}{}),
+    apps.WithAppsUpdateExecute(interface{}{"any"}),
     apps.WithAppsUpdateInstallationId(""),
-    apps.WithAppsUpdateLogging(false),
-    apps.WithAppsUpdateProviderBranch(""),
+    apps.WithAppsUpdateLogging(true),
+    apps.WithAppsUpdateProviderBranch("main"),
     apps.WithAppsUpdateProviderRepositoryId(""),
     apps.WithAppsUpdateProviderRootDirectory(""),
-    apps.WithAppsUpdateProviderSilentMode(false),
-    apps.WithAppsUpdateRuntime(""),
-    apps.WithAppsUpdateSchedule(""),
+    apps.WithAppsUpdateProviderSilentMode(true),
+    apps.WithAppsUpdateRuntime("node-18.0"),
+    apps.WithAppsUpdateSchedule("0 3 * * *"),
     apps.WithAppsUpdateScopes([]interface{}{}),
-    apps.WithAppsUpdateSpecification(""),
-    apps.WithAppsUpdateTimeout(0),
+    apps.WithAppsUpdateSpecification("s-1vcpu-512mb"),
+    apps.WithAppsUpdateTimeout(1),
 )
 ```

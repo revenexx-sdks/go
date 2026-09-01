@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Model
+// AssetResource model.
 type AssetResource struct {
     // 
     AltText string `json:"alt_text"`
@@ -36,11 +36,15 @@ type AssetResource struct {
     // 
     MimeType string `json:"mime_type"`
     // 
+    ModelUrl string `json:"model_url"`
+    // 
     OriginalName string `json:"original_name"`
     // 
     PageCount int `json:"page_count"`
     // 
     PathName string `json:"path_name"`
+    // 3D derivatives (null unless rendered): preview image + .glb mesh.
+    PreviewUrl string `json:"preview_url"`
     // 
     ProcessedAt string `json:"processed_at"`
     // 
@@ -53,8 +57,11 @@ type AssetResource struct {
     TenantId string `json:"tenant_id"`
     // 
     UpdatedAt string `json:"updated_at"`
-    // 
+    // Null for a private asset — it is only reachable through a signed
+    // URL, so there is no path-addressed public URL to hand out.
     Url string `json:"url"`
+    // 
+    UsdzUrl string `json:"usdz_url"`
     // 
     Visibility string `json:"visibility"`
     // 

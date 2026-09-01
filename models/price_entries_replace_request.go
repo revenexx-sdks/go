@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Model
+// PriceEntriesReplaceRequest model.
 type PriceEntriesReplaceRequest struct {
     // The complete new entry set (set semantics).
     Entries []PriceEntryReplaceItem `json:"entries"`

@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Target Model
+// Target Target
 type Target struct {
     // Target creation time in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

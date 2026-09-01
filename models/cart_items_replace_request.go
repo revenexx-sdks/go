@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Model
+// CartItemsReplaceRequest model.
 type CartItemsReplaceRequest struct {
     // The complete new item set (set semantics).
     Items []CartItemCreateRequest `json:"items"`

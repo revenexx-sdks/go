@@ -5,14 +5,17 @@ import (
     "errors"
 )
 
-// BlKkliMutationResponseLikeSuccessFlagPlusTheFullReMaterializedEditorState
-// Model
+// MutationResponse blökkli MutationResponseLike: whether the call was
+// applied, plus the FULL re-materialized editor state — so a client never
+// has to re-fetch after a change.
 type MutationResponse struct {
-    // Full editor state (see pages.editor.state).
-    State interface{} `json:"state"`
-    // 
+    // Everything the blökkli editor runs on, for one page in one language,
+    // materialized at the current point of the undo history. The theme adapter
+    // maps it 1:1 onto blökkli's MappedState.
+    State EditorState `json:"state"`
+    // Whether the change was applied.
     Success bool `json:"success"`
-    // 
+    // Why the call was refused, when `success` is false.
     Violations []interface{} `json:"violations"`
 
     // Used by Decode() method

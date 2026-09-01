@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Topic Model
+// Topic Topic
 type Topic struct {
     // Topic creation time in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

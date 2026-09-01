@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// RowsList Model
+// RowList Rows List
 type RowList struct {
     // List of rows.
     Rows []Row `json:"rows"`

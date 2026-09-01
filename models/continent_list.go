@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// ContinentsList Model
+// ContinentList Continents List
 type ContinentList struct {
     // List of continents.
     Continents []Continent `json:"continents"`

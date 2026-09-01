@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// ColumnsList Model
+// ColumnList Columns List
 type ColumnList struct {
     // List of columns.
     Columns []interface{} `json:"columns"`

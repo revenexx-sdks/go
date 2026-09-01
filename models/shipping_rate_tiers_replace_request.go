@@ -5,10 +5,11 @@ import (
     "errors"
 )
 
-// Model
+// ShippingRateTiersReplaceRequest model.
 type ShippingRateTiersReplaceRequest struct {
     // The complete new tier set (set semantics) — positions are derived from
-    // the array order.
+    // the array order. An empty array clears the matrix, and a matrix method with
+    // no tiers quotes nothing.
     Tiers []ShippingRateTierReplaceItem `json:"tiers"`
 
     // Used by Decode() method

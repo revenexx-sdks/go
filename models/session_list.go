@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// SessionsList Model
+// SessionList Sessions List
 type SessionList struct {
     // List of sessions.
     Sessions []Session `json:"sessions"`

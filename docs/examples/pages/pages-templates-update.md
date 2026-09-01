@@ -8,19 +8,20 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := pages.New(client)
 
 response, error := service.PagesTemplatesUpdate(
     "",
-    pages.WithPagesTemplatesUpdateDescription(""),
-    pages.WithPagesTemplatesUpdateFieldName(""),
-    pages.WithPagesTemplatesUpdateIsDefault(false),
-    pages.WithPagesTemplatesUpdateLabel(""),
-    pages.WithPagesTemplatesUpdatePageBundle(""),
+    pages.WithPagesTemplatesUpdateDescription("Full-width hero followed by a two-column teaser row."),
+    pages.WithPagesTemplatesUpdateFieldName("content"),
+    pages.WithPagesTemplatesUpdateIsDefault(true),
+    pages.WithPagesTemplatesUpdateLabel("Hero with two teasers"),
+    pages.WithPagesTemplatesUpdatePageBundle("standard"),
     pages.WithPagesTemplatesUpdateTree([]interface{}{}),
 )
 ```

@@ -5,13 +5,15 @@ import (
     "errors"
 )
 
-// PublishedPageResolvedForOneLanguageNestedBlockTreeWithI18nFallbackAppliedAndScheduledBlocksFiltered
-// Model
+// DeliveryPage One published page resolved for one language, ready to render:
+// i18n fallback applied per field, blocks outside their publish window
+// removed, library references expanded inline.
 type DeliveryPage struct {
-    // Field name → ordered block list ({ uuid, bundle, props, options, children
-    // }).
+    // The page's block tree, keyed by field name — `{ "content": [ … ] }`. A
+    // theme renders the field it knows and ignores the rest.
     Fields interface{} `json:"fields"`
-    // 
+    // The page frame — everything a theme needs before it starts rendering
+    // blocks.
     Page interface{} `json:"page"`
 
     // Used by Decode() method

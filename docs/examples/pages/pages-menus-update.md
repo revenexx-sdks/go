@@ -8,8 +8,9 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := pages.New(client)
@@ -17,6 +18,6 @@ service := pages.New(client)
 response, error := service.PagesMenusUpdate(
     "",
     pages.WithPagesMenusUpdateItems([]interface{}{}),
-    pages.WithPagesMenusUpdateLabel(""),
+    pages.WithPagesMenusUpdateLabel("Main navigation"),
 )
 ```

@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// AttributeEnum Model
+// AttributeEnum AttributeEnum
 type AttributeEnum struct {
     // Attribute creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

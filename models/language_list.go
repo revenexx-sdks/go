@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// LanguagesList Model
+// LanguageList Languages List
 type LanguageList struct {
     // List of languages.
     Languages []Language `json:"languages"`

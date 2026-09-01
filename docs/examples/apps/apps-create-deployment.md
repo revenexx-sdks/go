@@ -8,16 +8,17 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := apps.New(client)
 
 response, error := service.AppsCreateDeployment(
     "",
-    false,
-    "",
+    true,
+    file.NewInputFile("/path/to/file.png", "file.png"),
     apps.WithAppsCreateDeploymentCommands(""),
     apps.WithAppsCreateDeploymentEntrypoint(""),
 )
