@@ -8,8 +8,9 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := storage.New(client)
@@ -22,6 +23,6 @@ response, error := service.AssetUpdate(
     storage.WithAssetUpdateFolderId(""),
     storage.WithAssetUpdateName(""),
     storage.WithAssetUpdateTags([]interface{}{}),
-    storage.WithAssetUpdateVisibility(""),
+    storage.WithAssetUpdateVisibility("public"),
 )
 ```

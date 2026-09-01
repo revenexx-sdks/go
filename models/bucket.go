@@ -5,14 +5,17 @@ import (
     "errors"
 )
 
-// Bucket Model
+// Bucket Bucket
 type Bucket struct {
     // Bucket creation time in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`
     // Bucket ID.
     Id string `json:"$id"`
-    // Bucket permissions. [Learn more about
-    // permissions](https://appwrite.io/docs/permissions).
+    // Bucket permissions. Each entry is a permission string: an action wrapping a
+    // role, e.g. `read("any")`, `update("user:abc")`, `delete("team:abc/owner")`.
+    // Actions are `read`, `create`, `update`, `delete` and the aggregate `write`
+    // (= create + update + delete); the role inside the quotes takes the form
+    // described under “Role strings” in this document's introduction.
     Permissions []string `json:"$permissions"`
     // Bucket update date in ISO 8601 format.
     UpdatedAt string `json:"$updatedAt"`
@@ -28,8 +31,8 @@ type Bucket struct {
     Enabled bool `json:"enabled"`
     // Bucket is encrypted.
     Encryption bool `json:"encryption"`
-    // Whether file-level security is enabled. [Learn more about
-    // permissions](https://appwrite.io/docs/permissions).
+    // Whether file-level security is enabled. When it is, each record's own
+    // `$permissions` are enforced on top of the container's.
     FileSecurity bool `json:"fileSecurity"`
     // Maximum file size supported.
     MaximumFileSize int `json:"maximumFileSize"`

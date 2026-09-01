@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// ColumnURL Model
+// ColumnUrl ColumnURL
 type ColumnUrl struct {
     // Column creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

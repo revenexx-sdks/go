@@ -5,14 +5,30 @@ import (
     "errors"
 )
 
-// Model
+// InventoryAdjustRequest model.
 type InventoryAdjustRequest struct {
-    // The corrections — quantities are SIGNED deltas (at most 200).
+    // The corrections, at most 200 in one call — a stocktake, breakage,
+    // shrinkage. Quantities are SIGNED deltas, not new balances.
     Items []InventoryAdjustItem `json:"items"`
-    // Adjusted location (default 'main').
+    // Which location is being corrected. Omitted, the `default_location_code`
+    // setting decides. A correction is per location: the same SKU in two
+    // warehouses is two corrections.
     LocationCode string `json:"location_code"`
-    // Mandatory audit reason — every adjustment is a ledger row.
+    // Inline single-item form: the product to move, instead of a one-entry
+    // `items` array. The two forms are equivalent — nothing downstream knows
+    // which arrived.
+    ProductId string `json:"product_id"`
+    // Inline single-item form: the SIGNED correction (negative writes stock off,
+    // positive finds it). Non-zero.
+    Quantity float64 `json:"quantity"`
+    // Why the stock is being corrected — this is the audit trail a stocktake
+    // leaves behind. Owed unless `movement_reason_required` is 'none' (its
+    // default, 'adjustments', asks for one exactly here); missing where it is
+    // owed, the call is 400.
     Reason string `json:"reason"`
+    // Inline single-item form: the article number to move (instead of
+    // `product_id`).
+    Sku string `json:"sku"`
 
     // Used by Decode() method
     data []byte

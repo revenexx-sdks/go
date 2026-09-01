@@ -19,447 +19,15 @@ func New(clt client.Client) *Customers {
 	}
 }
 
-
-// CustomersAddressesList
-func (srv *Customers) CustomersAddressesList()(*interface{}, error) {
-	path := "/v1/customers/addresses"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type CustomersAddressesCreateOptions struct {
-	Company string
-	ContactId string
-	IsDefault bool
-	Name string
-	OrganizationId string
-	Phone string
-	Region string
-	Street2 string
-	Type string
-	enabledSetters map[string]bool
-}
-func (options CustomersAddressesCreateOptions) New() *CustomersAddressesCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"Company": false,
-		"ContactId": false,
-		"IsDefault": false,
-		"Name": false,
-		"OrganizationId": false,
-		"Phone": false,
-		"Region": false,
-		"Street2": false,
-		"Type": false,
-	}
-	return &options
-}
-type CustomersAddressesCreateOption func(*CustomersAddressesCreateOptions)
-func (srv *Customers) WithCustomersAddressesCreateCompany(v string) CustomersAddressesCreateOption {
-	return func(o *CustomersAddressesCreateOptions) {
-		o.Company = v
-		o.enabledSetters["Company"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesCreateContactId(v string) CustomersAddressesCreateOption {
-	return func(o *CustomersAddressesCreateOptions) {
-		o.ContactId = v
-		o.enabledSetters["ContactId"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesCreateIsDefault(v bool) CustomersAddressesCreateOption {
-	return func(o *CustomersAddressesCreateOptions) {
-		o.IsDefault = v
-		o.enabledSetters["IsDefault"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesCreateName(v string) CustomersAddressesCreateOption {
-	return func(o *CustomersAddressesCreateOptions) {
-		o.Name = v
-		o.enabledSetters["Name"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesCreateOrganizationId(v string) CustomersAddressesCreateOption {
-	return func(o *CustomersAddressesCreateOptions) {
-		o.OrganizationId = v
-		o.enabledSetters["OrganizationId"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesCreatePhone(v string) CustomersAddressesCreateOption {
-	return func(o *CustomersAddressesCreateOptions) {
-		o.Phone = v
-		o.enabledSetters["Phone"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesCreateRegion(v string) CustomersAddressesCreateOption {
-	return func(o *CustomersAddressesCreateOptions) {
-		o.Region = v
-		o.enabledSetters["Region"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesCreateStreet2(v string) CustomersAddressesCreateOption {
-	return func(o *CustomersAddressesCreateOptions) {
-		o.Street2 = v
-		o.enabledSetters["Street2"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesCreateType(v string) CustomersAddressesCreateOption {
-	return func(o *CustomersAddressesCreateOptions) {
-		o.Type = v
-		o.enabledSetters["Type"] = true
-	}
-}
-									
-// CustomersAddressesCreate
-func (srv *Customers) CustomersAddressesCreate(City string, Country string, Street string, Zip string, optionalSetters ...CustomersAddressesCreateOption)(*models.Address, error) {
-	path := "/v1/customers/addresses"
-	options := CustomersAddressesCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["city"] = City
-	params["country"] = Country
-	params["street"] = Street
-	params["zip"] = Zip
-	if options.enabledSetters["Company"] {
-		params["company"] = options.Company
-	}
-	if options.enabledSetters["ContactId"] {
-		params["contact_id"] = options.ContactId
-	}
-	if options.enabledSetters["IsDefault"] {
-		params["is_default"] = options.IsDefault
-	}
-	if options.enabledSetters["Name"] {
-		params["name"] = options.Name
-	}
-	if options.enabledSetters["OrganizationId"] {
-		params["organization_id"] = options.OrganizationId
-	}
-	if options.enabledSetters["Phone"] {
-		params["phone"] = options.Phone
-	}
-	if options.enabledSetters["Region"] {
-		params["region"] = options.Region
-	}
-	if options.enabledSetters["Street2"] {
-		params["street2"] = options.Street2
-	}
-	if options.enabledSetters["Type"] {
-		params["type"] = options.Type
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Address{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Address
-	parsed, ok := resp.Result.(models.Address)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// CustomersAddressesDelete
-func (srv *Customers) CustomersAddressesDelete(Id string)(*interface{}, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/customers/addresses/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// CustomersAddressesGet
-func (srv *Customers) CustomersAddressesGet(Id string)(*models.Address, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/customers/addresses/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Address{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Address
-	parsed, ok := resp.Result.(models.Address)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type CustomersAddressesUpdateOptions struct {
-	City string
-	Company string
-	ContactId string
-	Country string
-	IsDefault bool
-	Name string
-	OrganizationId string
-	Phone string
-	Region string
-	Street string
-	Street2 string
-	Type string
-	Zip string
-	enabledSetters map[string]bool
-}
-func (options CustomersAddressesUpdateOptions) New() *CustomersAddressesUpdateOptions {
-	options.enabledSetters = map[string]bool{
-		"City": false,
-		"Company": false,
-		"ContactId": false,
-		"Country": false,
-		"IsDefault": false,
-		"Name": false,
-		"OrganizationId": false,
-		"Phone": false,
-		"Region": false,
-		"Street": false,
-		"Street2": false,
-		"Type": false,
-		"Zip": false,
-	}
-	return &options
-}
-type CustomersAddressesUpdateOption func(*CustomersAddressesUpdateOptions)
-func (srv *Customers) WithCustomersAddressesUpdateCity(v string) CustomersAddressesUpdateOption {
-	return func(o *CustomersAddressesUpdateOptions) {
-		o.City = v
-		o.enabledSetters["City"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesUpdateCompany(v string) CustomersAddressesUpdateOption {
-	return func(o *CustomersAddressesUpdateOptions) {
-		o.Company = v
-		o.enabledSetters["Company"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesUpdateContactId(v string) CustomersAddressesUpdateOption {
-	return func(o *CustomersAddressesUpdateOptions) {
-		o.ContactId = v
-		o.enabledSetters["ContactId"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesUpdateCountry(v string) CustomersAddressesUpdateOption {
-	return func(o *CustomersAddressesUpdateOptions) {
-		o.Country = v
-		o.enabledSetters["Country"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesUpdateIsDefault(v bool) CustomersAddressesUpdateOption {
-	return func(o *CustomersAddressesUpdateOptions) {
-		o.IsDefault = v
-		o.enabledSetters["IsDefault"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesUpdateName(v string) CustomersAddressesUpdateOption {
-	return func(o *CustomersAddressesUpdateOptions) {
-		o.Name = v
-		o.enabledSetters["Name"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesUpdateOrganizationId(v string) CustomersAddressesUpdateOption {
-	return func(o *CustomersAddressesUpdateOptions) {
-		o.OrganizationId = v
-		o.enabledSetters["OrganizationId"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesUpdatePhone(v string) CustomersAddressesUpdateOption {
-	return func(o *CustomersAddressesUpdateOptions) {
-		o.Phone = v
-		o.enabledSetters["Phone"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesUpdateRegion(v string) CustomersAddressesUpdateOption {
-	return func(o *CustomersAddressesUpdateOptions) {
-		o.Region = v
-		o.enabledSetters["Region"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesUpdateStreet(v string) CustomersAddressesUpdateOption {
-	return func(o *CustomersAddressesUpdateOptions) {
-		o.Street = v
-		o.enabledSetters["Street"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesUpdateStreet2(v string) CustomersAddressesUpdateOption {
-	return func(o *CustomersAddressesUpdateOptions) {
-		o.Street2 = v
-		o.enabledSetters["Street2"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesUpdateType(v string) CustomersAddressesUpdateOption {
-	return func(o *CustomersAddressesUpdateOptions) {
-		o.Type = v
-		o.enabledSetters["Type"] = true
-	}
-}
-func (srv *Customers) WithCustomersAddressesUpdateZip(v string) CustomersAddressesUpdateOption {
-	return func(o *CustomersAddressesUpdateOptions) {
-		o.Zip = v
-		o.enabledSetters["Zip"] = true
-	}
-}
 			
-// CustomersAddressesUpdate
-func (srv *Customers) CustomersAddressesUpdate(Id string, optionalSetters ...CustomersAddressesUpdateOption)(*models.Address, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/customers/addresses/{id}")
-	options := CustomersAddressesUpdateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["id"] = Id
-	if options.enabledSetters["City"] {
-		params["city"] = options.City
-	}
-	if options.enabledSetters["Company"] {
-		params["company"] = options.Company
-	}
-	if options.enabledSetters["ContactId"] {
-		params["contact_id"] = options.ContactId
-	}
-	if options.enabledSetters["Country"] {
-		params["country"] = options.Country
-	}
-	if options.enabledSetters["IsDefault"] {
-		params["is_default"] = options.IsDefault
-	}
-	if options.enabledSetters["Name"] {
-		params["name"] = options.Name
-	}
-	if options.enabledSetters["OrganizationId"] {
-		params["organization_id"] = options.OrganizationId
-	}
-	if options.enabledSetters["Phone"] {
-		params["phone"] = options.Phone
-	}
-	if options.enabledSetters["Region"] {
-		params["region"] = options.Region
-	}
-	if options.enabledSetters["Street"] {
-		params["street"] = options.Street
-	}
-	if options.enabledSetters["Street2"] {
-		params["street2"] = options.Street2
-	}
-	if options.enabledSetters["Type"] {
-		params["type"] = options.Type
-	}
-	if options.enabledSetters["Zip"] {
-		params["zip"] = options.Zip
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Address{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Address
-	parsed, ok := resp.Result.(models.Address)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-			
-// CustomersAuthLogin
-func (srv *Customers) CustomersAuthLogin(Email string, Password string)(*models.AuthLoginResponse, error) {
+// CustomersAuthLogin an email and a password go in; a session and the CONTACT
+// behind it come back, so a storefront knows in one call both that the buyer
+// is signed in and who they are. The session is minted server-side rather
+// than handed back from the credential check, because the account route hides
+// the session secret from non-privileged responses and a trusted BFF needs
+// it. `permissions` carries the buyer's effective grants, so a BFF does not
+// need a second call to decide what to render.
+func (srv *Customers) CustomersAuthLogin(Email string, Password string)(*models.Error, error) {
 	path := "/v1/customers/auth/login"
 	params := map[string]interface{}{}
 	params["email"] = Email
@@ -475,7 +43,7 @@ func (srv *Customers) CustomersAuthLogin(Email string, Password string)(*models.
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.AuthLoginResponse{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -484,8 +52,8 @@ func (srv *Customers) CustomersAuthLogin(Email string, Password string)(*models.
 
 		return parsed, nil
 	}
-	var parsed models.AuthLoginResponse
-	parsed, ok := resp.Result.(models.AuthLoginResponse)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -493,8 +61,14 @@ func (srv *Customers) CustomersAuthLogin(Email string, Password string)(*models.
 
 }
 			
-// CustomersAuthLogout
-func (srv *Customers) CustomersAuthLogout(SessionId string, UserId string)(*interface{}, error) {
+// CustomersAuthLogout ends ONE session — the buyer signs out on this device
+// and stays signed in on the others, because the session id is what is
+// revoked and not the account. The contact row is untouched: signing out is
+// not blocking, and a caller wanting the second thing wants `status:
+// "blocked"` on the contact instead. Both ids come from what
+// `/customers/auth/login` answered, and a BFF should drop its own cookie
+// whatever this answers — the session is unusable afterwards either way.
+func (srv *Customers) CustomersAuthLogout(SessionId string, UserId string)(*models.Error, error) {
 	path := "/v1/customers/auth/logout"
 	params := map[string]interface{}{}
 	params["session_id"] = SessionId
@@ -510,16 +84,96 @@ func (srv *Customers) CustomersAuthLogout(SessionId string, UserId string)(*inte
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		var parsed interface{}
+		parsed := models.Error{}.New(bytes)
 
-		err = json.Unmarshal(bytes, &parsed)
+		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
 			return nil, err
 		}
-		return &parsed, nil
+
+		return parsed, nil
 	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
+	if !ok {
+		return nil, errors.New("unexpected response type")
+	}
+	return &parsed, nil
+
+}
+			
+// CustomersAuthMagicLink sign in without a password: a link goes to the
+// address, and `PUT /customers/auth/magic-link` turns it into a session.
+// Creates the account when the address is new, which makes this a
+// registration path as much as a sign-in one — and why an address nobody
+// holds is not distinguished in the answer. The mail is this shop's own
+// template through the messaging service; the secret is not in this response,
+// only in the link.
+func (srv *Customers) CustomersAuthMagicLink(Email string, Url string)(*models.Error, error) {
+	path := "/v1/customers/auth/magic-link"
+	params := map[string]interface{}{}
+	params["email"] = Email
+	params["url"] = Url
+	headers := map[string]interface{}{
+		"content-type": "application/json",
+	}
+
+	resp, err := srv.client.Call("POST", path, headers, params)
+	if err != nil {
+		return nil, err
+	}
+	if strings.HasPrefix(resp.Type, "application/json") {
+		bytes := []byte(resp.Result.(string))
+
+		parsed := models.Error{}.New(bytes)
+
+		err = json.Unmarshal(bytes, parsed)
+		if err != nil {
+			return nil, err
+		}
+
+		return parsed, nil
+	}
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
+	if !ok {
+		return nil, errors.New("unexpected response type")
+	}
+	return &parsed, nil
+
+}
+			
+// CustomersAuthMagicLinkConfirm the buyer clicked the link and the storefront
+// read `userId` and `secret` out of it. Answers exactly what a password login
+// answers — session, contact and effective grants — because a shop must
+// not have to branch on how somebody signed in.
+func (srv *Customers) CustomersAuthMagicLinkConfirm(Secret string, UserId string)(*models.Error, error) {
+	path := "/v1/customers/auth/magic-link"
+	params := map[string]interface{}{}
+	params["secret"] = Secret
+	params["user_id"] = UserId
+	headers := map[string]interface{}{
+		"content-type": "application/json",
+	}
+
+	resp, err := srv.client.Call("PUT", path, headers, params)
+	if err != nil {
+		return nil, err
+	}
+	if strings.HasPrefix(resp.Type, "application/json") {
+		bytes := []byte(resp.Result.(string))
+
+		parsed := models.Error{}.New(bytes)
+
+		err = json.Unmarshal(bytes, parsed)
+		if err != nil {
+			return nil, err
+		}
+
+		return parsed, nil
+	}
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -544,8 +198,13 @@ func (srv *Customers) WithCustomersAuthMeSessionId(v string) CustomersAuthMeOpti
 	}
 }
 			
-// CustomersAuthMe
-func (srv *Customers) CustomersAuthMe(UserId string, optionalSetters ...CustomersAuthMeOption)(*models.AuthMeResponse, error) {
+// CustomersAuthMe the platform user, the customer record mirrored against it
+// and the effective grants, in one call. The expected caller is a trusted
+// storefront BFF holding the session on the buyer's behalf, which is why the
+// ids travel in the body rather than in a browser-facing header. The grants
+// are derived here on every call rather than returned from anywhere they
+// could be cached, so a role changed a second ago is already reflected.
+func (srv *Customers) CustomersAuthMe(UserId string, optionalSetters ...CustomersAuthMeOption)(*models.Error, error) {
 	path := "/v1/customers/auth/me"
 	options := CustomersAuthMeOptions{}.New()
 	for _, opt := range optionalSetters {
@@ -567,7 +226,7 @@ func (srv *Customers) CustomersAuthMe(UserId string, optionalSetters ...Customer
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.AuthMeResponse{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -576,8 +235,172 @@ func (srv *Customers) CustomersAuthMe(UserId string, optionalSetters ...Customer
 
 		return parsed, nil
 	}
-	var parsed models.AuthMeResponse
-	parsed, ok := resp.Result.(models.AuthMeResponse)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
+	if !ok {
+		return nil, errors.New("unexpected response type")
+	}
+	return &parsed, nil
+
+}
+type CustomersAuthMfaChallengeOptions struct {
+	Factor string
+	enabledSetters map[string]bool
+}
+func (options CustomersAuthMfaChallengeOptions) New() *CustomersAuthMfaChallengeOptions {
+	options.enabledSetters = map[string]bool{
+		"Factor": false,
+	}
+	return &options
+}
+type CustomersAuthMfaChallengeOption func(*CustomersAuthMfaChallengeOptions)
+func (srv *Customers) WithCustomersAuthMfaChallengeFactor(v string) CustomersAuthMfaChallengeOption {
+	return func(o *CustomersAuthMfaChallengeOptions) {
+		o.Factor = v
+		o.enabledSetters["Factor"] = true
+	}
+}
+			
+// CustomersAuthMfaChallenge between the password and the finished session:
+// the buyer has proved one thing and is asked for another. Created by user
+// id, because the account route that creates challenges hides the code from
+// whoever may call it — and answered with the half-finished session the
+// sign-in is in the middle of, through `PUT /customers/auth/mfa/challenge`.
+// Needs a platform build that returns the challenge code; without one there
+// is no way to read what to send, and the call answers 502 rather than
+// mailing an empty challenge.
+func (srv *Customers) CustomersAuthMfaChallenge(UserId string, optionalSetters ...CustomersAuthMfaChallengeOption)(*models.Error, error) {
+	path := "/v1/customers/auth/mfa/challenge"
+	options := CustomersAuthMfaChallengeOptions{}.New()
+	for _, opt := range optionalSetters {
+		opt(options)
+	}
+	params := map[string]interface{}{}
+	params["user_id"] = UserId
+	if options.enabledSetters["Factor"] {
+		params["factor"] = options.Factor
+	}
+	headers := map[string]interface{}{
+		"content-type": "application/json",
+	}
+
+	resp, err := srv.client.Call("POST", path, headers, params)
+	if err != nil {
+		return nil, err
+	}
+	if strings.HasPrefix(resp.Type, "application/json") {
+		bytes := []byte(resp.Result.(string))
+
+		parsed := models.Error{}.New(bytes)
+
+		err = json.Unmarshal(bytes, parsed)
+		if err != nil {
+			return nil, err
+		}
+
+		return parsed, nil
+	}
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
+	if !ok {
+		return nil, errors.New("unexpected response type")
+	}
+	return &parsed, nil
+
+}
+type CustomersAuthMfaChallengeConfirmOptions struct {
+	UserId string
+	enabledSetters map[string]bool
+}
+func (options CustomersAuthMfaChallengeConfirmOptions) New() *CustomersAuthMfaChallengeConfirmOptions {
+	options.enabledSetters = map[string]bool{
+		"UserId": false,
+	}
+	return &options
+}
+type CustomersAuthMfaChallengeConfirmOption func(*CustomersAuthMfaChallengeConfirmOptions)
+func (srv *Customers) WithCustomersAuthMfaChallengeConfirmUserId(v string) CustomersAuthMfaChallengeConfirmOption {
+	return func(o *CustomersAuthMfaChallengeConfirmOptions) {
+		o.UserId = v
+		o.enabledSetters["UserId"] = true
+	}
+}
+							
+// CustomersAuthMfaChallengeConfirm the code the buyer typed, against the
+// challenge it was sent for. The session becomes fully authenticated when
+// this answers.
+func (srv *Customers) CustomersAuthMfaChallengeConfirm(ChallengeId string, Code string, SessionSecret string, optionalSetters ...CustomersAuthMfaChallengeConfirmOption)(*models.Error, error) {
+	path := "/v1/customers/auth/mfa/challenge"
+	options := CustomersAuthMfaChallengeConfirmOptions{}.New()
+	for _, opt := range optionalSetters {
+		opt(options)
+	}
+	params := map[string]interface{}{}
+	params["challenge_id"] = ChallengeId
+	params["code"] = Code
+	params["session_secret"] = SessionSecret
+	if options.enabledSetters["UserId"] {
+		params["user_id"] = options.UserId
+	}
+	headers := map[string]interface{}{
+		"content-type": "application/json",
+	}
+
+	resp, err := srv.client.Call("PUT", path, headers, params)
+	if err != nil {
+		return nil, err
+	}
+	if strings.HasPrefix(resp.Type, "application/json") {
+		bytes := []byte(resp.Result.(string))
+
+		parsed := models.Error{}.New(bytes)
+
+		err = json.Unmarshal(bytes, parsed)
+		if err != nil {
+			return nil, err
+		}
+
+		return parsed, nil
+	}
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
+	if !ok {
+		return nil, errors.New("unexpected response type")
+	}
+	return &parsed, nil
+
+}
+	
+// CustomersAuthOtp the same token as the sign-in link, delivered as a short
+// code instead — for a buyer on a phone, where leaving for a mail client
+// and coming back loses the checkout they were in the middle of. Redeemed
+// with `PUT /customers/auth/otp`.
+func (srv *Customers) CustomersAuthOtp(Email string)(*models.Error, error) {
+	path := "/v1/customers/auth/otp"
+	params := map[string]interface{}{}
+	params["email"] = Email
+	headers := map[string]interface{}{
+		"content-type": "application/json",
+	}
+
+	resp, err := srv.client.Call("POST", path, headers, params)
+	if err != nil {
+		return nil, err
+	}
+	if strings.HasPrefix(resp.Type, "application/json") {
+		bytes := []byte(resp.Result.(string))
+
+		parsed := models.Error{}.New(bytes)
+
+		err = json.Unmarshal(bytes, parsed)
+		if err != nil {
+			return nil, err
+		}
+
+		return parsed, nil
+	}
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -585,8 +408,55 @@ func (srv *Customers) CustomersAuthMe(UserId string, optionalSetters ...Customer
 
 }
 			
-// CustomersAuthRecovery
-func (srv *Customers) CustomersAuthRecovery(Email string, Url string)(*interface{}, error) {
+// CustomersAuthOtpConfirm the code the buyer typed, plus the `userId` the
+// send answered with. Answers exactly what a password login answers —
+// session, contact and effective grants — so a storefront never has to
+// branch on how somebody signed in. The code is spent on first use and
+// expires, so a second attempt with the same one is a 401 rather than a
+// second session.
+func (srv *Customers) CustomersAuthOtpConfirm(Secret string, UserId string)(*models.Error, error) {
+	path := "/v1/customers/auth/otp"
+	params := map[string]interface{}{}
+	params["secret"] = Secret
+	params["user_id"] = UserId
+	headers := map[string]interface{}{
+		"content-type": "application/json",
+	}
+
+	resp, err := srv.client.Call("PUT", path, headers, params)
+	if err != nil {
+		return nil, err
+	}
+	if strings.HasPrefix(resp.Type, "application/json") {
+		bytes := []byte(resp.Result.(string))
+
+		parsed := models.Error{}.New(bytes)
+
+		err = json.Unmarshal(bytes, parsed)
+		if err != nil {
+			return nil, err
+		}
+
+		return parsed, nil
+	}
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
+	if !ok {
+		return nil, errors.New("unexpected response type")
+	}
+	return &parsed, nil
+
+}
+			
+// CustomersAuthRecovery step one of two: a link goes to the address given,
+// and `PUT /customers/auth/recovery` is what the buyer's browser comes back
+// to. The identity service mints the token; the MAIL is this shop's own —
+// the tenant's template, layout, language and sending domain, through the
+// messaging service. The secret is NOT in this answer: it exists only inside
+// the mailed link, which is the whole point of the two-step shape, and
+// echoing it here would make the mail decorative. Nothing about the contact
+// changes; the password only moves in step two.
+func (srv *Customers) CustomersAuthRecovery(Email string, Url string)(*models.Error, error) {
 	path := "/v1/customers/auth/recovery"
 	params := map[string]interface{}{}
 	params["email"] = Email
@@ -602,16 +472,17 @@ func (srv *Customers) CustomersAuthRecovery(Email string, Url string)(*interface
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		var parsed interface{}
+		parsed := models.Error{}.New(bytes)
 
-		err = json.Unmarshal(bytes, &parsed)
+		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
 			return nil, err
 		}
-		return &parsed, nil
+
+		return parsed, nil
 	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -619,8 +490,13 @@ func (srv *Customers) CustomersAuthRecovery(Email string, Url string)(*interface
 
 }
 					
-// CustomersAuthRecoveryConfirm
-func (srv *Customers) CustomersAuthRecoveryConfirm(Password string, Secret string, UserId string)(*interface{}, error) {
+// CustomersAuthRecoveryConfirm step two: the `userId` and `secret` the mailed
+// link carried, plus the password the buyer just typed. The secret is spent
+// on first use and expires, so a link cannot be replayed and a second attempt
+// with the same one is a 401 rather than a second password change. The new
+// password is in effect the moment this answers; what happens to sessions
+// opened with the old one is the identity service's policy, not this app's.
+func (srv *Customers) CustomersAuthRecoveryConfirm(Password string, Secret string, UserId string)(*models.Error, error) {
 	path := "/v1/customers/auth/recovery"
 	params := map[string]interface{}{}
 	params["password"] = Password
@@ -637,16 +513,17 @@ func (srv *Customers) CustomersAuthRecoveryConfirm(Password string, Secret strin
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		var parsed interface{}
+		parsed := models.Error{}.New(bytes)
 
-		err = json.Unmarshal(bytes, &parsed)
+		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
 			return nil, err
 		}
-		return &parsed, nil
+
+		return parsed, nil
 	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -659,6 +536,9 @@ type CustomersAuthRegisterOptions struct {
 	Locale string
 	OrganizationId string
 	OrganizationName string
+	Url string
+	VatId string
+	VerificationUrl string
 	enabledSetters map[string]bool
 }
 func (options CustomersAuthRegisterOptions) New() *CustomersAuthRegisterOptions {
@@ -668,6 +548,9 @@ func (options CustomersAuthRegisterOptions) New() *CustomersAuthRegisterOptions 
 		"Locale": false,
 		"OrganizationId": false,
 		"OrganizationName": false,
+		"Url": false,
+		"VatId": false,
+		"VerificationUrl": false,
 	}
 	return &options
 }
@@ -702,9 +585,40 @@ func (srv *Customers) WithCustomersAuthRegisterOrganizationName(v string) Custom
 		o.enabledSetters["OrganizationName"] = true
 	}
 }
+func (srv *Customers) WithCustomersAuthRegisterUrl(v string) CustomersAuthRegisterOption {
+	return func(o *CustomersAuthRegisterOptions) {
+		o.Url = v
+		o.enabledSetters["Url"] = true
+	}
+}
+func (srv *Customers) WithCustomersAuthRegisterVatId(v string) CustomersAuthRegisterOption {
+	return func(o *CustomersAuthRegisterOptions) {
+		o.VatId = v
+		o.enabledSetters["VatId"] = true
+	}
+}
+func (srv *Customers) WithCustomersAuthRegisterVerificationUrl(v string) CustomersAuthRegisterOption {
+	return func(o *CustomersAuthRegisterOptions) {
+		o.VerificationUrl = v
+		o.enabledSetters["VerificationUrl"] = true
+	}
+}
 					
-// CustomersAuthRegister
-func (srv *Customers) CustomersAuthRegister(Email string, Password string, optionalSetters ...CustomersAuthRegisterOption)(*models.AuthRegisterResponse, error) {
+// CustomersAuthRegister one call writes the whole buyer: the contact this app
+// is the system of record for, and the platform user behind its login. When
+// the body names a company it also FOUNDS one — an organization, mirrored
+// into platform auth as a team, with this contact as its admin. The tenant
+// setting registration_mode decides what a registration IS. 'open' (the
+// default, unchanged behaviour) creates a finished account:
+// registration_status='approved', status='active', login works.
+// 'approval_required' creates an APPLICATION: registration_status='pending',
+// status='invited', the platform user exists with the applicant's own
+// password but is DISABLED, and a newly founded organization is parked as
+// 'blocked' — check `approval_required` in the response and show a 'we will
+// get back to you' screen instead of logging the buyer in. The registration
+// gates below are all evaluated BEFORE anything is written, and a failure
+// after that point rolls the organization and the contact back together.
+func (srv *Customers) CustomersAuthRegister(Email string, Password string, optionalSetters ...CustomersAuthRegisterOption)(*models.Error, error) {
 	path := "/v1/customers/auth/register"
 	options := CustomersAuthRegisterOptions{}.New()
 	for _, opt := range optionalSetters {
@@ -728,171 +642,14 @@ func (srv *Customers) CustomersAuthRegister(Email string, Password string, optio
 	if options.enabledSetters["OrganizationName"] {
 		params["organization_name"] = options.OrganizationName
 	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
+	if options.enabledSetters["Url"] {
+		params["url"] = options.Url
 	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
+	if options.enabledSetters["VatId"] {
+		params["vat_id"] = options.VatId
 	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.AuthRegisterResponse{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.AuthRegisterResponse
-	parsed, ok := resp.Result.(models.AuthRegisterResponse)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// CustomersContactsList
-func (srv *Customers) CustomersContactsList()(*interface{}, error) {
-	path := "/v1/customers/contacts"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type CustomersContactsCreateOptions struct {
-	FirstName string
-	IsPrimary bool
-	LastName string
-	Locale string
-	OrganizationId string
-	Phone string
-	Role string
-	Status string
-	enabledSetters map[string]bool
-}
-func (options CustomersContactsCreateOptions) New() *CustomersContactsCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"FirstName": false,
-		"IsPrimary": false,
-		"LastName": false,
-		"Locale": false,
-		"OrganizationId": false,
-		"Phone": false,
-		"Role": false,
-		"Status": false,
-	}
-	return &options
-}
-type CustomersContactsCreateOption func(*CustomersContactsCreateOptions)
-func (srv *Customers) WithCustomersContactsCreateFirstName(v string) CustomersContactsCreateOption {
-	return func(o *CustomersContactsCreateOptions) {
-		o.FirstName = v
-		o.enabledSetters["FirstName"] = true
-	}
-}
-func (srv *Customers) WithCustomersContactsCreateIsPrimary(v bool) CustomersContactsCreateOption {
-	return func(o *CustomersContactsCreateOptions) {
-		o.IsPrimary = v
-		o.enabledSetters["IsPrimary"] = true
-	}
-}
-func (srv *Customers) WithCustomersContactsCreateLastName(v string) CustomersContactsCreateOption {
-	return func(o *CustomersContactsCreateOptions) {
-		o.LastName = v
-		o.enabledSetters["LastName"] = true
-	}
-}
-func (srv *Customers) WithCustomersContactsCreateLocale(v string) CustomersContactsCreateOption {
-	return func(o *CustomersContactsCreateOptions) {
-		o.Locale = v
-		o.enabledSetters["Locale"] = true
-	}
-}
-func (srv *Customers) WithCustomersContactsCreateOrganizationId(v string) CustomersContactsCreateOption {
-	return func(o *CustomersContactsCreateOptions) {
-		o.OrganizationId = v
-		o.enabledSetters["OrganizationId"] = true
-	}
-}
-func (srv *Customers) WithCustomersContactsCreatePhone(v string) CustomersContactsCreateOption {
-	return func(o *CustomersContactsCreateOptions) {
-		o.Phone = v
-		o.enabledSetters["Phone"] = true
-	}
-}
-func (srv *Customers) WithCustomersContactsCreateRole(v string) CustomersContactsCreateOption {
-	return func(o *CustomersContactsCreateOptions) {
-		o.Role = v
-		o.enabledSetters["Role"] = true
-	}
-}
-func (srv *Customers) WithCustomersContactsCreateStatus(v string) CustomersContactsCreateOption {
-	return func(o *CustomersContactsCreateOptions) {
-		o.Status = v
-		o.enabledSetters["Status"] = true
-	}
-}
-			
-// CustomersContactsCreate
-func (srv *Customers) CustomersContactsCreate(Email string, optionalSetters ...CustomersContactsCreateOption)(*models.Contact, error) {
-	path := "/v1/customers/contacts"
-	options := CustomersContactsCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["email"] = Email
-	if options.enabledSetters["FirstName"] {
-		params["first_name"] = options.FirstName
-	}
-	if options.enabledSetters["IsPrimary"] {
-		params["is_primary"] = options.IsPrimary
-	}
-	if options.enabledSetters["LastName"] {
-		params["last_name"] = options.LastName
-	}
-	if options.enabledSetters["Locale"] {
-		params["locale"] = options.Locale
-	}
-	if options.enabledSetters["OrganizationId"] {
-		params["organization_id"] = options.OrganizationId
-	}
-	if options.enabledSetters["Phone"] {
-		params["phone"] = options.Phone
-	}
-	if options.enabledSetters["Role"] {
-		params["role"] = options.Role
-	}
-	if options.enabledSetters["Status"] {
-		params["status"] = options.Status
+	if options.enabledSetters["VerificationUrl"] {
+		params["verification_url"] = options.VerificationUrl
 	}
 	headers := map[string]interface{}{
 		"content-type": "application/json",
@@ -905,7 +662,7 @@ func (srv *Customers) CustomersContactsCreate(Email string, optionalSetters ...C
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.Contact{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -914,200 +671,64 @@ func (srv *Customers) CustomersContactsCreate(Email string, optionalSetters ...C
 
 		return parsed, nil
 	}
-	var parsed models.Contact
-	parsed, ok := resp.Result.(models.Contact)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
 	return &parsed, nil
 
-}
-	
-// CustomersContactsDelete
-func (srv *Customers) CustomersContactsDelete(Id string)(*interface{}, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/customers/contacts/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// CustomersContactsGet
-func (srv *Customers) CustomersContactsGet(Id string)(*models.Contact, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/customers/contacts/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Contact{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Contact
-	parsed, ok := resp.Result.(models.Contact)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type CustomersContactsUpdateOptions struct {
-	Email string
-	FirstName string
-	IsPrimary bool
-	LastName string
-	Locale string
-	OrganizationId string
-	Phone string
-	Role string
-	Status string
-	enabledSetters map[string]bool
-}
-func (options CustomersContactsUpdateOptions) New() *CustomersContactsUpdateOptions {
-	options.enabledSetters = map[string]bool{
-		"Email": false,
-		"FirstName": false,
-		"IsPrimary": false,
-		"LastName": false,
-		"Locale": false,
-		"OrganizationId": false,
-		"Phone": false,
-		"Role": false,
-		"Status": false,
-	}
-	return &options
-}
-type CustomersContactsUpdateOption func(*CustomersContactsUpdateOptions)
-func (srv *Customers) WithCustomersContactsUpdateEmail(v string) CustomersContactsUpdateOption {
-	return func(o *CustomersContactsUpdateOptions) {
-		o.Email = v
-		o.enabledSetters["Email"] = true
-	}
-}
-func (srv *Customers) WithCustomersContactsUpdateFirstName(v string) CustomersContactsUpdateOption {
-	return func(o *CustomersContactsUpdateOptions) {
-		o.FirstName = v
-		o.enabledSetters["FirstName"] = true
-	}
-}
-func (srv *Customers) WithCustomersContactsUpdateIsPrimary(v bool) CustomersContactsUpdateOption {
-	return func(o *CustomersContactsUpdateOptions) {
-		o.IsPrimary = v
-		o.enabledSetters["IsPrimary"] = true
-	}
-}
-func (srv *Customers) WithCustomersContactsUpdateLastName(v string) CustomersContactsUpdateOption {
-	return func(o *CustomersContactsUpdateOptions) {
-		o.LastName = v
-		o.enabledSetters["LastName"] = true
-	}
-}
-func (srv *Customers) WithCustomersContactsUpdateLocale(v string) CustomersContactsUpdateOption {
-	return func(o *CustomersContactsUpdateOptions) {
-		o.Locale = v
-		o.enabledSetters["Locale"] = true
-	}
-}
-func (srv *Customers) WithCustomersContactsUpdateOrganizationId(v string) CustomersContactsUpdateOption {
-	return func(o *CustomersContactsUpdateOptions) {
-		o.OrganizationId = v
-		o.enabledSetters["OrganizationId"] = true
-	}
-}
-func (srv *Customers) WithCustomersContactsUpdatePhone(v string) CustomersContactsUpdateOption {
-	return func(o *CustomersContactsUpdateOptions) {
-		o.Phone = v
-		o.enabledSetters["Phone"] = true
-	}
-}
-func (srv *Customers) WithCustomersContactsUpdateRole(v string) CustomersContactsUpdateOption {
-	return func(o *CustomersContactsUpdateOptions) {
-		o.Role = v
-		o.enabledSetters["Role"] = true
-	}
-}
-func (srv *Customers) WithCustomersContactsUpdateStatus(v string) CustomersContactsUpdateOption {
-	return func(o *CustomersContactsUpdateOptions) {
-		o.Status = v
-		o.enabledSetters["Status"] = true
-	}
 }
 			
-// CustomersContactsUpdate
-func (srv *Customers) CustomersContactsUpdate(Id string, optionalSetters ...CustomersContactsUpdateOption)(*models.Contact, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/customers/contacts/{id}")
-	options := CustomersContactsUpdateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
+// CustomersAuthVerification confirm that the address belongs to the buyer.
+// Needs no session: the verification is created through the identity
+// service's users surface, because its account counterpart reads the
+// authenticated user and a caller authenticating AS the user cannot see the
+// secret it just created. The buyer still confirms with their own session,
+// through `PUT /customers/auth/verification` — only the creation moved.
+// Send it right after a registration, or from an account page.
+func (srv *Customers) CustomersAuthVerification(Url string, UserId string)(*models.Error, error) {
+	path := "/v1/customers/auth/verification"
 	params := map[string]interface{}{}
-	params["id"] = Id
-	if options.enabledSetters["Email"] {
-		params["email"] = options.Email
+	params["url"] = Url
+	params["user_id"] = UserId
+	headers := map[string]interface{}{
+		"content-type": "application/json",
 	}
-	if options.enabledSetters["FirstName"] {
-		params["first_name"] = options.FirstName
+
+	resp, err := srv.client.Call("POST", path, headers, params)
+	if err != nil {
+		return nil, err
 	}
-	if options.enabledSetters["IsPrimary"] {
-		params["is_primary"] = options.IsPrimary
+	if strings.HasPrefix(resp.Type, "application/json") {
+		bytes := []byte(resp.Result.(string))
+
+		parsed := models.Error{}.New(bytes)
+
+		err = json.Unmarshal(bytes, parsed)
+		if err != nil {
+			return nil, err
+		}
+
+		return parsed, nil
 	}
-	if options.enabledSetters["LastName"] {
-		params["last_name"] = options.LastName
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
+	if !ok {
+		return nil, errors.New("unexpected response type")
 	}
-	if options.enabledSetters["Locale"] {
-		params["locale"] = options.Locale
-	}
-	if options.enabledSetters["OrganizationId"] {
-		params["organization_id"] = options.OrganizationId
-	}
-	if options.enabledSetters["Phone"] {
-		params["phone"] = options.Phone
-	}
-	if options.enabledSetters["Role"] {
-		params["role"] = options.Role
-	}
-	if options.enabledSetters["Status"] {
-		params["status"] = options.Status
-	}
+	return &parsed, nil
+
+}
+			
+// CustomersAuthVerificationConfirm the `userId` and `secret` the mailed link
+// carried. The address counts as confirmed the moment this answers; the
+// secret is spent, so the link cannot be replayed.
+func (srv *Customers) CustomersAuthVerificationConfirm(Secret string, UserId string)(*models.Error, error) {
+	path := "/v1/customers/auth/verification"
+	params := map[string]interface{}{}
+	params["secret"] = Secret
+	params["user_id"] = UserId
 	headers := map[string]interface{}{
 		"content-type": "application/json",
 	}
@@ -1119,7 +740,7 @@ func (srv *Customers) CustomersContactsUpdate(Id string, optionalSetters ...Cust
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.Contact{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -1128,97 +749,27 @@ func (srv *Customers) CustomersContactsUpdate(Id string, optionalSetters ...Cust
 
 		return parsed, nil
 	}
-	var parsed models.Contact
-	parsed, ok := resp.Result.(models.Contact)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
 	return &parsed, nil
 
 }
-
-// CustomersOrganizationsList
-func (srv *Customers) CustomersOrganizationsList()(*interface{}, error) {
-	path := "/v1/customers/organizations"
+	
+// CustomersPrincipalResolve the capability the API gateway calls to turn a
+// caller's X-Revenexx-Principal assertion into the permission set it forwards
+// to every other app as X-Revenexx-Permissions. This app is the platform's
+// role provider (manifest#provides_roles), and this is the hot path of every
+// attributed storefront request — one contact read plus the tenant's role
+// map. A blocked or pending contact always resolves with active=false; what
+// its `permissions` then say is the tenant's blocked_contact_behavior setting
+// — 'keep' (the default, the role's grants), 'catalog_only' or 'deny_all'.
+func (srv *Customers) CustomersPrincipalResolve(ContactId string)(*models.Error, error) {
+	path := "/v1/customers/principal/resolve"
 	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type CustomersOrganizationsCreateOptions struct {
-	Settings interface{}
-	Status string
-	VatId string
-	enabledSetters map[string]bool
-}
-func (options CustomersOrganizationsCreateOptions) New() *CustomersOrganizationsCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"Settings": false,
-		"Status": false,
-		"VatId": false,
-	}
-	return &options
-}
-type CustomersOrganizationsCreateOption func(*CustomersOrganizationsCreateOptions)
-func (srv *Customers) WithCustomersOrganizationsCreateSettings(v interface{}) CustomersOrganizationsCreateOption {
-	return func(o *CustomersOrganizationsCreateOptions) {
-		o.Settings = v
-		o.enabledSetters["Settings"] = true
-	}
-}
-func (srv *Customers) WithCustomersOrganizationsCreateStatus(v string) CustomersOrganizationsCreateOption {
-	return func(o *CustomersOrganizationsCreateOptions) {
-		o.Status = v
-		o.enabledSetters["Status"] = true
-	}
-}
-func (srv *Customers) WithCustomersOrganizationsCreateVatId(v string) CustomersOrganizationsCreateOption {
-	return func(o *CustomersOrganizationsCreateOptions) {
-		o.VatId = v
-		o.enabledSetters["VatId"] = true
-	}
-}
-			
-// CustomersOrganizationsCreate
-func (srv *Customers) CustomersOrganizationsCreate(Name string, optionalSetters ...CustomersOrganizationsCreateOption)(*models.Organization, error) {
-	path := "/v1/customers/organizations"
-	options := CustomersOrganizationsCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["name"] = Name
-	if options.enabledSetters["Settings"] {
-		params["settings"] = options.Settings
-	}
-	if options.enabledSetters["Status"] {
-		params["status"] = options.Status
-	}
-	if options.enabledSetters["VatId"] {
-		params["vat_id"] = options.VatId
-	}
+	params["contact_id"] = ContactId
 	headers := map[string]interface{}{
 		"content-type": "application/json",
 	}
@@ -1230,7 +781,7 @@ func (srv *Customers) CustomersOrganizationsCreate(Name string, optionalSetters 
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.Organization{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -1239,167 +790,8 @@ func (srv *Customers) CustomersOrganizationsCreate(Name string, optionalSetters 
 
 		return parsed, nil
 	}
-	var parsed models.Organization
-	parsed, ok := resp.Result.(models.Organization)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// CustomersOrganizationsDelete
-func (srv *Customers) CustomersOrganizationsDelete(Id string)(*interface{}, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/customers/organizations/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// CustomersOrganizationsGet
-func (srv *Customers) CustomersOrganizationsGet(Id string)(*models.Organization, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/customers/organizations/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Organization{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Organization
-	parsed, ok := resp.Result.(models.Organization)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type CustomersOrganizationsUpdateOptions struct {
-	Name string
-	Settings interface{}
-	Status string
-	VatId string
-	enabledSetters map[string]bool
-}
-func (options CustomersOrganizationsUpdateOptions) New() *CustomersOrganizationsUpdateOptions {
-	options.enabledSetters = map[string]bool{
-		"Name": false,
-		"Settings": false,
-		"Status": false,
-		"VatId": false,
-	}
-	return &options
-}
-type CustomersOrganizationsUpdateOption func(*CustomersOrganizationsUpdateOptions)
-func (srv *Customers) WithCustomersOrganizationsUpdateName(v string) CustomersOrganizationsUpdateOption {
-	return func(o *CustomersOrganizationsUpdateOptions) {
-		o.Name = v
-		o.enabledSetters["Name"] = true
-	}
-}
-func (srv *Customers) WithCustomersOrganizationsUpdateSettings(v interface{}) CustomersOrganizationsUpdateOption {
-	return func(o *CustomersOrganizationsUpdateOptions) {
-		o.Settings = v
-		o.enabledSetters["Settings"] = true
-	}
-}
-func (srv *Customers) WithCustomersOrganizationsUpdateStatus(v string) CustomersOrganizationsUpdateOption {
-	return func(o *CustomersOrganizationsUpdateOptions) {
-		o.Status = v
-		o.enabledSetters["Status"] = true
-	}
-}
-func (srv *Customers) WithCustomersOrganizationsUpdateVatId(v string) CustomersOrganizationsUpdateOption {
-	return func(o *CustomersOrganizationsUpdateOptions) {
-		o.VatId = v
-		o.enabledSetters["VatId"] = true
-	}
-}
-			
-// CustomersOrganizationsUpdate
-func (srv *Customers) CustomersOrganizationsUpdate(Id string, optionalSetters ...CustomersOrganizationsUpdateOption)(*models.Organization, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/customers/organizations/{id}")
-	options := CustomersOrganizationsUpdateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["id"] = Id
-	if options.enabledSetters["Name"] {
-		params["name"] = options.Name
-	}
-	if options.enabledSetters["Settings"] {
-		params["settings"] = options.Settings
-	}
-	if options.enabledSetters["Status"] {
-		params["status"] = options.Status
-	}
-	if options.enabledSetters["VatId"] {
-		params["vat_id"] = options.VatId
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Organization{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Organization
-	parsed, ok := resp.Result.(models.Organization)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}

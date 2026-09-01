@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// TablesList Model
+// TableList Tables List
 type TableList struct {
     // List of tables.
     Tables []Table `json:"tables"`

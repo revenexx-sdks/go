@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// ColumnInteger Model
+// ColumnInteger ColumnInteger
 type ColumnInteger struct {
     // Column creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

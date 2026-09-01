@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// MembershipsList Model
+// MembershipList Memberships List
 type MembershipList struct {
     // List of memberships.
     Memberships []Membership `json:"memberships"`

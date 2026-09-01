@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Function Model
+// Function Function
 type Function struct {
     // Function creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

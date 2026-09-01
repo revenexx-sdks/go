@@ -8,19 +8,20 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := apps.New(client)
 
 response, error := service.AppsCreateExecution(
     "",
-    apps.WithAppsCreateExecutionAsync(false),
+    apps.WithAppsCreateExecutionAsync(true),
     apps.WithAppsCreateExecutionBody(""),
     apps.WithAppsCreateExecutionHeaders(map[string]interface{}{}),
-    apps.WithAppsCreateExecutionMethod(""),
-    apps.WithAppsCreateExecutionPath(""),
+    apps.WithAppsCreateExecutionMethod("GET"),
+    apps.WithAppsCreateExecutionPath("/"),
     apps.WithAppsCreateExecutionScheduledAt(""),
 )
 ```

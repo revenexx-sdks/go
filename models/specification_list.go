@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// SpecificationsList Model
+// SpecificationList Specifications List
 type SpecificationList struct {
     // List of specifications.
     Specifications []Specification `json:"specifications"`

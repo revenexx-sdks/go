@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// DeploymentsList Model
+// DeploymentList Deployments List
 type DeploymentList struct {
     // List of deployments.
     Deployments []Deployment `json:"deployments"`

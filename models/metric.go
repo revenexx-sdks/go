@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Metric Model
+// Metric Metric
 type Metric struct {
     // The date at which this metric was aggregated in ISO 8601 format.
     Date string `json:"date"`

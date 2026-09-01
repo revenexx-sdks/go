@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// FunctionsList Model
+// FunctionList Functions List
 type FunctionList struct {
     // List of functions.
     Functions []Function `json:"functions"`

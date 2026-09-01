@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// VariablesList Model
+// VariableList Variables List
 type VariableList struct {
     // Total number of variables that matched your query.
     Total int `json:"total"`

@@ -8,16 +8,17 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := avatars.New(client)
 
 response, error := service.AvatarsGetCreditCard(
-    "",
-    avatars.WithAvatarsGetCreditCardWidth(0),
-    avatars.WithAvatarsGetCreditCardHeight(0),
-    avatars.WithAvatarsGetCreditCardQuality(0),
+    "amex",
+    avatars.WithAvatarsGetCreditCardWidth(1),
+    avatars.WithAvatarsGetCreditCardHeight(1),
+    avatars.WithAvatarsGetCreditCardQuality(1),
 )
 ```

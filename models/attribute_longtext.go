@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// AttributeLongtext Model
+// AttributeLongtext AttributeLongtext
 type AttributeLongtext struct {
     // Attribute creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

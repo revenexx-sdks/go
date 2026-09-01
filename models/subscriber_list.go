@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// SubscriberList Model
+// SubscriberList Subscriber list
 type SubscriberList struct {
     // List of subscribers.
     Subscribers []Subscriber `json:"subscribers"`

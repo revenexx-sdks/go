@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// MFAChallenge Model
+// MfaChallenge MFA Challenge
 type MfaChallenge struct {
     // Token creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

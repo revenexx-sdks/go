@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// TargetList Model
+// TargetList Target list
 type TargetList struct {
     // List of targets.
     Targets []Target `json:"targets"`

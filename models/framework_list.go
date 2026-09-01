@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// FrameworksList Model
+// FrameworkList Frameworks List
 type FrameworkList struct {
     // List of frameworks.
     Frameworks []Framework `json:"frameworks"`

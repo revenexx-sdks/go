@@ -8,8 +8,9 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := products.New(client)
@@ -18,7 +19,7 @@ response, error := service.ProductsProductAssociationsCreate(
     "",
     "",
     "",
-    products.WithProductsProductAssociationsCreatePosition(0),
-    products.WithProductsProductAssociationsCreateQuantity(0),
+    products.WithProductsProductAssociationsCreatePosition(1),
+    products.WithProductsProductAssociationsCreateQuantity(4),
 )
 ```

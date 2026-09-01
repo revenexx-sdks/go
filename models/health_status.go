@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// HealthStatus Model
+// HealthStatus Health Status
 type HealthStatus struct {
     // Name of the service.
     Name string `json:"name"`

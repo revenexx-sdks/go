@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// ColumnVarchar Model
+// ColumnVarchar ColumnVarchar
 type ColumnVarchar struct {
     // Column creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

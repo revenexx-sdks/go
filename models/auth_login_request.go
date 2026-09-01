@@ -5,11 +5,12 @@ import (
     "errors"
 )
 
-// Model
+// AuthLoginRequest model.
 type AuthLoginRequest struct {
-    // 
+    // The buyer's login address — the same one the contact carries.
     Email string `json:"email"`
-    // 
+    // The password from registration or recovery. Wrong credentials are a 401; a
+    // correct one on an undecided application is a 403.
     Password string `json:"password"`
 
     // Used by Decode() method

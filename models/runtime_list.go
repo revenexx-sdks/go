@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// RuntimesList Model
+// RuntimeList Runtimes List
 type RuntimeList struct {
     // List of runtimes.
     Runtimes []Runtime `json:"runtimes"`

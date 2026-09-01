@@ -5,10 +5,11 @@ import (
     "errors"
 )
 
-// Log Model
+// Log Log
 type Log struct {
-    // Client code name. View list of [available
-    // options](https://github.com/appwrite/appwrite/blob/master/docs/lists/clients.json).
+    // Client code name. A short code such as `CH` for Chrome, derived from the
+    // request's User-Agent by the core service; the full code list is not part of
+    // this API.
     ClientCode string `json:"clientCode"`
     // Client engine name.
     ClientEngine string `json:"clientEngine"`
@@ -36,8 +37,9 @@ type Log struct {
     Ip string `json:"ip"`
     // API mode when event triggered.
     Mode string `json:"mode"`
-    // Operating system code name. View list of [available
-    // options](https://github.com/appwrite/appwrite/blob/master/docs/lists/os.json).
+    // Operating system code name. A short code such as `AND` for Android, derived
+    // from the request's User-Agent by the core service; the full code list is
+    // not part of this API.
     OsCode string `json:"osCode"`
     // Operating system name.
     OsName string `json:"osName"`

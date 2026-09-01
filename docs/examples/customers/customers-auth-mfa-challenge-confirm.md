@@ -1,0 +1,24 @@
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/revenexx-sdks/go/client"
+    "github.com/revenexx-sdks/go/customers"
+)
+
+client := client.New(
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
+)
+
+service := customers.New(client)
+
+response, error := service.CustomersAuthMfaChallengeConfirm(
+    "",
+    "",
+    "",
+    customers.WithCustomersAuthMfaChallengeConfirmUserId(""),
+)
+```

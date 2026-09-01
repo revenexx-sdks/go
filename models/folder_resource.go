@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Model
+// FolderResource model.
 type FolderResource struct {
     // 
     CreatedAt string `json:"created_at"`

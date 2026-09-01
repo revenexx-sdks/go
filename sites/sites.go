@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/revenexx-sdks/go/client"
 	"github.com/revenexx-sdks/go/models"
+	"github.com/revenexx-sdks/go/file"
 	"strings"
 )
 
@@ -806,7 +807,7 @@ func (srv *Sites) WithSitesCreateDeploymentOutputDirectory(v string) SitesCreate
 // to upload a new version of your site code. To activate your newly uploaded
 // code, you'll need to update the site's deployment to use your new
 // deployment ID.
-func (srv *Sites) SitesCreateDeployment(SiteId string, Activate bool, Code string, optionalSetters ...SitesCreateDeploymentOption)(*models.Deployment, error) {
+func (srv *Sites) SitesCreateDeployment(SiteId string, Activate bool, Code file.InputFile, optionalSetters ...SitesCreateDeploymentOption)(*models.Deployment, error) {
 	r := strings.NewReplacer("{siteId}", SiteId)
 	path := r.Replace("/v1/sites/{siteId}/deployments")
 	options := SitesCreateDeploymentOptions{}.New()
@@ -829,6 +830,8 @@ func (srv *Sites) SitesCreateDeployment(SiteId string, Activate bool, Code strin
 	headers := map[string]interface{}{
 		"content-type": "multipart/form-data",
 	}
+
+    paramName := "code"
 
 
     uploadId := ""
@@ -912,9 +915,10 @@ func (srv *Sites) WithSitesCreateTemplateDeploymentActivate(v bool) SitesCreateT
 													
 // SitesCreateTemplateDeployment create a deployment based on a template.
 // 
-// Use this endpoint with combination of
-// [listTemplates](https://appwrite.io/docs/products/sites/templates) to find
-// the template details.
+// Unlike app templates, site templates have no listing on this API — that
+// catalogue is the vendor's and is not reproduced here. Take `repository`,
+// `owner`, `rootDirectory` and `reference` from wherever the template is
+// published.
 func (srv *Sites) SitesCreateTemplateDeployment(SiteId string, Owner string, Reference string, Repository string, RootDirectory string, Type string, optionalSetters ...SitesCreateTemplateDeploymentOption)(*models.Deployment, error) {
 	r := strings.NewReplacer("{siteId}", SiteId)
 	path := r.Replace("/v1/sites/{siteId}/deployments/template")

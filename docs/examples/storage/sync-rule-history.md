@@ -8,15 +8,16 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := storage.New(client)
 
 response, error := service.SyncRuleHistory(
     storage.WithSyncRuleHistoryRuleId(""),
-    storage.WithSyncRuleHistoryFrom(""),
-    storage.WithSyncRuleHistoryTo(""),
+    storage.WithSyncRuleHistoryFrom("2026-01-01T12:00:00Z"),
+    storage.WithSyncRuleHistoryTo("2026-01-01T12:00:00Z"),
 )
 ```

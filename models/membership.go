@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Membership Model
+// Membership Membership
 type Membership struct {
     // Membership creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

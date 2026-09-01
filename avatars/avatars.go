@@ -193,41 +193,6 @@ func (srv *Avatars) AvatarsGetCreditCard(Code string, optionalSetters ...Avatars
 	return &parsed, nil
 
 }
-	
-// AvatarsGetFavicon use this endpoint to fetch the favorite icon (AKA
-// favicon) of any remote website URL.
-// 
-// This endpoint does not follow HTTP redirects.
-func (srv *Avatars) AvatarsGetFavicon(Url string)(*interface{}, error) {
-	path := "/v1/avatars/favicon"
-	params := map[string]interface{}{}
-	params["url"] = Url
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
 type AvatarsGetFlagOptions struct {
 	Width int
 	Height int

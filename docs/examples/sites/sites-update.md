@@ -8,30 +8,31 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := sites.New(client)
 
 response, error := service.SitesUpdate(
     "",
+    "analog",
     "",
-    "",
-    sites.WithSitesUpdateAdapter(""),
-    sites.WithSitesUpdateBuildCommand(""),
-    sites.WithSitesUpdateBuildRuntime(""),
-    sites.WithSitesUpdateEnabled(false),
-    sites.WithSitesUpdateFallbackFile(""),
-    sites.WithSitesUpdateInstallCommand(""),
+    sites.WithSitesUpdateAdapter("static"),
+    sites.WithSitesUpdateBuildCommand("npm run build"),
+    sites.WithSitesUpdateBuildRuntime("node-18.0"),
+    sites.WithSitesUpdateEnabled(true),
+    sites.WithSitesUpdateFallbackFile("index.html"),
+    sites.WithSitesUpdateInstallCommand("npm install"),
     sites.WithSitesUpdateInstallationId(""),
-    sites.WithSitesUpdateLogging(false),
+    sites.WithSitesUpdateLogging(true),
     sites.WithSitesUpdateOutputDirectory(""),
-    sites.WithSitesUpdateProviderBranch(""),
+    sites.WithSitesUpdateProviderBranch("main"),
     sites.WithSitesUpdateProviderRepositoryId(""),
     sites.WithSitesUpdateProviderRootDirectory(""),
-    sites.WithSitesUpdateProviderSilentMode(false),
-    sites.WithSitesUpdateSpecification(""),
-    sites.WithSitesUpdateTimeout(0),
+    sites.WithSitesUpdateProviderSilentMode(true),
+    sites.WithSitesUpdateSpecification("s-1vcpu-512mb"),
+    sites.WithSitesUpdateTimeout(1),
 )
 ```

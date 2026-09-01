@@ -5,13 +5,18 @@ import (
     "errors"
 )
 
-// Model
+// ProductTaxRef model.
 type ProductTaxRef struct {
-    // 
+    // The product's id.
     Id string `json:"id"`
-    // 
+    // The product's resolved display name, or its SKU when the catalog holds no
+    // name for it.
+    Label string `json:"label"`
+    // The SKU, so a caller that asked by id can key its own answer by SKU and the
+    // other way round.
     Sku string `json:"sku"`
-    // 
+    // The tax class key the prices app resolves a rate from. Null means the
+    // product names none and the caller has to fall back to its own default.
     TaxClass string `json:"tax_class"`
 
     // Used by Decode() method

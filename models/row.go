@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Row Model
+// Row Row
 type Row struct {
     // Row creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`
@@ -13,8 +13,11 @@ type Row struct {
     DatabaseId string `json:"$databaseId"`
     // Row ID.
     Id string `json:"$id"`
-    // Row permissions. [Learn more about
-    // permissions](https://appwrite.io/docs/permissions).
+    // Row permissions. Each entry is a permission string: an action wrapping a
+    // role, e.g. `read("any")`, `update("user:abc")`, `delete("team:abc/owner")`.
+    // Actions are `read`, `create`, `update`, `delete` and the aggregate `write`
+    // (= create + update + delete); the role inside the quotes takes the form
+    // described under “Role strings” in this document's introduction.
     Permissions []string `json:"$permissions"`
     // Row automatically incrementing ID.
     Sequence int `json:"$sequence"`

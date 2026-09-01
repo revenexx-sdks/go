@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// AttributeString Model
+// AttributeString AttributeString
 type AttributeString struct {
     // Attribute creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

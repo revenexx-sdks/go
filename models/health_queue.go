@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// HealthQueue Model
+// HealthQueue Health Queue
 type HealthQueue struct {
     // Amount of actions in the queue.
     Size int `json:"size"`

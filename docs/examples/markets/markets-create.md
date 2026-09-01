@@ -8,19 +8,23 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := markets.New(client)
 
 response, error := service.MarketsCreate(
-    "",
-    "",
-    markets.WithMarketsCreateCurrency(""),
+    "northwind",
+    "Northwind",
+    markets.WithMarketsCreateCurrency("EUR"),
     markets.WithMarketsCreateIsDefault(false),
-    markets.WithMarketsCreateLabels(map[string]interface{}{}),
+    markets.WithMarketsCreateLabels(map[string]interface{}{
+        "de-DE": "Nordwind",
+        "en-GB": "Northwind"
+    }),
     markets.WithMarketsCreatePosition(0),
-    markets.WithMarketsCreateStatus(""),
+    markets.WithMarketsCreateStatus("active"),
 )
 ```

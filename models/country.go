@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Country Model
+// Country Country
 type Country struct {
     // Country two-character ISO 3166-1 alpha code.
     Code string `json:"code"`

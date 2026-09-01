@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Language Model
+// Language Language
 type Language struct {
     // Language two-character ISO 639-1 codes.
     Code string `json:"code"`

@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// LocaleCodesList Model
+// LocaleCodeList Locale codes list
 type LocaleCodeList struct {
     // List of localeCodes.
     LocaleCodes []LocaleCode `json:"localeCodes"`

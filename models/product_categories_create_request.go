@@ -5,14 +5,21 @@ import (
     "errors"
 )
 
-// Model
+// ProductCategoriesCreateRequest model.
 type ProductCategoriesCreateRequest struct {
-    // 
+    // The category it is filed into. One row per (product, category), whichever
+    // way it got there.
     CategoryId string `json:"category_id"`
-    // 
+    // Sort order of this product inside the category.
     Position int `json:"position"`
-    // 
+    // The product filed into the category. Deleting the product deletes the
+    // membership with it.
     ProductId string `json:"product_id"`
+    // How the membership came about: 'manual' is hand-picked, 'rule' was
+    // materialized by a category rule. The two never touch each other — a
+    // recompute only ever inserts and deletes `rule` rows, so a hand-picked
+    // membership survives every pass.
+    Source string `json:"source"`
 
     // Used by Decode() method
     data []byte

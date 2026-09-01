@@ -8,11 +8,16 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := pages.New(client)
 
-response, error := service.PagesMenusList())
+response, error := service.PagesMenusList(
+    pages.WithPagesMenusListLimit(1),
+    pages.WithPagesMenusListOffset(1),
+    pages.WithPagesMenusListOrder("created_at.desc"),
+)
 ```

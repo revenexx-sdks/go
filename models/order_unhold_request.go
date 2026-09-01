@@ -5,7 +5,8 @@ import (
     "errors"
 )
 
-// NoPayloadReleasingTheHoldIsAPureStateTransition Model
+// OrderUnholdRequest No payload — releasing the hold is a pure state
+// transition, and it clears hold_reason with it. Send {}.
 type OrderUnholdRequest struct {
 
     // Used by Decode() method

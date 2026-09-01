@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// AlgoSHA Model
+// AlgoSha AlgoSHA
 type AlgoSha struct {
     // Algo type.
     Type string `json:"type"`

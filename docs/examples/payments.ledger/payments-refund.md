@@ -1,0 +1,22 @@
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/revenexx-sdks/go/client"
+    "github.com/revenexx-sdks/go/payments_ledger"
+)
+
+client := client.New(
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
+)
+
+service := payments_ledger.New(client)
+
+response, error := service.PaymentsRefund(
+    "",
+    payments_ledger.WithPaymentsRefundReason("Buyer cancelled by phone"),
+)
+```

@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Model
+// StoreAssetRequest model.
 type StoreAssetRequest struct {
     // 
     AltText string `json:"alt_text"`

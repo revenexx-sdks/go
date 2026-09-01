@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// UsageFunctions Model
+// UsageFunctions UsageFunctions
 type UsageFunctions struct {
     // Aggregated number of functions build per period.
     Builds []Metric `json:"builds"`

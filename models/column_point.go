@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// ColumnPoint Model
+// ColumnPoint ColumnPoint
 type ColumnPoint struct {
     // Column creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

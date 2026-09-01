@@ -5,11 +5,11 @@ import (
     "errors"
 )
 
-// Model
+// AuthLogoutRequest model.
 type AuthLogoutRequest struct {
-    // 
+    // The session to revoke — `session.$id` from the login.
     SessionId string `json:"session_id"`
-    // 
+    // The platform user — `session.userId` from the login.
     UserId string `json:"user_id"`
 
     // Used by Decode() method

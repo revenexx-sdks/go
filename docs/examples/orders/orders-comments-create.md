@@ -8,16 +8,17 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := orders.New(client)
 
 response, error := service.OrdersCommentsCreate(
     "",
-    "",
-    orders.WithOrdersCommentsCreateAuthor(""),
-    orders.WithOrdersCommentsCreateVisibility(""),
+    "Called the customer, delivery agreed for next week.",
+    orders.WithOrdersCommentsCreateAuthor("service-desk"),
+    orders.WithOrdersCommentsCreateVisibility("internal"),
 )
 ```

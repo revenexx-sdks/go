@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// PhonesList Model
+// PhoneList Phones List
 type PhoneList struct {
     // List of phones.
     Phones []Phone `json:"phones"`

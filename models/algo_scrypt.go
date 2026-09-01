@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// AlgoScrypt Model
+// AlgoScrypt AlgoScrypt
 type AlgoScrypt struct {
     // CPU complexity of computed hash.
     CostCpu int `json:"costCpu"`

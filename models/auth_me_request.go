@@ -5,12 +5,12 @@ import (
     "errors"
 )
 
-// Model
+// AuthMeRequest model.
 type AuthMeRequest struct {
-    // Optional session to verify — answers 401 when the session is expired or
-    // revoked.
+    // Optional session to verify. Pass it to ask "is this session still alive?"
+    // (a revoked one is then a 401); omit it to only ask who a user is.
     SessionId string `json:"session_id"`
-    // 
+    // The platform user to resolve — `session.userId` from the login.
     UserId string `json:"user_id"`
 
     // Used by Decode() method

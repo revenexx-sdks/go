@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// TemplateVariable Model
+// TemplateVariable Template Variable
 type TemplateVariable struct {
     // Variable Description.
     Description string `json:"description"`

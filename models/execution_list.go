@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// ExecutionsList Model
+// ExecutionList Executions List
 type ExecutionList struct {
     // List of executions.
     Executions []Execution `json:"executions"`

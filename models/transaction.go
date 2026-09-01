@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Transaction Model
+// Transaction Transaction
 type Transaction struct {
     // Transaction creation time in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

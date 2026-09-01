@@ -5,10 +5,10 @@ import (
     "errors"
 )
 
-// MessageList Model
+// MessageList Message list
 type MessageList struct {
     // List of messages.
-    Messages []Message `json:"messages"`
+    Messages []Message2 `json:"messages"`
     // Total number of messages that matched your query.
     Total int `json:"total"`
 

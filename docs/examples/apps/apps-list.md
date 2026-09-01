@@ -8,8 +8,9 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := apps.New(client)
@@ -17,6 +18,6 @@ service := apps.New(client)
 response, error := service.AppsList(
     apps.WithAppsListQueries([]interface{}{}),
     apps.WithAppsListSearch(""),
-    apps.WithAppsListTotal(false),
+    apps.WithAppsListTotal(true),
 )
 ```

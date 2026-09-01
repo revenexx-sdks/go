@@ -8,19 +8,23 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := markets.New(client)
 
 response, error := service.MarketsTaxClassesCreate(
     "",
-    "",
-    "",
-    markets.WithMarketsTaxClassesCreateIsDefault(false),
-    markets.WithMarketsTaxClassesCreateLabels(map[string]interface{}{}),
+    "standard",
+    "Standard rate",
+    markets.WithMarketsTaxClassesCreateIsDefault(true),
+    markets.WithMarketsTaxClassesCreateLabels(map[string]interface{}{
+        "de-DE": "Regelsatz",
+        "en-GB": "Standard rate"
+    }),
     markets.WithMarketsTaxClassesCreatePosition(0),
-    markets.WithMarketsTaxClassesCreateRate(0),
+    markets.WithMarketsTaxClassesCreateRate(20),
 )
 ```

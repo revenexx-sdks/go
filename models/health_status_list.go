@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// StatusList Model
+// HealthStatusList Status List
 type HealthStatusList struct {
     // List of statuses.
     Statuses []HealthStatus `json:"statuses"`

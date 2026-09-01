@@ -5,11 +5,12 @@ import (
     "errors"
 )
 
-// PartialUpdateOmittedFieldsKeepTheirCurrentValue Model
+// MenuUpdateRequest Partial update — omitted fields keep their current
+// value. `items` is replaced wholesale when sent.
 type MenuUpdateRequest struct {
-    // 
-    Items []interface{} `json:"items"`
-    // 
+    // The ordered navigation tree. Replaces the stored one completely.
+    Items []PageMenuItem `json:"items"`
+    // What this menu is called for the people who edit it.
     Label string `json:"label"`
 
     // Used by Decode() method

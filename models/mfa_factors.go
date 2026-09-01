@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// MFAFactors Model
+// MfaFactors MFAFactors
 type MfaFactors struct {
     // Can email be used for MFA challenge for this account.
     Email bool `json:"email"`

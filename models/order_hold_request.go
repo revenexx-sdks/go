@@ -5,9 +5,12 @@ import (
     "errors"
 )
 
-// Model
+// OrderHoldRequest Stop the order. The reason is optional but is what the
+// guard quotes back at whoever tries to ship, so an unexplained hold is a
+// hold nobody can resolve.
 type OrderHoldRequest struct {
-    // Why the order is blocked (shown on the shipping guard).
+    // Why the order is held, in the words the shipping guard quotes back. Null
+    // when it is not held — releasing a hold clears it.
     Reason string `json:"reason"`
 
     // Used by Decode() method

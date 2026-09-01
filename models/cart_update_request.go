@@ -5,17 +5,19 @@ import (
     "errors"
 )
 
-// OnlySafeColumnsAreUpdatableStatusMovesThroughTheLifecycleRoutes Model
+// CartUpdateRequest Only safe columns are updatable — status moves through
+// the lifecycle routes.
 type CartUpdateRequest struct {
-    // 
+    // Move the cart to another sales channel.
     ChannelId string `json:"channel_id"`
-    // ISO 4217 code.
+    // ISO 4217 code. Changes what NEW lines inherit; lines already in the cart
+    // keep the currency they were added with.
     Currency string `json:"currency"`
-    // 
-    MarketId string `json:"market_id"`
-    // Free-form metadata.
+    // Free-form data the storefront hangs on the cart. Stored and returned
+    // verbatim; no key in here is read by this app, and none is indexed.
     Metadata interface{} `json:"metadata"`
-    // 
+    // Rename the cart. Unlike on create, this is written verbatim — `null` and
+    // `''` are refused by the database.
     Name string `json:"name"`
 
     // Used by Decode() method

@@ -28,8 +28,8 @@ const (
 	defaultChunkSize = 5 * 1024 * 1024
 )
 
-// RevenexxAPIRevenexxError represents an error of a client request
-type RevenexxAPIRevenexxError struct {
+// RevenexxError represents an error of a client request
+type RevenexxError struct {
 	statusCode int
 	message    string
 	response   string
@@ -44,23 +44,23 @@ type ClientResponse struct {
 	Type	   string
 }
 
-func (ce *RevenexxAPIRevenexxError) Error() string {
+func (ce *RevenexxError) Error() string {
 	return ce.message
 }
 
-func (ce *RevenexxAPIRevenexxError) GetMessage() string {
+func (ce *RevenexxError) GetMessage() string {
 	return ce.message
 }
 
-func (ce *RevenexxAPIRevenexxError) GetStatusCode() int {
+func (ce *RevenexxError) GetStatusCode() int {
 	return ce.statusCode
 }
 
-func (ce *RevenexxAPIRevenexxError) GetResponse() string {
+func (ce *RevenexxError) GetResponse() string {
 	return ce.response
 }
 
-// Client is the client struct to access RevenexxAPIRevenexx  services
+// Client is the client struct to access Revenexx  services
 type Client struct {
 	Client     *http.Client
 	Headers    map[string]string
@@ -70,14 +70,14 @@ type Client struct {
 	ChunkSize  int64
 }
 
-// Initialize a new RevenexxAPIRevenexx client with a given timeout
+// Initialize a new Revenexx client with a given timeout
 func New(optionalSetters ...ClientOption) Client {
 	headers := map[string]string{
-		"user-agent" : fmt.Sprintf("RevenexxAPIRevenexxGoSDK/0.0.1 (%s; %s)", runtime.GOOS, runtime.GOARCH),
+		"user-agent" : fmt.Sprintf("RevenexxGoSDK/0.0.2 (%s; %s)", runtime.GOOS, runtime.GOARCH),
 		"x-sdk-name": "Revenexx Go",
 		"x-sdk-platform": "",
 		"x-sdk-language": "go",
-		"x-sdk-version": "0.0.1",
+		"x-sdk-version": "0.0.2",
 	}
 	httpClient, err := GetDefaultClient(defaultTimeout)
 	if err != nil {
@@ -119,6 +119,86 @@ func GetDefaultClient(timeout time.Duration) (*http.Client, error) {
 
 type ClientOption func(*Client) error
 
+// WithEndpoint sets the API endpoint the client sends requests to.
+func WithEndpoint(endpoint string) ClientOption {
+	return func(clt *Client) error {
+		clt.Endpoint = endpoint
+		return nil
+	}
+}
+
+// WithTimeout sets the request timeout.
+func WithTimeout(timeout time.Duration) ClientOption {
+	return func(clt *Client) error {
+		httpClient, err := GetDefaultClient(timeout)
+		if err != nil {
+			return err
+		}
+
+		clt.Timeout = timeout
+		clt.Client = httpClient
+
+		return nil
+	}
+}
+
+// WithSelfSigned toggles acceptance of self-signed TLS certificates.
+func WithSelfSigned(status bool) ClientOption {
+	return func(clt *Client) error {
+		clt.SelfSigned = status
+		return nil
+	}
+}
+
+// WithChunkSize sets the chunk size used for file uploads.
+func WithChunkSize(size int64) ClientOption {
+	return func(clt *Client) error {
+		clt.ChunkSize = size
+		return nil
+	}
+}
+
+// WithTenant sets the X-Revenexx-Tenant header sent on every request,
+// scoping calls to the given tenant.
+func WithTenant(value string) ClientOption {
+	return func(clt *Client) error {
+		clt.Headers["X-Revenexx-Tenant"] = value
+		return nil
+	}
+}
+
+// WithMarket sets the X-Revenexx-Market header sent on every request, scoping
+// calls to the given market. Optional - omit it to see only global rows.
+func WithMarket(value string) ClientOption {
+	return func(clt *Client) error {
+		clt.Headers["X-Revenexx-Market"] = value
+		return nil
+	}
+}
+
+// WithApiKeyAuth sets the X-Revenexx-Api-Key header on every request.
+//
+// A gateway-managed scoped API key (rvxk_…).
+func WithApiKeyAuth(value string) ClientOption {
+	return func(clt *Client) error {
+		clt.Headers["X-Revenexx-Api-Key"] = value
+		return nil
+	}
+}
+// WithBearerAuth sets the Authorization header on every request.
+//
+// A Zitadel-issued JWT (Cockpit / interactive callers).
+func WithBearerAuth(value string) ClientOption {
+	return func(clt *Client) error {
+		if strings.HasPrefix(strings.ToLower(value), "bearer ") {
+			clt.Headers["Authorization"] = value
+		} else {
+			clt.Headers["Authorization"] = "Bearer " + value
+		}
+		return nil
+	}
+}
+
 // AddHeader add a new custom header that the Client should send on each request
 func (client *Client) AddHeader(key string, value string) {
 	client.Headers[key] = value
@@ -150,84 +230,22 @@ func (client *Client) FileUpload(url string, headers map[string]interface{}, par
 		return nil, err
 	}
 
-	inputFile.Data = make([]byte, client.ChunkSize)
-
-	var result *ClientResponse
-
-	numChunks := fileInfo.Size() / client.ChunkSize
-	if fileInfo.Size()%client.ChunkSize != 0 {
-		numChunks++
+	// The API takes one multipart body per upload. It has no chunked or
+	// resumable protocol — no content-range, no upload id, no per-chunk
+	// endpoint — so the whole file always goes in a single request.
+	inputFile.Data = make([]byte, fileInfo.Size())
+	// io.ReadFull, not file.Read: a single Read may return fewer bytes than the
+	// buffer holds, which would silently truncate the upload.
+	if _, err := io.ReadFull(file, inputFile.Data); err != nil && err != io.EOF && err != io.ErrUnexpectedEOF {
+		return nil, err
 	}
-	var currentChunk int64 = 0
-	if uploadId != "" {
-		resp, err := client.Call("GET", url+"/"+uploadId, nil, nil)
-		if err == nil {
-			currentChunk = int64(resp.Result.(map[string]interface{})["chunksUploaded"].(float64))
-		}
-	}
+	params[paramName] = inputFile
 
-	if fileInfo.Size() <= client.ChunkSize {
-		if uploadId != "" {
-			headers["x-revenexx-id"] = uploadId
-		}
-		inputFile.Data = make([]byte, fileInfo.Size())
-		_, err := file.Read(inputFile.Data)
-		if err != nil && err != io.EOF {
-			return nil, err
-		}
-		params[paramName] = inputFile
-
-		result, err = client.Call("POST", url, headers, params)
-		if err != nil {
-			return nil, err
-		}
-
-		var parsed map[string]interface{}
-		if strings.HasPrefix(result.Type, "application/json") {
-			err = json.Unmarshal([]byte(result.Result.(string)), &parsed)
-			if err == nil {
-				uploadId, _ = parsed["$id"].(string)
-			}
-		}
-
-		return result, nil
+	result, err := client.Call("POST", url, headers, params)
+	if err != nil {
+		return nil, err
 	}
 
-	for i := currentChunk; i < numChunks; i++ {
-		chunkSize := client.ChunkSize
-		offset := int64(i) * chunkSize
-		if i == numChunks-1 {
-			chunkSize = fileInfo.Size() - offset
-			inputFile.Data = make([]byte, chunkSize)
-		}
-		_, err := file.ReadAt(inputFile.Data, offset)
-		if err != nil && err != io.EOF {
-			return nil, err
-		}
-		params[paramName] = inputFile
-		if uploadId != "" {
-			headers["x-revenexx-id"] = uploadId
-		}
-		totalSize := fileInfo.Size()
-		start := offset
-		end := offset + client.ChunkSize - 1
-		if end >= totalSize {
-			end = totalSize - 1
-		}
-		headers["content-range"] = fmt.Sprintf("bytes %d-%d/%d", start, end, totalSize)
-		result, err = client.Call("POST", url, headers, params)
-		if err != nil {
-			return nil, err
-		}
-
-		var parsed map[string]interface{}
-		if strings.HasPrefix(result.Type, "application/json") {
-			err = json.Unmarshal([]byte(result.Result.(string)), &parsed)
-			if err == nil {
-				uploadId, _ = parsed["$id"].(string)
-			}
-		}
-	}
 	return result, nil
 }
 
@@ -376,7 +394,7 @@ func (client *Client) Call(method string, path string, headers map[string]interf
 			if !ok {
 				message = "N/A"
 			}
-			return nil, &RevenexxAPIRevenexxError{
+			return nil, &RevenexxError{
 				statusCode: resp.StatusCode,
 				message:    message,
 				response:   string(responseData),
@@ -392,7 +410,7 @@ func (client *Client) Call(method string, path string, headers map[string]interf
 	}
 
 	if resp.StatusCode < 200 || resp.StatusCode > 399 {
-		return nil, &RevenexxAPIRevenexxError{
+		return nil, &RevenexxError{
 			statusCode: resp.StatusCode,
 			message:    string(responseData),
 			response:   string(responseData),

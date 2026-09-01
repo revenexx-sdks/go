@@ -5,14 +5,17 @@ import (
     "errors"
 )
 
-// File Model
+// File File
 type File struct {
     // File creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`
     // File ID.
     Id string `json:"$id"`
-    // File permissions. [Learn more about
-    // permissions](https://appwrite.io/docs/permissions).
+    // File permissions. Each entry is a permission string: an action wrapping a
+    // role, e.g. `read("any")`, `update("user:abc")`, `delete("team:abc/owner")`.
+    // Actions are `read`, `create`, `update`, `delete` and the aggregate `write`
+    // (= create + update + delete); the role inside the quotes takes the form
+    // described under “Role strings” in this document's introduction.
     Permissions []string `json:"$permissions"`
     // File update date in ISO 8601 format.
     UpdatedAt string `json:"$updatedAt"`

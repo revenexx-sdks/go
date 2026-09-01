@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// FunctionTemplatesList Model
+// TemplateFunctionList Function Templates List
 type TemplateFunctionList struct {
     // List of templates.
     Templates []TemplateFunction `json:"templates"`

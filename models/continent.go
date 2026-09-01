@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Continent Model
+// Continent Continent
 type Continent struct {
     // Continent two letter code.
     Code string `json:"code"`

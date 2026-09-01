@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// TemplateRuntime Model
+// TemplateRuntime Template Runtime
 type TemplateRuntime struct {
     // The build command used to build the deployment.
     Commands string `json:"commands"`

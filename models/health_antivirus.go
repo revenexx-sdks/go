@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// HealthAntivirus Model
+// HealthAntivirus Health Antivirus
 type HealthAntivirus struct {
     // Antivirus status. Possible values are: `disabled`, `offline`, `online`
     Status string `json:"status"`

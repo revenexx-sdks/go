@@ -8,8 +8,9 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := markets.New(client)
@@ -17,8 +18,8 @@ service := markets.New(client)
 response, error := service.MarketsCurrenciesUpdate(
     "",
     "",
-    markets.WithMarketsCurrenciesUpdateCode(""),
-    markets.WithMarketsCurrenciesUpdateIsDefault(false),
+    markets.WithMarketsCurrenciesUpdateCode("EUR"),
+    markets.WithMarketsCurrenciesUpdateIsDefault(true),
     markets.WithMarketsCurrenciesUpdatePosition(0),
 )
 ```

@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Document Model
+// Document Document
 type Document struct {
     // Collection ID.
     CollectionId string `json:"$collectionId"`
@@ -15,8 +15,12 @@ type Document struct {
     DatabaseId string `json:"$databaseId"`
     // Document ID.
     Id string `json:"$id"`
-    // Document permissions. [Learn more about
-    // permissions](https://appwrite.io/docs/permissions).
+    // Document permissions. Each entry is a permission string: an action wrapping
+    // a role, e.g. `read("any")`, `update("user:abc")`,
+    // `delete("team:abc/owner")`. Actions are `read`, `create`, `update`,
+    // `delete` and the aggregate `write` (= create + update + delete); the role
+    // inside the quotes takes the form described under “Role strings” in this
+    // document's introduction.
     Permissions []string `json:"$permissions"`
     // Document automatically incrementing ID.
     Sequence int `json:"$sequence"`

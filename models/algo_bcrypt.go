@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// AlgoBcrypt Model
+// AlgoBcrypt AlgoBcrypt
 type AlgoBcrypt struct {
     // Algo type.
     Type string `json:"type"`

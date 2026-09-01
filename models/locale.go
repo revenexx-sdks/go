@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Locale Model
+// Locale Locale
 type Locale struct {
     // Continent name. This field support localization.
     Continent string `json:"continent"`

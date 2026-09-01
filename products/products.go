@@ -19,11 +19,238 @@ func New(clt client.Client) *Products {
 	}
 }
 
-
-// ProductsList
-func (srv *Products) ProductsList()(*interface{}, error) {
+type ProductsListOptions struct {
+	Limit int
+	Offset int
+	Order string
+	Id string
+	Sku string
+	Kind string
+	ParentId string
+	FamilyId string
+	FamilyVariantId string
+	Enabled bool
+	TaxClass string
+	AttributeValues string
+	Label string
+	QuantifiedAssociations string
+	Completeness string
+	CreatedAt string
+	UpdatedAt string
+	DeletedAt string
+	enabledSetters map[string]bool
+}
+func (options ProductsListOptions) New() *ProductsListOptions {
+	options.enabledSetters = map[string]bool{
+		"Limit": false,
+		"Offset": false,
+		"Order": false,
+		"Id": false,
+		"Sku": false,
+		"Kind": false,
+		"ParentId": false,
+		"FamilyId": false,
+		"FamilyVariantId": false,
+		"Enabled": false,
+		"TaxClass": false,
+		"AttributeValues": false,
+		"Label": false,
+		"QuantifiedAssociations": false,
+		"Completeness": false,
+		"CreatedAt": false,
+		"UpdatedAt": false,
+		"DeletedAt": false,
+	}
+	return &options
+}
+type ProductsListOption func(*ProductsListOptions)
+func (srv *Products) WithProductsListLimit(v int) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.Limit = v
+		o.enabledSetters["Limit"] = true
+	}
+}
+func (srv *Products) WithProductsListOffset(v int) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.Offset = v
+		o.enabledSetters["Offset"] = true
+	}
+}
+func (srv *Products) WithProductsListOrder(v string) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.Order = v
+		o.enabledSetters["Order"] = true
+	}
+}
+func (srv *Products) WithProductsListId(v string) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.Id = v
+		o.enabledSetters["Id"] = true
+	}
+}
+func (srv *Products) WithProductsListSku(v string) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.Sku = v
+		o.enabledSetters["Sku"] = true
+	}
+}
+func (srv *Products) WithProductsListKind(v string) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.Kind = v
+		o.enabledSetters["Kind"] = true
+	}
+}
+func (srv *Products) WithProductsListParentId(v string) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.ParentId = v
+		o.enabledSetters["ParentId"] = true
+	}
+}
+func (srv *Products) WithProductsListFamilyId(v string) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.FamilyId = v
+		o.enabledSetters["FamilyId"] = true
+	}
+}
+func (srv *Products) WithProductsListFamilyVariantId(v string) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.FamilyVariantId = v
+		o.enabledSetters["FamilyVariantId"] = true
+	}
+}
+func (srv *Products) WithProductsListEnabled(v bool) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.Enabled = v
+		o.enabledSetters["Enabled"] = true
+	}
+}
+func (srv *Products) WithProductsListTaxClass(v string) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.TaxClass = v
+		o.enabledSetters["TaxClass"] = true
+	}
+}
+func (srv *Products) WithProductsListAttributeValues(v string) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.AttributeValues = v
+		o.enabledSetters["AttributeValues"] = true
+	}
+}
+func (srv *Products) WithProductsListLabel(v string) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.Label = v
+		o.enabledSetters["Label"] = true
+	}
+}
+func (srv *Products) WithProductsListQuantifiedAssociations(v string) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.QuantifiedAssociations = v
+		o.enabledSetters["QuantifiedAssociations"] = true
+	}
+}
+func (srv *Products) WithProductsListCompleteness(v string) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.Completeness = v
+		o.enabledSetters["Completeness"] = true
+	}
+}
+func (srv *Products) WithProductsListCreatedAt(v string) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.CreatedAt = v
+		o.enabledSetters["CreatedAt"] = true
+	}
+}
+func (srv *Products) WithProductsListUpdatedAt(v string) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.UpdatedAt = v
+		o.enabledSetters["UpdatedAt"] = true
+	}
+}
+func (srv *Products) WithProductsListDeletedAt(v string) ProductsListOption {
+	return func(o *ProductsListOptions) {
+		o.DeletedAt = v
+		o.enabledSetters["DeletedAt"] = true
+	}
+}
+	
+// ProductsList the catalog itself. A product row carries only what every
+// product has — SKU, kind, family, enabled, tax class — and everything
+// the tenant modelled lives in the `attribute_values` jsonb document, keyed
+// by attribute CODE inside one of four scope buckets (common, per locale, per
+// channel, per channel and locale). `label` is a generated column, maintained
+// by the database so a grid of twenty thousand rows can sort and filter on a
+// name with no join. `kind` says where the row sits in the variant hierarchy:
+// a `model` carries what its variants share and is never sold itself.
+// 
+// Every column of `products` is an exact-match query parameter, `order` sorts
+// by one column, and `limit`/`offset` page through `page.total`. A query key
+// that is NOT a column is dropped rather than refused, and the `filter`
+// object echoes the ones that were understood — that echo is the only way
+// to tell an unfiltered answer from an empty one. It reads rows exactly as
+// they are stored: no join is resolved, no jsonb value is unpacked, and
+// soft-deleted products are included — filter on `deleted_at` to read the
+// live catalog, or use `GET /products/grid`, which excludes them.
+func (srv *Products) ProductsList(optionalSetters ...ProductsListOption)(*interface{}, error) {
 	path := "/v1/products"
+	options := ProductsListOptions{}.New()
+	for _, opt := range optionalSetters {
+		opt(options)
+	}
 	params := map[string]interface{}{}
+	if options.enabledSetters["Limit"] {
+		params["limit"] = options.Limit
+	}
+	if options.enabledSetters["Offset"] {
+		params["offset"] = options.Offset
+	}
+	if options.enabledSetters["Order"] {
+		params["order"] = options.Order
+	}
+	if options.enabledSetters["Id"] {
+		params["id"] = options.Id
+	}
+	if options.enabledSetters["Sku"] {
+		params["sku"] = options.Sku
+	}
+	if options.enabledSetters["Kind"] {
+		params["kind"] = options.Kind
+	}
+	if options.enabledSetters["ParentId"] {
+		params["parent_id"] = options.ParentId
+	}
+	if options.enabledSetters["FamilyId"] {
+		params["family_id"] = options.FamilyId
+	}
+	if options.enabledSetters["FamilyVariantId"] {
+		params["family_variant_id"] = options.FamilyVariantId
+	}
+	if options.enabledSetters["Enabled"] {
+		params["enabled"] = options.Enabled
+	}
+	if options.enabledSetters["TaxClass"] {
+		params["tax_class"] = options.TaxClass
+	}
+	if options.enabledSetters["AttributeValues"] {
+		params["attribute_values"] = options.AttributeValues
+	}
+	if options.enabledSetters["Label"] {
+		params["label"] = options.Label
+	}
+	if options.enabledSetters["QuantifiedAssociations"] {
+		params["quantified_associations"] = options.QuantifiedAssociations
+	}
+	if options.enabledSetters["Completeness"] {
+		params["completeness"] = options.Completeness
+	}
+	if options.enabledSetters["CreatedAt"] {
+		params["created_at"] = options.CreatedAt
+	}
+	if options.enabledSetters["UpdatedAt"] {
+		params["updated_at"] = options.UpdatedAt
+	}
+	if options.enabledSetters["DeletedAt"] {
+		params["deleted_at"] = options.DeletedAt
+	}
 	headers := map[string]interface{}{
 	}
 
@@ -140,8 +367,29 @@ func (srv *Products) WithProductsCreateTaxClass(v string) ProductsCreateOption {
 	}
 }
 			
-// ProductsCreate
-func (srv *Products) ProductsCreate(Sku string, optionalSetters ...ProductsCreateOption)(*models.Products, error) {
+// ProductsCreate creates one product and answers 201 with the stored row,
+// including the id and the timestamps the database filled in — a client
+// never sends an id, it reads one back and uses it in the path of every later
+// call.
+// 
+// The catalog itself. A product row carries only what every product has —
+// SKU, kind, family, enabled, tax class — and everything the tenant
+// modelled lives in the `attribute_values` jsonb document, keyed by attribute
+// CODE inside one of four scope buckets (common, per locale, per channel, per
+// channel and locale). `label` is a generated column, maintained by the
+// database so a grid of twenty thousand rows can sort and filter on a name
+// with no join. `kind` says where the row sits in the variant hierarchy: a
+// `model` carries what its variants share and is never sold itself.
+// 
+// `sku` is the only column the database refuses the row without; everything
+// else has a default or is nullable. A second row with the same `sku` answers
+// 409. This app owns the create: `enabled` defaults from the
+// `new_products_enabled_by_default` tenant setting rather than blindly to
+// true, so an import cannot publish twenty thousand unfinished products the
+// moment it lands, and a product that names no family gets the
+// `default_product_family` one. An explicit value in the body always wins
+// over both.
+func (srv *Products) ProductsCreate(Sku string, optionalSetters ...ProductsCreateOption)(*models.Error, error) {
 	path := "/v1/products"
 	options := ProductsCreateOptions{}.New()
 	for _, opt := range optionalSetters {
@@ -190,7 +438,7 @@ func (srv *Products) ProductsCreate(Sku string, optionalSetters ...ProductsCreat
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.Products{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -199,1796 +447,8 @@ func (srv *Products) ProductsCreate(Sku string, optionalSetters ...ProductsCreat
 
 		return parsed, nil
 	}
-	var parsed models.Products
-	parsed, ok := resp.Result.(models.Products)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// ProductsAssetFamiliesList
-func (srv *Products) ProductsAssetFamiliesList()(*interface{}, error) {
-	path := "/v1/products/asset_families"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsAssetFamiliesCreateOptions struct {
-	Labels interface{}
-	NamingConvention interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsAssetFamiliesCreateOptions) New() *ProductsAssetFamiliesCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"Labels": false,
-		"NamingConvention": false,
-	}
-	return &options
-}
-type ProductsAssetFamiliesCreateOption func(*ProductsAssetFamiliesCreateOptions)
-func (srv *Products) WithProductsAssetFamiliesCreateLabels(v interface{}) ProductsAssetFamiliesCreateOption {
-	return func(o *ProductsAssetFamiliesCreateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-func (srv *Products) WithProductsAssetFamiliesCreateNamingConvention(v interface{}) ProductsAssetFamiliesCreateOption {
-	return func(o *ProductsAssetFamiliesCreateOptions) {
-		o.NamingConvention = v
-		o.enabledSetters["NamingConvention"] = true
-	}
-}
-			
-// ProductsAssetFamiliesCreate
-func (srv *Products) ProductsAssetFamiliesCreate(Code string, optionalSetters ...ProductsAssetFamiliesCreateOption)(*models.AssetFamilies, error) {
-	path := "/v1/products/asset_families"
-	options := ProductsAssetFamiliesCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["code"] = Code
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	if options.enabledSetters["NamingConvention"] {
-		params["naming_convention"] = options.NamingConvention
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.AssetFamilies{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.AssetFamilies
-	parsed, ok := resp.Result.(models.AssetFamilies)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsAssetFamiliesDelete
-func (srv *Products) ProductsAssetFamiliesDelete(Id string)(*interface{}, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/asset_families/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsAssetFamiliesGet
-func (srv *Products) ProductsAssetFamiliesGet(Id string)(*models.AssetFamilies, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/asset_families/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.AssetFamilies{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.AssetFamilies
-	parsed, ok := resp.Result.(models.AssetFamilies)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsAssetFamiliesUpdateOptions struct {
-	Code string
-	Labels interface{}
-	NamingConvention interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsAssetFamiliesUpdateOptions) New() *ProductsAssetFamiliesUpdateOptions {
-	options.enabledSetters = map[string]bool{
-		"Code": false,
-		"Labels": false,
-		"NamingConvention": false,
-	}
-	return &options
-}
-type ProductsAssetFamiliesUpdateOption func(*ProductsAssetFamiliesUpdateOptions)
-func (srv *Products) WithProductsAssetFamiliesUpdateCode(v string) ProductsAssetFamiliesUpdateOption {
-	return func(o *ProductsAssetFamiliesUpdateOptions) {
-		o.Code = v
-		o.enabledSetters["Code"] = true
-	}
-}
-func (srv *Products) WithProductsAssetFamiliesUpdateLabels(v interface{}) ProductsAssetFamiliesUpdateOption {
-	return func(o *ProductsAssetFamiliesUpdateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-func (srv *Products) WithProductsAssetFamiliesUpdateNamingConvention(v interface{}) ProductsAssetFamiliesUpdateOption {
-	return func(o *ProductsAssetFamiliesUpdateOptions) {
-		o.NamingConvention = v
-		o.enabledSetters["NamingConvention"] = true
-	}
-}
-			
-// ProductsAssetFamiliesUpdate
-func (srv *Products) ProductsAssetFamiliesUpdate(Id string, optionalSetters ...ProductsAssetFamiliesUpdateOption)(*models.AssetFamilies, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/asset_families/{id}")
-	options := ProductsAssetFamiliesUpdateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["id"] = Id
-	if options.enabledSetters["Code"] {
-		params["code"] = options.Code
-	}
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	if options.enabledSetters["NamingConvention"] {
-		params["naming_convention"] = options.NamingConvention
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.AssetFamilies{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.AssetFamilies
-	parsed, ok := resp.Result.(models.AssetFamilies)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// ProductsAssetsList
-func (srv *Products) ProductsAssetsList()(*interface{}, error) {
-	path := "/v1/products/assets"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsAssetsCreateOptions struct {
-	AttributeValues interface{}
-	MediaUuid string
-	enabledSetters map[string]bool
-}
-func (options ProductsAssetsCreateOptions) New() *ProductsAssetsCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"AttributeValues": false,
-		"MediaUuid": false,
-	}
-	return &options
-}
-type ProductsAssetsCreateOption func(*ProductsAssetsCreateOptions)
-func (srv *Products) WithProductsAssetsCreateAttributeValues(v interface{}) ProductsAssetsCreateOption {
-	return func(o *ProductsAssetsCreateOptions) {
-		o.AttributeValues = v
-		o.enabledSetters["AttributeValues"] = true
-	}
-}
-func (srv *Products) WithProductsAssetsCreateMediaUuid(v string) ProductsAssetsCreateOption {
-	return func(o *ProductsAssetsCreateOptions) {
-		o.MediaUuid = v
-		o.enabledSetters["MediaUuid"] = true
-	}
-}
-					
-// ProductsAssetsCreate
-func (srv *Products) ProductsAssetsCreate(AssetFamilyId string, Code string, optionalSetters ...ProductsAssetsCreateOption)(*models.Assets, error) {
-	path := "/v1/products/assets"
-	options := ProductsAssetsCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["asset_family_id"] = AssetFamilyId
-	params["code"] = Code
-	if options.enabledSetters["AttributeValues"] {
-		params["attribute_values"] = options.AttributeValues
-	}
-	if options.enabledSetters["MediaUuid"] {
-		params["media_uuid"] = options.MediaUuid
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Assets{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Assets
-	parsed, ok := resp.Result.(models.Assets)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsAssetsDelete
-func (srv *Products) ProductsAssetsDelete(Id string)(*interface{}, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/assets/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsAssetsGet
-func (srv *Products) ProductsAssetsGet(Id string)(*models.Assets, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/assets/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Assets{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Assets
-	parsed, ok := resp.Result.(models.Assets)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsAssetsUpdateOptions struct {
-	AssetFamilyId string
-	AttributeValues interface{}
-	Code string
-	MediaUuid string
-	enabledSetters map[string]bool
-}
-func (options ProductsAssetsUpdateOptions) New() *ProductsAssetsUpdateOptions {
-	options.enabledSetters = map[string]bool{
-		"AssetFamilyId": false,
-		"AttributeValues": false,
-		"Code": false,
-		"MediaUuid": false,
-	}
-	return &options
-}
-type ProductsAssetsUpdateOption func(*ProductsAssetsUpdateOptions)
-func (srv *Products) WithProductsAssetsUpdateAssetFamilyId(v string) ProductsAssetsUpdateOption {
-	return func(o *ProductsAssetsUpdateOptions) {
-		o.AssetFamilyId = v
-		o.enabledSetters["AssetFamilyId"] = true
-	}
-}
-func (srv *Products) WithProductsAssetsUpdateAttributeValues(v interface{}) ProductsAssetsUpdateOption {
-	return func(o *ProductsAssetsUpdateOptions) {
-		o.AttributeValues = v
-		o.enabledSetters["AttributeValues"] = true
-	}
-}
-func (srv *Products) WithProductsAssetsUpdateCode(v string) ProductsAssetsUpdateOption {
-	return func(o *ProductsAssetsUpdateOptions) {
-		o.Code = v
-		o.enabledSetters["Code"] = true
-	}
-}
-func (srv *Products) WithProductsAssetsUpdateMediaUuid(v string) ProductsAssetsUpdateOption {
-	return func(o *ProductsAssetsUpdateOptions) {
-		o.MediaUuid = v
-		o.enabledSetters["MediaUuid"] = true
-	}
-}
-			
-// ProductsAssetsUpdate
-func (srv *Products) ProductsAssetsUpdate(Id string, optionalSetters ...ProductsAssetsUpdateOption)(*models.Assets, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/assets/{id}")
-	options := ProductsAssetsUpdateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["id"] = Id
-	if options.enabledSetters["AssetFamilyId"] {
-		params["asset_family_id"] = options.AssetFamilyId
-	}
-	if options.enabledSetters["AttributeValues"] {
-		params["attribute_values"] = options.AttributeValues
-	}
-	if options.enabledSetters["Code"] {
-		params["code"] = options.Code
-	}
-	if options.enabledSetters["MediaUuid"] {
-		params["media_uuid"] = options.MediaUuid
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Assets{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Assets
-	parsed, ok := resp.Result.(models.Assets)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// ProductsAssociationTypesList
-func (srv *Products) ProductsAssociationTypesList()(*interface{}, error) {
-	path := "/v1/products/association_types"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsAssociationTypesCreateOptions struct {
-	IsQuantified bool
-	IsTwoWay bool
-	Labels interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsAssociationTypesCreateOptions) New() *ProductsAssociationTypesCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"IsQuantified": false,
-		"IsTwoWay": false,
-		"Labels": false,
-	}
-	return &options
-}
-type ProductsAssociationTypesCreateOption func(*ProductsAssociationTypesCreateOptions)
-func (srv *Products) WithProductsAssociationTypesCreateIsQuantified(v bool) ProductsAssociationTypesCreateOption {
-	return func(o *ProductsAssociationTypesCreateOptions) {
-		o.IsQuantified = v
-		o.enabledSetters["IsQuantified"] = true
-	}
-}
-func (srv *Products) WithProductsAssociationTypesCreateIsTwoWay(v bool) ProductsAssociationTypesCreateOption {
-	return func(o *ProductsAssociationTypesCreateOptions) {
-		o.IsTwoWay = v
-		o.enabledSetters["IsTwoWay"] = true
-	}
-}
-func (srv *Products) WithProductsAssociationTypesCreateLabels(v interface{}) ProductsAssociationTypesCreateOption {
-	return func(o *ProductsAssociationTypesCreateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-			
-// ProductsAssociationTypesCreate
-func (srv *Products) ProductsAssociationTypesCreate(Code string, optionalSetters ...ProductsAssociationTypesCreateOption)(*models.AssociationTypes, error) {
-	path := "/v1/products/association_types"
-	options := ProductsAssociationTypesCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["code"] = Code
-	if options.enabledSetters["IsQuantified"] {
-		params["is_quantified"] = options.IsQuantified
-	}
-	if options.enabledSetters["IsTwoWay"] {
-		params["is_two_way"] = options.IsTwoWay
-	}
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.AssociationTypes{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.AssociationTypes
-	parsed, ok := resp.Result.(models.AssociationTypes)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsAssociationTypesDelete
-func (srv *Products) ProductsAssociationTypesDelete(Id string)(*interface{}, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/association_types/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsAssociationTypesGet
-func (srv *Products) ProductsAssociationTypesGet(Id string)(*models.AssociationTypes, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/association_types/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.AssociationTypes{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.AssociationTypes
-	parsed, ok := resp.Result.(models.AssociationTypes)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsAssociationTypesUpdateOptions struct {
-	Code string
-	IsQuantified bool
-	IsTwoWay bool
-	Labels interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsAssociationTypesUpdateOptions) New() *ProductsAssociationTypesUpdateOptions {
-	options.enabledSetters = map[string]bool{
-		"Code": false,
-		"IsQuantified": false,
-		"IsTwoWay": false,
-		"Labels": false,
-	}
-	return &options
-}
-type ProductsAssociationTypesUpdateOption func(*ProductsAssociationTypesUpdateOptions)
-func (srv *Products) WithProductsAssociationTypesUpdateCode(v string) ProductsAssociationTypesUpdateOption {
-	return func(o *ProductsAssociationTypesUpdateOptions) {
-		o.Code = v
-		o.enabledSetters["Code"] = true
-	}
-}
-func (srv *Products) WithProductsAssociationTypesUpdateIsQuantified(v bool) ProductsAssociationTypesUpdateOption {
-	return func(o *ProductsAssociationTypesUpdateOptions) {
-		o.IsQuantified = v
-		o.enabledSetters["IsQuantified"] = true
-	}
-}
-func (srv *Products) WithProductsAssociationTypesUpdateIsTwoWay(v bool) ProductsAssociationTypesUpdateOption {
-	return func(o *ProductsAssociationTypesUpdateOptions) {
-		o.IsTwoWay = v
-		o.enabledSetters["IsTwoWay"] = true
-	}
-}
-func (srv *Products) WithProductsAssociationTypesUpdateLabels(v interface{}) ProductsAssociationTypesUpdateOption {
-	return func(o *ProductsAssociationTypesUpdateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-			
-// ProductsAssociationTypesUpdate
-func (srv *Products) ProductsAssociationTypesUpdate(Id string, optionalSetters ...ProductsAssociationTypesUpdateOption)(*models.AssociationTypes, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/association_types/{id}")
-	options := ProductsAssociationTypesUpdateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["id"] = Id
-	if options.enabledSetters["Code"] {
-		params["code"] = options.Code
-	}
-	if options.enabledSetters["IsQuantified"] {
-		params["is_quantified"] = options.IsQuantified
-	}
-	if options.enabledSetters["IsTwoWay"] {
-		params["is_two_way"] = options.IsTwoWay
-	}
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.AssociationTypes{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.AssociationTypes
-	parsed, ok := resp.Result.(models.AssociationTypes)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// ProductsAttributeGroupsList
-func (srv *Products) ProductsAttributeGroupsList()(*interface{}, error) {
-	path := "/v1/products/attribute_groups"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsAttributeGroupsCreateOptions struct {
-	Labels interface{}
-	Position int
-	enabledSetters map[string]bool
-}
-func (options ProductsAttributeGroupsCreateOptions) New() *ProductsAttributeGroupsCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"Labels": false,
-		"Position": false,
-	}
-	return &options
-}
-type ProductsAttributeGroupsCreateOption func(*ProductsAttributeGroupsCreateOptions)
-func (srv *Products) WithProductsAttributeGroupsCreateLabels(v interface{}) ProductsAttributeGroupsCreateOption {
-	return func(o *ProductsAttributeGroupsCreateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-func (srv *Products) WithProductsAttributeGroupsCreatePosition(v int) ProductsAttributeGroupsCreateOption {
-	return func(o *ProductsAttributeGroupsCreateOptions) {
-		o.Position = v
-		o.enabledSetters["Position"] = true
-	}
-}
-			
-// ProductsAttributeGroupsCreate
-func (srv *Products) ProductsAttributeGroupsCreate(Code string, optionalSetters ...ProductsAttributeGroupsCreateOption)(*models.AttributeGroups, error) {
-	path := "/v1/products/attribute_groups"
-	options := ProductsAttributeGroupsCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["code"] = Code
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	if options.enabledSetters["Position"] {
-		params["position"] = options.Position
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.AttributeGroups{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.AttributeGroups
-	parsed, ok := resp.Result.(models.AttributeGroups)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsAttributeGroupsDelete
-func (srv *Products) ProductsAttributeGroupsDelete(Id string)(*interface{}, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/attribute_groups/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsAttributeGroupsGet
-func (srv *Products) ProductsAttributeGroupsGet(Id string)(*models.AttributeGroups, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/attribute_groups/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.AttributeGroups{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.AttributeGroups
-	parsed, ok := resp.Result.(models.AttributeGroups)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsAttributeGroupsUpdateOptions struct {
-	Code string
-	Labels interface{}
-	Position int
-	enabledSetters map[string]bool
-}
-func (options ProductsAttributeGroupsUpdateOptions) New() *ProductsAttributeGroupsUpdateOptions {
-	options.enabledSetters = map[string]bool{
-		"Code": false,
-		"Labels": false,
-		"Position": false,
-	}
-	return &options
-}
-type ProductsAttributeGroupsUpdateOption func(*ProductsAttributeGroupsUpdateOptions)
-func (srv *Products) WithProductsAttributeGroupsUpdateCode(v string) ProductsAttributeGroupsUpdateOption {
-	return func(o *ProductsAttributeGroupsUpdateOptions) {
-		o.Code = v
-		o.enabledSetters["Code"] = true
-	}
-}
-func (srv *Products) WithProductsAttributeGroupsUpdateLabels(v interface{}) ProductsAttributeGroupsUpdateOption {
-	return func(o *ProductsAttributeGroupsUpdateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-func (srv *Products) WithProductsAttributeGroupsUpdatePosition(v int) ProductsAttributeGroupsUpdateOption {
-	return func(o *ProductsAttributeGroupsUpdateOptions) {
-		o.Position = v
-		o.enabledSetters["Position"] = true
-	}
-}
-			
-// ProductsAttributeGroupsUpdate
-func (srv *Products) ProductsAttributeGroupsUpdate(Id string, optionalSetters ...ProductsAttributeGroupsUpdateOption)(*models.AttributeGroups, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/attribute_groups/{id}")
-	options := ProductsAttributeGroupsUpdateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["id"] = Id
-	if options.enabledSetters["Code"] {
-		params["code"] = options.Code
-	}
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	if options.enabledSetters["Position"] {
-		params["position"] = options.Position
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.AttributeGroups{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.AttributeGroups
-	parsed, ok := resp.Result.(models.AttributeGroups)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// ProductsAttributeOptionsList
-func (srv *Products) ProductsAttributeOptionsList()(*interface{}, error) {
-	path := "/v1/products/attribute_options"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsAttributeOptionsCreateOptions struct {
-	Labels interface{}
-	Position int
-	Swatch interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsAttributeOptionsCreateOptions) New() *ProductsAttributeOptionsCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"Labels": false,
-		"Position": false,
-		"Swatch": false,
-	}
-	return &options
-}
-type ProductsAttributeOptionsCreateOption func(*ProductsAttributeOptionsCreateOptions)
-func (srv *Products) WithProductsAttributeOptionsCreateLabels(v interface{}) ProductsAttributeOptionsCreateOption {
-	return func(o *ProductsAttributeOptionsCreateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-func (srv *Products) WithProductsAttributeOptionsCreatePosition(v int) ProductsAttributeOptionsCreateOption {
-	return func(o *ProductsAttributeOptionsCreateOptions) {
-		o.Position = v
-		o.enabledSetters["Position"] = true
-	}
-}
-func (srv *Products) WithProductsAttributeOptionsCreateSwatch(v interface{}) ProductsAttributeOptionsCreateOption {
-	return func(o *ProductsAttributeOptionsCreateOptions) {
-		o.Swatch = v
-		o.enabledSetters["Swatch"] = true
-	}
-}
-					
-// ProductsAttributeOptionsCreate
-func (srv *Products) ProductsAttributeOptionsCreate(AttributeId string, Code string, optionalSetters ...ProductsAttributeOptionsCreateOption)(*models.AttributeOptions, error) {
-	path := "/v1/products/attribute_options"
-	options := ProductsAttributeOptionsCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["attribute_id"] = AttributeId
-	params["code"] = Code
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	if options.enabledSetters["Position"] {
-		params["position"] = options.Position
-	}
-	if options.enabledSetters["Swatch"] {
-		params["swatch"] = options.Swatch
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.AttributeOptions{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.AttributeOptions
-	parsed, ok := resp.Result.(models.AttributeOptions)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsAttributeOptionsDelete
-func (srv *Products) ProductsAttributeOptionsDelete(Id string)(*interface{}, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/attribute_options/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsAttributeOptionsGet
-func (srv *Products) ProductsAttributeOptionsGet(Id string)(*models.AttributeOptions, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/attribute_options/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.AttributeOptions{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.AttributeOptions
-	parsed, ok := resp.Result.(models.AttributeOptions)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsAttributeOptionsUpdateOptions struct {
-	AttributeId string
-	Code string
-	Labels interface{}
-	Position int
-	Swatch interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsAttributeOptionsUpdateOptions) New() *ProductsAttributeOptionsUpdateOptions {
-	options.enabledSetters = map[string]bool{
-		"AttributeId": false,
-		"Code": false,
-		"Labels": false,
-		"Position": false,
-		"Swatch": false,
-	}
-	return &options
-}
-type ProductsAttributeOptionsUpdateOption func(*ProductsAttributeOptionsUpdateOptions)
-func (srv *Products) WithProductsAttributeOptionsUpdateAttributeId(v string) ProductsAttributeOptionsUpdateOption {
-	return func(o *ProductsAttributeOptionsUpdateOptions) {
-		o.AttributeId = v
-		o.enabledSetters["AttributeId"] = true
-	}
-}
-func (srv *Products) WithProductsAttributeOptionsUpdateCode(v string) ProductsAttributeOptionsUpdateOption {
-	return func(o *ProductsAttributeOptionsUpdateOptions) {
-		o.Code = v
-		o.enabledSetters["Code"] = true
-	}
-}
-func (srv *Products) WithProductsAttributeOptionsUpdateLabels(v interface{}) ProductsAttributeOptionsUpdateOption {
-	return func(o *ProductsAttributeOptionsUpdateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-func (srv *Products) WithProductsAttributeOptionsUpdatePosition(v int) ProductsAttributeOptionsUpdateOption {
-	return func(o *ProductsAttributeOptionsUpdateOptions) {
-		o.Position = v
-		o.enabledSetters["Position"] = true
-	}
-}
-func (srv *Products) WithProductsAttributeOptionsUpdateSwatch(v interface{}) ProductsAttributeOptionsUpdateOption {
-	return func(o *ProductsAttributeOptionsUpdateOptions) {
-		o.Swatch = v
-		o.enabledSetters["Swatch"] = true
-	}
-}
-			
-// ProductsAttributeOptionsUpdate
-func (srv *Products) ProductsAttributeOptionsUpdate(Id string, optionalSetters ...ProductsAttributeOptionsUpdateOption)(*models.AttributeOptions, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/attribute_options/{id}")
-	options := ProductsAttributeOptionsUpdateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["id"] = Id
-	if options.enabledSetters["AttributeId"] {
-		params["attribute_id"] = options.AttributeId
-	}
-	if options.enabledSetters["Code"] {
-		params["code"] = options.Code
-	}
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	if options.enabledSetters["Position"] {
-		params["position"] = options.Position
-	}
-	if options.enabledSetters["Swatch"] {
-		params["swatch"] = options.Swatch
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.AttributeOptions{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.AttributeOptions
-	parsed, ok := resp.Result.(models.AttributeOptions)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// ProductsAttributesList
-func (srv *Products) ProductsAttributesList()(*interface{}, error) {
-	path := "/v1/products/attributes"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsAttributesCreateOptions struct {
-	Config interface{}
-	EntityRef string
-	EntityType string
-	GroupId string
-	IsFilterable bool
-	IsUnique bool
-	Labels interface{}
-	Localizable bool
-	Position int
-	Scopable bool
-	UsableInGrid bool
-	Validation interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsAttributesCreateOptions) New() *ProductsAttributesCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"Config": false,
-		"EntityRef": false,
-		"EntityType": false,
-		"GroupId": false,
-		"IsFilterable": false,
-		"IsUnique": false,
-		"Labels": false,
-		"Localizable": false,
-		"Position": false,
-		"Scopable": false,
-		"UsableInGrid": false,
-		"Validation": false,
-	}
-	return &options
-}
-type ProductsAttributesCreateOption func(*ProductsAttributesCreateOptions)
-func (srv *Products) WithProductsAttributesCreateConfig(v interface{}) ProductsAttributesCreateOption {
-	return func(o *ProductsAttributesCreateOptions) {
-		o.Config = v
-		o.enabledSetters["Config"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesCreateEntityRef(v string) ProductsAttributesCreateOption {
-	return func(o *ProductsAttributesCreateOptions) {
-		o.EntityRef = v
-		o.enabledSetters["EntityRef"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesCreateEntityType(v string) ProductsAttributesCreateOption {
-	return func(o *ProductsAttributesCreateOptions) {
-		o.EntityType = v
-		o.enabledSetters["EntityType"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesCreateGroupId(v string) ProductsAttributesCreateOption {
-	return func(o *ProductsAttributesCreateOptions) {
-		o.GroupId = v
-		o.enabledSetters["GroupId"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesCreateIsFilterable(v bool) ProductsAttributesCreateOption {
-	return func(o *ProductsAttributesCreateOptions) {
-		o.IsFilterable = v
-		o.enabledSetters["IsFilterable"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesCreateIsUnique(v bool) ProductsAttributesCreateOption {
-	return func(o *ProductsAttributesCreateOptions) {
-		o.IsUnique = v
-		o.enabledSetters["IsUnique"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesCreateLabels(v interface{}) ProductsAttributesCreateOption {
-	return func(o *ProductsAttributesCreateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesCreateLocalizable(v bool) ProductsAttributesCreateOption {
-	return func(o *ProductsAttributesCreateOptions) {
-		o.Localizable = v
-		o.enabledSetters["Localizable"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesCreatePosition(v int) ProductsAttributesCreateOption {
-	return func(o *ProductsAttributesCreateOptions) {
-		o.Position = v
-		o.enabledSetters["Position"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesCreateScopable(v bool) ProductsAttributesCreateOption {
-	return func(o *ProductsAttributesCreateOptions) {
-		o.Scopable = v
-		o.enabledSetters["Scopable"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesCreateUsableInGrid(v bool) ProductsAttributesCreateOption {
-	return func(o *ProductsAttributesCreateOptions) {
-		o.UsableInGrid = v
-		o.enabledSetters["UsableInGrid"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesCreateValidation(v interface{}) ProductsAttributesCreateOption {
-	return func(o *ProductsAttributesCreateOptions) {
-		o.Validation = v
-		o.enabledSetters["Validation"] = true
-	}
-}
-					
-// ProductsAttributesCreate
-func (srv *Products) ProductsAttributesCreate(Code string, Type string, optionalSetters ...ProductsAttributesCreateOption)(*models.Attributes, error) {
-	path := "/v1/products/attributes"
-	options := ProductsAttributesCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["code"] = Code
-	params["type"] = Type
-	if options.enabledSetters["Config"] {
-		params["config"] = options.Config
-	}
-	if options.enabledSetters["EntityRef"] {
-		params["entity_ref"] = options.EntityRef
-	}
-	if options.enabledSetters["EntityType"] {
-		params["entity_type"] = options.EntityType
-	}
-	if options.enabledSetters["GroupId"] {
-		params["group_id"] = options.GroupId
-	}
-	if options.enabledSetters["IsFilterable"] {
-		params["is_filterable"] = options.IsFilterable
-	}
-	if options.enabledSetters["IsUnique"] {
-		params["is_unique"] = options.IsUnique
-	}
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	if options.enabledSetters["Localizable"] {
-		params["localizable"] = options.Localizable
-	}
-	if options.enabledSetters["Position"] {
-		params["position"] = options.Position
-	}
-	if options.enabledSetters["Scopable"] {
-		params["scopable"] = options.Scopable
-	}
-	if options.enabledSetters["UsableInGrid"] {
-		params["usable_in_grid"] = options.UsableInGrid
-	}
-	if options.enabledSetters["Validation"] {
-		params["validation"] = options.Validation
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Attributes{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Attributes
-	parsed, ok := resp.Result.(models.Attributes)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsAttributesDelete
-func (srv *Products) ProductsAttributesDelete(Id string)(*interface{}, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/attributes/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsAttributesGet
-func (srv *Products) ProductsAttributesGet(Id string)(*models.Attributes, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/attributes/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Attributes{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Attributes
-	parsed, ok := resp.Result.(models.Attributes)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsAttributesUpdateOptions struct {
-	Code string
-	Config interface{}
-	EntityRef string
-	EntityType string
-	GroupId string
-	IsFilterable bool
-	IsUnique bool
-	Labels interface{}
-	Localizable bool
-	Position int
-	Scopable bool
-	Type string
-	UsableInGrid bool
-	Validation interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsAttributesUpdateOptions) New() *ProductsAttributesUpdateOptions {
-	options.enabledSetters = map[string]bool{
-		"Code": false,
-		"Config": false,
-		"EntityRef": false,
-		"EntityType": false,
-		"GroupId": false,
-		"IsFilterable": false,
-		"IsUnique": false,
-		"Labels": false,
-		"Localizable": false,
-		"Position": false,
-		"Scopable": false,
-		"Type": false,
-		"UsableInGrid": false,
-		"Validation": false,
-	}
-	return &options
-}
-type ProductsAttributesUpdateOption func(*ProductsAttributesUpdateOptions)
-func (srv *Products) WithProductsAttributesUpdateCode(v string) ProductsAttributesUpdateOption {
-	return func(o *ProductsAttributesUpdateOptions) {
-		o.Code = v
-		o.enabledSetters["Code"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesUpdateConfig(v interface{}) ProductsAttributesUpdateOption {
-	return func(o *ProductsAttributesUpdateOptions) {
-		o.Config = v
-		o.enabledSetters["Config"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesUpdateEntityRef(v string) ProductsAttributesUpdateOption {
-	return func(o *ProductsAttributesUpdateOptions) {
-		o.EntityRef = v
-		o.enabledSetters["EntityRef"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesUpdateEntityType(v string) ProductsAttributesUpdateOption {
-	return func(o *ProductsAttributesUpdateOptions) {
-		o.EntityType = v
-		o.enabledSetters["EntityType"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesUpdateGroupId(v string) ProductsAttributesUpdateOption {
-	return func(o *ProductsAttributesUpdateOptions) {
-		o.GroupId = v
-		o.enabledSetters["GroupId"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesUpdateIsFilterable(v bool) ProductsAttributesUpdateOption {
-	return func(o *ProductsAttributesUpdateOptions) {
-		o.IsFilterable = v
-		o.enabledSetters["IsFilterable"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesUpdateIsUnique(v bool) ProductsAttributesUpdateOption {
-	return func(o *ProductsAttributesUpdateOptions) {
-		o.IsUnique = v
-		o.enabledSetters["IsUnique"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesUpdateLabels(v interface{}) ProductsAttributesUpdateOption {
-	return func(o *ProductsAttributesUpdateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesUpdateLocalizable(v bool) ProductsAttributesUpdateOption {
-	return func(o *ProductsAttributesUpdateOptions) {
-		o.Localizable = v
-		o.enabledSetters["Localizable"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesUpdatePosition(v int) ProductsAttributesUpdateOption {
-	return func(o *ProductsAttributesUpdateOptions) {
-		o.Position = v
-		o.enabledSetters["Position"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesUpdateScopable(v bool) ProductsAttributesUpdateOption {
-	return func(o *ProductsAttributesUpdateOptions) {
-		o.Scopable = v
-		o.enabledSetters["Scopable"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesUpdateType(v string) ProductsAttributesUpdateOption {
-	return func(o *ProductsAttributesUpdateOptions) {
-		o.Type = v
-		o.enabledSetters["Type"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesUpdateUsableInGrid(v bool) ProductsAttributesUpdateOption {
-	return func(o *ProductsAttributesUpdateOptions) {
-		o.UsableInGrid = v
-		o.enabledSetters["UsableInGrid"] = true
-	}
-}
-func (srv *Products) WithProductsAttributesUpdateValidation(v interface{}) ProductsAttributesUpdateOption {
-	return func(o *ProductsAttributesUpdateOptions) {
-		o.Validation = v
-		o.enabledSetters["Validation"] = true
-	}
-}
-			
-// ProductsAttributesUpdate
-func (srv *Products) ProductsAttributesUpdate(Id string, optionalSetters ...ProductsAttributesUpdateOption)(*models.Attributes, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/attributes/{id}")
-	options := ProductsAttributesUpdateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["id"] = Id
-	if options.enabledSetters["Code"] {
-		params["code"] = options.Code
-	}
-	if options.enabledSetters["Config"] {
-		params["config"] = options.Config
-	}
-	if options.enabledSetters["EntityRef"] {
-		params["entity_ref"] = options.EntityRef
-	}
-	if options.enabledSetters["EntityType"] {
-		params["entity_type"] = options.EntityType
-	}
-	if options.enabledSetters["GroupId"] {
-		params["group_id"] = options.GroupId
-	}
-	if options.enabledSetters["IsFilterable"] {
-		params["is_filterable"] = options.IsFilterable
-	}
-	if options.enabledSetters["IsUnique"] {
-		params["is_unique"] = options.IsUnique
-	}
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	if options.enabledSetters["Localizable"] {
-		params["localizable"] = options.Localizable
-	}
-	if options.enabledSetters["Position"] {
-		params["position"] = options.Position
-	}
-	if options.enabledSetters["Scopable"] {
-		params["scopable"] = options.Scopable
-	}
-	if options.enabledSetters["Type"] {
-		params["type"] = options.Type
-	}
-	if options.enabledSetters["UsableInGrid"] {
-		params["usable_in_grid"] = options.UsableInGrid
-	}
-	if options.enabledSetters["Validation"] {
-		params["validation"] = options.Validation
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Attributes{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Attributes
-	parsed, ok := resp.Result.(models.Attributes)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -2021,7 +481,19 @@ func (srv *Products) WithProductsBatchSkus(v []string) ProductsBatchOption {
 	}
 }
 	
-// ProductsBatch
+// ProductsBatch answers four fields — id, sku, tax_class and the resolved
+// display name — for a list of ids and/or SKUs in ONE call. It exists for
+// the app on the other side of a product reference: the prices app holds SKUs
+// and needs a tax class, a feed builder holds ids and needs names, and
+// neither should page through the catalog or fire a request per line. Ask by
+// either identifier or both; the two are unioned and a product named twice
+// comes back once.
+// 
+// It answers what it FOUND: an id or SKU that names nothing is simply absent
+// from `items` rather than an error, so compare the length of what you sent
+// with what came back if a miss matters. It is not a general product read —
+// for the whole row use `GET /products/{id}`, and for a scannable list use
+// `GET /products/grid`.
 func (srv *Products) ProductsBatch(optionalSetters ...ProductsBatchOption)(*interface{}, error) {
 	path := "/v1/products/batch"
 	options := ProductsBatchOptions{}.New()
@@ -2062,1397 +534,369 @@ func (srv *Products) ProductsBatch(optionalSetters ...ProductsBatchOption)(*inte
 	return &parsed, nil
 
 }
-
-// ProductsCategoriesList
-func (srv *Products) ProductsCategoriesList()(*interface{}, error) {
-	path := "/v1/products/categories"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsCategoriesCreateOptions struct {
-	Labels interface{}
-	ParentId string
-	Path string
-	Position int
-	Values interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsCategoriesCreateOptions) New() *ProductsCategoriesCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"Labels": false,
-		"ParentId": false,
-		"Path": false,
-		"Position": false,
-		"Values": false,
-	}
-	return &options
-}
-type ProductsCategoriesCreateOption func(*ProductsCategoriesCreateOptions)
-func (srv *Products) WithProductsCategoriesCreateLabels(v interface{}) ProductsCategoriesCreateOption {
-	return func(o *ProductsCategoriesCreateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-func (srv *Products) WithProductsCategoriesCreateParentId(v string) ProductsCategoriesCreateOption {
-	return func(o *ProductsCategoriesCreateOptions) {
-		o.ParentId = v
-		o.enabledSetters["ParentId"] = true
-	}
-}
-func (srv *Products) WithProductsCategoriesCreatePath(v string) ProductsCategoriesCreateOption {
-	return func(o *ProductsCategoriesCreateOptions) {
-		o.Path = v
-		o.enabledSetters["Path"] = true
-	}
-}
-func (srv *Products) WithProductsCategoriesCreatePosition(v int) ProductsCategoriesCreateOption {
-	return func(o *ProductsCategoriesCreateOptions) {
-		o.Position = v
-		o.enabledSetters["Position"] = true
-	}
-}
-func (srv *Products) WithProductsCategoriesCreateValues(v interface{}) ProductsCategoriesCreateOption {
-	return func(o *ProductsCategoriesCreateOptions) {
-		o.Values = v
-		o.enabledSetters["Values"] = true
-	}
-}
-			
-// ProductsCategoriesCreate
-func (srv *Products) ProductsCategoriesCreate(Code string, optionalSetters ...ProductsCategoriesCreateOption)(*models.Categories, error) {
-	path := "/v1/products/categories"
-	options := ProductsCategoriesCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["code"] = Code
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	if options.enabledSetters["ParentId"] {
-		params["parent_id"] = options.ParentId
-	}
-	if options.enabledSetters["Path"] {
-		params["path"] = options.Path
-	}
-	if options.enabledSetters["Position"] {
-		params["position"] = options.Position
-	}
-	if options.enabledSetters["Values"] {
-		params["values"] = options.Values
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Categories{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Categories
-	parsed, ok := resp.Result.(models.Categories)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsCategoriesDelete
-func (srv *Products) ProductsCategoriesDelete(Id string)(*interface{}, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/categories/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsCategoriesGet
-func (srv *Products) ProductsCategoriesGet(Id string)(*models.Categories, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/categories/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Categories{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Categories
-	parsed, ok := resp.Result.(models.Categories)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsCategoriesUpdateOptions struct {
-	Code string
-	Labels interface{}
-	ParentId string
-	Path string
-	Position int
-	Values interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsCategoriesUpdateOptions) New() *ProductsCategoriesUpdateOptions {
-	options.enabledSetters = map[string]bool{
-		"Code": false,
-		"Labels": false,
-		"ParentId": false,
-		"Path": false,
-		"Position": false,
-		"Values": false,
-	}
-	return &options
-}
-type ProductsCategoriesUpdateOption func(*ProductsCategoriesUpdateOptions)
-func (srv *Products) WithProductsCategoriesUpdateCode(v string) ProductsCategoriesUpdateOption {
-	return func(o *ProductsCategoriesUpdateOptions) {
-		o.Code = v
-		o.enabledSetters["Code"] = true
-	}
-}
-func (srv *Products) WithProductsCategoriesUpdateLabels(v interface{}) ProductsCategoriesUpdateOption {
-	return func(o *ProductsCategoriesUpdateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-func (srv *Products) WithProductsCategoriesUpdateParentId(v string) ProductsCategoriesUpdateOption {
-	return func(o *ProductsCategoriesUpdateOptions) {
-		o.ParentId = v
-		o.enabledSetters["ParentId"] = true
-	}
-}
-func (srv *Products) WithProductsCategoriesUpdatePath(v string) ProductsCategoriesUpdateOption {
-	return func(o *ProductsCategoriesUpdateOptions) {
-		o.Path = v
-		o.enabledSetters["Path"] = true
-	}
-}
-func (srv *Products) WithProductsCategoriesUpdatePosition(v int) ProductsCategoriesUpdateOption {
-	return func(o *ProductsCategoriesUpdateOptions) {
-		o.Position = v
-		o.enabledSetters["Position"] = true
-	}
-}
-func (srv *Products) WithProductsCategoriesUpdateValues(v interface{}) ProductsCategoriesUpdateOption {
-	return func(o *ProductsCategoriesUpdateOptions) {
-		o.Values = v
-		o.enabledSetters["Values"] = true
-	}
-}
-			
-// ProductsCategoriesUpdate
-func (srv *Products) ProductsCategoriesUpdate(Id string, optionalSetters ...ProductsCategoriesUpdateOption)(*models.Categories, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/categories/{id}")
-	options := ProductsCategoriesUpdateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["id"] = Id
-	if options.enabledSetters["Code"] {
-		params["code"] = options.Code
-	}
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	if options.enabledSetters["ParentId"] {
-		params["parent_id"] = options.ParentId
-	}
-	if options.enabledSetters["Path"] {
-		params["path"] = options.Path
-	}
-	if options.enabledSetters["Position"] {
-		params["position"] = options.Position
-	}
-	if options.enabledSetters["Values"] {
-		params["values"] = options.Values
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Categories{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Categories
-	parsed, ok := resp.Result.(models.Categories)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// ProductsFamiliesList
-func (srv *Products) ProductsFamiliesList()(*interface{}, error) {
-	path := "/v1/products/families"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsFamiliesCreateOptions struct {
-	ImageAttribute string
-	LabelAttribute string
-	Labels interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsFamiliesCreateOptions) New() *ProductsFamiliesCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"ImageAttribute": false,
-		"LabelAttribute": false,
-		"Labels": false,
-	}
-	return &options
-}
-type ProductsFamiliesCreateOption func(*ProductsFamiliesCreateOptions)
-func (srv *Products) WithProductsFamiliesCreateImageAttribute(v string) ProductsFamiliesCreateOption {
-	return func(o *ProductsFamiliesCreateOptions) {
-		o.ImageAttribute = v
-		o.enabledSetters["ImageAttribute"] = true
-	}
-}
-func (srv *Products) WithProductsFamiliesCreateLabelAttribute(v string) ProductsFamiliesCreateOption {
-	return func(o *ProductsFamiliesCreateOptions) {
-		o.LabelAttribute = v
-		o.enabledSetters["LabelAttribute"] = true
-	}
-}
-func (srv *Products) WithProductsFamiliesCreateLabels(v interface{}) ProductsFamiliesCreateOption {
-	return func(o *ProductsFamiliesCreateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-			
-// ProductsFamiliesCreate
-func (srv *Products) ProductsFamiliesCreate(Code string, optionalSetters ...ProductsFamiliesCreateOption)(*models.Families, error) {
-	path := "/v1/products/families"
-	options := ProductsFamiliesCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["code"] = Code
-	if options.enabledSetters["ImageAttribute"] {
-		params["image_attribute"] = options.ImageAttribute
-	}
-	if options.enabledSetters["LabelAttribute"] {
-		params["label_attribute"] = options.LabelAttribute
-	}
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Families{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Families
-	parsed, ok := resp.Result.(models.Families)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsFamiliesDelete
-func (srv *Products) ProductsFamiliesDelete(Id string)(*interface{}, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/families/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsFamiliesGet
-func (srv *Products) ProductsFamiliesGet(Id string)(*models.Families, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/families/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Families{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Families
-	parsed, ok := resp.Result.(models.Families)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsFamiliesUpdateOptions struct {
-	Code string
-	ImageAttribute string
-	LabelAttribute string
-	Labels interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsFamiliesUpdateOptions) New() *ProductsFamiliesUpdateOptions {
-	options.enabledSetters = map[string]bool{
-		"Code": false,
-		"ImageAttribute": false,
-		"LabelAttribute": false,
-		"Labels": false,
-	}
-	return &options
-}
-type ProductsFamiliesUpdateOption func(*ProductsFamiliesUpdateOptions)
-func (srv *Products) WithProductsFamiliesUpdateCode(v string) ProductsFamiliesUpdateOption {
-	return func(o *ProductsFamiliesUpdateOptions) {
-		o.Code = v
-		o.enabledSetters["Code"] = true
-	}
-}
-func (srv *Products) WithProductsFamiliesUpdateImageAttribute(v string) ProductsFamiliesUpdateOption {
-	return func(o *ProductsFamiliesUpdateOptions) {
-		o.ImageAttribute = v
-		o.enabledSetters["ImageAttribute"] = true
-	}
-}
-func (srv *Products) WithProductsFamiliesUpdateLabelAttribute(v string) ProductsFamiliesUpdateOption {
-	return func(o *ProductsFamiliesUpdateOptions) {
-		o.LabelAttribute = v
-		o.enabledSetters["LabelAttribute"] = true
-	}
-}
-func (srv *Products) WithProductsFamiliesUpdateLabels(v interface{}) ProductsFamiliesUpdateOption {
-	return func(o *ProductsFamiliesUpdateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-			
-// ProductsFamiliesUpdate
-func (srv *Products) ProductsFamiliesUpdate(Id string, optionalSetters ...ProductsFamiliesUpdateOption)(*models.Families, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/families/{id}")
-	options := ProductsFamiliesUpdateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["id"] = Id
-	if options.enabledSetters["Code"] {
-		params["code"] = options.Code
-	}
-	if options.enabledSetters["ImageAttribute"] {
-		params["image_attribute"] = options.ImageAttribute
-	}
-	if options.enabledSetters["LabelAttribute"] {
-		params["label_attribute"] = options.LabelAttribute
-	}
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.Families{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.Families
-	parsed, ok := resp.Result.(models.Families)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// ProductsFamilyAttributesList
-func (srv *Products) ProductsFamilyAttributesList()(*interface{}, error) {
-	path := "/v1/products/family_attributes"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsFamilyAttributesCreateOptions struct {
-	IsRequired bool
-	Position int
-	RequiredChannels interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsFamilyAttributesCreateOptions) New() *ProductsFamilyAttributesCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"IsRequired": false,
-		"Position": false,
-		"RequiredChannels": false,
-	}
-	return &options
-}
-type ProductsFamilyAttributesCreateOption func(*ProductsFamilyAttributesCreateOptions)
-func (srv *Products) WithProductsFamilyAttributesCreateIsRequired(v bool) ProductsFamilyAttributesCreateOption {
-	return func(o *ProductsFamilyAttributesCreateOptions) {
-		o.IsRequired = v
-		o.enabledSetters["IsRequired"] = true
-	}
-}
-func (srv *Products) WithProductsFamilyAttributesCreatePosition(v int) ProductsFamilyAttributesCreateOption {
-	return func(o *ProductsFamilyAttributesCreateOptions) {
-		o.Position = v
-		o.enabledSetters["Position"] = true
-	}
-}
-func (srv *Products) WithProductsFamilyAttributesCreateRequiredChannels(v interface{}) ProductsFamilyAttributesCreateOption {
-	return func(o *ProductsFamilyAttributesCreateOptions) {
-		o.RequiredChannels = v
-		o.enabledSetters["RequiredChannels"] = true
-	}
-}
-					
-// ProductsFamilyAttributesCreate
-func (srv *Products) ProductsFamilyAttributesCreate(AttributeId string, FamilyId string, optionalSetters ...ProductsFamilyAttributesCreateOption)(*models.FamilyAttributes, error) {
-	path := "/v1/products/family_attributes"
-	options := ProductsFamilyAttributesCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["attribute_id"] = AttributeId
-	params["family_id"] = FamilyId
-	if options.enabledSetters["IsRequired"] {
-		params["is_required"] = options.IsRequired
-	}
-	if options.enabledSetters["Position"] {
-		params["position"] = options.Position
-	}
-	if options.enabledSetters["RequiredChannels"] {
-		params["required_channels"] = options.RequiredChannels
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.FamilyAttributes{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.FamilyAttributes
-	parsed, ok := resp.Result.(models.FamilyAttributes)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsFamilyAttributesDelete
-func (srv *Products) ProductsFamilyAttributesDelete(Id string)(*interface{}, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/family_attributes/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsFamilyAttributesGet
-func (srv *Products) ProductsFamilyAttributesGet(Id string)(*models.FamilyAttributes, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/family_attributes/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.FamilyAttributes{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.FamilyAttributes
-	parsed, ok := resp.Result.(models.FamilyAttributes)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsFamilyAttributesUpdateOptions struct {
-	AttributeId string
+type ProductsGridOptions struct {
+	Limit int
+	Offset int
+	Order string
+	Q string
+	Kind string
+	Enabled bool
 	FamilyId string
-	IsRequired bool
-	Position int
-	RequiredChannels interface{}
 	enabledSetters map[string]bool
 }
-func (options ProductsFamilyAttributesUpdateOptions) New() *ProductsFamilyAttributesUpdateOptions {
+func (options ProductsGridOptions) New() *ProductsGridOptions {
 	options.enabledSetters = map[string]bool{
-		"AttributeId": false,
+		"Limit": false,
+		"Offset": false,
+		"Order": false,
+		"Q": false,
+		"Kind": false,
+		"Enabled": false,
 		"FamilyId": false,
-		"IsRequired": false,
-		"Position": false,
-		"RequiredChannels": false,
 	}
 	return &options
 }
-type ProductsFamilyAttributesUpdateOption func(*ProductsFamilyAttributesUpdateOptions)
-func (srv *Products) WithProductsFamilyAttributesUpdateAttributeId(v string) ProductsFamilyAttributesUpdateOption {
-	return func(o *ProductsFamilyAttributesUpdateOptions) {
-		o.AttributeId = v
-		o.enabledSetters["AttributeId"] = true
+type ProductsGridOption func(*ProductsGridOptions)
+func (srv *Products) WithProductsGridLimit(v int) ProductsGridOption {
+	return func(o *ProductsGridOptions) {
+		o.Limit = v
+		o.enabledSetters["Limit"] = true
 	}
 }
-func (srv *Products) WithProductsFamilyAttributesUpdateFamilyId(v string) ProductsFamilyAttributesUpdateOption {
-	return func(o *ProductsFamilyAttributesUpdateOptions) {
+func (srv *Products) WithProductsGridOffset(v int) ProductsGridOption {
+	return func(o *ProductsGridOptions) {
+		o.Offset = v
+		o.enabledSetters["Offset"] = true
+	}
+}
+func (srv *Products) WithProductsGridOrder(v string) ProductsGridOption {
+	return func(o *ProductsGridOptions) {
+		o.Order = v
+		o.enabledSetters["Order"] = true
+	}
+}
+func (srv *Products) WithProductsGridQ(v string) ProductsGridOption {
+	return func(o *ProductsGridOptions) {
+		o.Q = v
+		o.enabledSetters["Q"] = true
+	}
+}
+func (srv *Products) WithProductsGridKind(v string) ProductsGridOption {
+	return func(o *ProductsGridOptions) {
+		o.Kind = v
+		o.enabledSetters["Kind"] = true
+	}
+}
+func (srv *Products) WithProductsGridEnabled(v bool) ProductsGridOption {
+	return func(o *ProductsGridOptions) {
+		o.Enabled = v
+		o.enabledSetters["Enabled"] = true
+	}
+}
+func (srv *Products) WithProductsGridFamilyId(v string) ProductsGridOption {
+	return func(o *ProductsGridOptions) {
 		o.FamilyId = v
 		o.enabledSetters["FamilyId"] = true
 	}
 }
-func (srv *Products) WithProductsFamilyAttributesUpdateIsRequired(v bool) ProductsFamilyAttributesUpdateOption {
-	return func(o *ProductsFamilyAttributesUpdateOptions) {
-		o.IsRequired = v
-		o.enabledSetters["IsRequired"] = true
+	
+// ProductsGrid the list a merchant can actually scan, as opposed to `GET
+// /products`, which answers SKUs and a jsonb blob. Every row arrives already
+// flattened: its resolved display name and where that name came from, its
+// family code, its stored completeness, and the value of every attribute the
+// catalog marks `usable_in_grid` — no join, no second call. `q` is a
+// case-insensitive substring of the stored `label` column, which falls back
+// to the SKU, so one box finds a product by either. Soft-deleted products are
+// excluded here, unlike `GET /products`.
+// 
+// It filters on `q`, `kind`, `enabled` and `family_id`, and on NOTHING ELSE
+// — a query parameter it does not accept is refused with 400 rather than
+// dropped. That matters because of `filters`: the array reports the
+// attributes marked `is_filterable`, which is what a filter bar should OFFER,
+// and it is not a query surface. Filtering on an attribute value is not
+// offered by this API at all — the values live inside a four-bucket jsonb
+// document and are read through a fallback chain, so it is a feature with a
+// design of its own rather than a parameter that was forgotten.
+func (srv *Products) ProductsGrid(optionalSetters ...ProductsGridOption)(*models.Error, error) {
+	path := "/v1/products/grid"
+	options := ProductsGridOptions{}.New()
+	for _, opt := range optionalSetters {
+		opt(options)
+	}
+	params := map[string]interface{}{}
+	if options.enabledSetters["Limit"] {
+		params["limit"] = options.Limit
+	}
+	if options.enabledSetters["Offset"] {
+		params["offset"] = options.Offset
+	}
+	if options.enabledSetters["Order"] {
+		params["order"] = options.Order
+	}
+	if options.enabledSetters["Q"] {
+		params["q"] = options.Q
+	}
+	if options.enabledSetters["Kind"] {
+		params["kind"] = options.Kind
+	}
+	if options.enabledSetters["Enabled"] {
+		params["enabled"] = options.Enabled
+	}
+	if options.enabledSetters["FamilyId"] {
+		params["family_id"] = options.FamilyId
+	}
+	headers := map[string]interface{}{
+	}
+
+	resp, err := srv.client.Call("GET", path, headers, params)
+	if err != nil {
+		return nil, err
+	}
+	if strings.HasPrefix(resp.Type, "application/json") {
+		bytes := []byte(resp.Result.(string))
+
+		parsed := models.Error{}.New(bytes)
+
+		err = json.Unmarshal(bytes, parsed)
+		if err != nil {
+			return nil, err
+		}
+
+		return parsed, nil
+	}
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
+	if !ok {
+		return nil, errors.New("unexpected response type")
+	}
+	return &parsed, nil
+
+}
+type ProductsLabelsOptions struct {
+	Ids []string
+	Skus []string
+	enabledSetters map[string]bool
+}
+func (options ProductsLabelsOptions) New() *ProductsLabelsOptions {
+	options.enabledSetters = map[string]bool{
+		"Ids": false,
+		"Skus": false,
+	}
+	return &options
+}
+type ProductsLabelsOption func(*ProductsLabelsOptions)
+func (srv *Products) WithProductsLabelsIds(v []string) ProductsLabelsOption {
+	return func(o *ProductsLabelsOptions) {
+		o.Ids = v
+		o.enabledSetters["Ids"] = true
 	}
 }
-func (srv *Products) WithProductsFamilyAttributesUpdatePosition(v int) ProductsFamilyAttributesUpdateOption {
-	return func(o *ProductsFamilyAttributesUpdateOptions) {
+func (srv *Products) WithProductsLabelsSkus(v []string) ProductsLabelsOption {
+	return func(o *ProductsLabelsOptions) {
+		o.Skus = v
+		o.enabledSetters["Skus"] = true
+	}
+}
+	
+// ProductsLabels what is this product CALLED? A product's name is an
+// attribute rather than a column, and which attribute it is, is per family
+// — so no plain read can answer it. This resolves up to 500 products at
+// once, by id and/or SKU: it reads families.label_attribute (falling back to
+// the default_label_attribute setting, then to the conventional `name`) and
+// looks the value up through the scoped attribute_values document — common,
+// then locale_specific in the label_locales order, then the channel buckets.
+// 
+// It reports WHERE the name was found, which is the half that matters:
+// `source: "sku"` means the catalog holds no name for this product and the
+// SKU is standing in for one, so show it as a missing name rather than as a
+// name. Writes nothing, and answers only what it found.
+func (srv *Products) ProductsLabels(optionalSetters ...ProductsLabelsOption)(*models.Error, error) {
+	path := "/v1/products/labels"
+	options := ProductsLabelsOptions{}.New()
+	for _, opt := range optionalSetters {
+		opt(options)
+	}
+	params := map[string]interface{}{}
+	if options.enabledSetters["Ids"] {
+		params["ids"] = options.Ids
+	}
+	if options.enabledSetters["Skus"] {
+		params["skus"] = options.Skus
+	}
+	headers := map[string]interface{}{
+		"content-type": "application/json",
+	}
+
+	resp, err := srv.client.Call("POST", path, headers, params)
+	if err != nil {
+		return nil, err
+	}
+	if strings.HasPrefix(resp.Type, "application/json") {
+		bytes := []byte(resp.Result.(string))
+
+		parsed := models.Error{}.New(bytes)
+
+		err = json.Unmarshal(bytes, parsed)
+		if err != nil {
+			return nil, err
+		}
+
+		return parsed, nil
+	}
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
+	if !ok {
+		return nil, errors.New("unexpected response type")
+	}
+	return &parsed, nil
+
+}
+type ProductsProductAssociationsListOptions struct {
+	Limit int
+	Offset int
+	Order string
+	Id string
+	ProductId string
+	AssociationTypeId string
+	TargetProductId string
+	Quantity float64
+	Position int
+	CreatedAt string
+	enabledSetters map[string]bool
+}
+func (options ProductsProductAssociationsListOptions) New() *ProductsProductAssociationsListOptions {
+	options.enabledSetters = map[string]bool{
+		"Limit": false,
+		"Offset": false,
+		"Order": false,
+		"Id": false,
+		"ProductId": false,
+		"AssociationTypeId": false,
+		"TargetProductId": false,
+		"Quantity": false,
+		"Position": false,
+		"CreatedAt": false,
+	}
+	return &options
+}
+type ProductsProductAssociationsListOption func(*ProductsProductAssociationsListOptions)
+func (srv *Products) WithProductsProductAssociationsListLimit(v int) ProductsProductAssociationsListOption {
+	return func(o *ProductsProductAssociationsListOptions) {
+		o.Limit = v
+		o.enabledSetters["Limit"] = true
+	}
+}
+func (srv *Products) WithProductsProductAssociationsListOffset(v int) ProductsProductAssociationsListOption {
+	return func(o *ProductsProductAssociationsListOptions) {
+		o.Offset = v
+		o.enabledSetters["Offset"] = true
+	}
+}
+func (srv *Products) WithProductsProductAssociationsListOrder(v string) ProductsProductAssociationsListOption {
+	return func(o *ProductsProductAssociationsListOptions) {
+		o.Order = v
+		o.enabledSetters["Order"] = true
+	}
+}
+func (srv *Products) WithProductsProductAssociationsListId(v string) ProductsProductAssociationsListOption {
+	return func(o *ProductsProductAssociationsListOptions) {
+		o.Id = v
+		o.enabledSetters["Id"] = true
+	}
+}
+func (srv *Products) WithProductsProductAssociationsListProductId(v string) ProductsProductAssociationsListOption {
+	return func(o *ProductsProductAssociationsListOptions) {
+		o.ProductId = v
+		o.enabledSetters["ProductId"] = true
+	}
+}
+func (srv *Products) WithProductsProductAssociationsListAssociationTypeId(v string) ProductsProductAssociationsListOption {
+	return func(o *ProductsProductAssociationsListOptions) {
+		o.AssociationTypeId = v
+		o.enabledSetters["AssociationTypeId"] = true
+	}
+}
+func (srv *Products) WithProductsProductAssociationsListTargetProductId(v string) ProductsProductAssociationsListOption {
+	return func(o *ProductsProductAssociationsListOptions) {
+		o.TargetProductId = v
+		o.enabledSetters["TargetProductId"] = true
+	}
+}
+func (srv *Products) WithProductsProductAssociationsListQuantity(v float64) ProductsProductAssociationsListOption {
+	return func(o *ProductsProductAssociationsListOptions) {
+		o.Quantity = v
+		o.enabledSetters["Quantity"] = true
+	}
+}
+func (srv *Products) WithProductsProductAssociationsListPosition(v int) ProductsProductAssociationsListOption {
+	return func(o *ProductsProductAssociationsListOptions) {
 		o.Position = v
 		o.enabledSetters["Position"] = true
 	}
 }
-func (srv *Products) WithProductsFamilyAttributesUpdateRequiredChannels(v interface{}) ProductsFamilyAttributesUpdateOption {
-	return func(o *ProductsFamilyAttributesUpdateOptions) {
-		o.RequiredChannels = v
-		o.enabledSetters["RequiredChannels"] = true
+func (srv *Products) WithProductsProductAssociationsListCreatedAt(v string) ProductsProductAssociationsListOption {
+	return func(o *ProductsProductAssociationsListOptions) {
+		o.CreatedAt = v
+		o.enabledSetters["CreatedAt"] = true
 	}
-}
-			
-// ProductsFamilyAttributesUpdate
-func (srv *Products) ProductsFamilyAttributesUpdate(Id string, optionalSetters ...ProductsFamilyAttributesUpdateOption)(*models.FamilyAttributes, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/family_attributes/{id}")
-	options := ProductsFamilyAttributesUpdateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["id"] = Id
-	if options.enabledSetters["AttributeId"] {
-		params["attribute_id"] = options.AttributeId
-	}
-	if options.enabledSetters["FamilyId"] {
-		params["family_id"] = options.FamilyId
-	}
-	if options.enabledSetters["IsRequired"] {
-		params["is_required"] = options.IsRequired
-	}
-	if options.enabledSetters["Position"] {
-		params["position"] = options.Position
-	}
-	if options.enabledSetters["RequiredChannels"] {
-		params["required_channels"] = options.RequiredChannels
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.FamilyAttributes{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.FamilyAttributes
-	parsed, ok := resp.Result.(models.FamilyAttributes)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// ProductsFamilyVariantsList
-func (srv *Products) ProductsFamilyVariantsList()(*interface{}, error) {
-	path := "/v1/products/family_variants"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsFamilyVariantsCreateOptions struct {
-	Axes interface{}
-	Labels interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsFamilyVariantsCreateOptions) New() *ProductsFamilyVariantsCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"Axes": false,
-		"Labels": false,
-	}
-	return &options
-}
-type ProductsFamilyVariantsCreateOption func(*ProductsFamilyVariantsCreateOptions)
-func (srv *Products) WithProductsFamilyVariantsCreateAxes(v interface{}) ProductsFamilyVariantsCreateOption {
-	return func(o *ProductsFamilyVariantsCreateOptions) {
-		o.Axes = v
-		o.enabledSetters["Axes"] = true
-	}
-}
-func (srv *Products) WithProductsFamilyVariantsCreateLabels(v interface{}) ProductsFamilyVariantsCreateOption {
-	return func(o *ProductsFamilyVariantsCreateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-					
-// ProductsFamilyVariantsCreate
-func (srv *Products) ProductsFamilyVariantsCreate(Code string, FamilyId string, optionalSetters ...ProductsFamilyVariantsCreateOption)(*models.FamilyVariants, error) {
-	path := "/v1/products/family_variants"
-	options := ProductsFamilyVariantsCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["code"] = Code
-	params["family_id"] = FamilyId
-	if options.enabledSetters["Axes"] {
-		params["axes"] = options.Axes
-	}
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.FamilyVariants{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.FamilyVariants
-	parsed, ok := resp.Result.(models.FamilyVariants)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
 }
 	
-// ProductsFamilyVariantsDelete
-func (srv *Products) ProductsFamilyVariantsDelete(Id string)(*interface{}, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/family_variants/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsFamilyVariantsGet
-func (srv *Products) ProductsFamilyVariantsGet(Id string)(*models.FamilyVariants, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/family_variants/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.FamilyVariants{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.FamilyVariants
-	parsed, ok := resp.Result.(models.FamilyVariants)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsFamilyVariantsUpdateOptions struct {
-	Axes interface{}
-	Code string
-	FamilyId string
-	Labels interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsFamilyVariantsUpdateOptions) New() *ProductsFamilyVariantsUpdateOptions {
-	options.enabledSetters = map[string]bool{
-		"Axes": false,
-		"Code": false,
-		"FamilyId": false,
-		"Labels": false,
-	}
-	return &options
-}
-type ProductsFamilyVariantsUpdateOption func(*ProductsFamilyVariantsUpdateOptions)
-func (srv *Products) WithProductsFamilyVariantsUpdateAxes(v interface{}) ProductsFamilyVariantsUpdateOption {
-	return func(o *ProductsFamilyVariantsUpdateOptions) {
-		o.Axes = v
-		o.enabledSetters["Axes"] = true
-	}
-}
-func (srv *Products) WithProductsFamilyVariantsUpdateCode(v string) ProductsFamilyVariantsUpdateOption {
-	return func(o *ProductsFamilyVariantsUpdateOptions) {
-		o.Code = v
-		o.enabledSetters["Code"] = true
-	}
-}
-func (srv *Products) WithProductsFamilyVariantsUpdateFamilyId(v string) ProductsFamilyVariantsUpdateOption {
-	return func(o *ProductsFamilyVariantsUpdateOptions) {
-		o.FamilyId = v
-		o.enabledSetters["FamilyId"] = true
-	}
-}
-func (srv *Products) WithProductsFamilyVariantsUpdateLabels(v interface{}) ProductsFamilyVariantsUpdateOption {
-	return func(o *ProductsFamilyVariantsUpdateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-			
-// ProductsFamilyVariantsUpdate
-func (srv *Products) ProductsFamilyVariantsUpdate(Id string, optionalSetters ...ProductsFamilyVariantsUpdateOption)(*models.FamilyVariants, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/family_variants/{id}")
-	options := ProductsFamilyVariantsUpdateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["id"] = Id
-	if options.enabledSetters["Axes"] {
-		params["axes"] = options.Axes
-	}
-	if options.enabledSetters["Code"] {
-		params["code"] = options.Code
-	}
-	if options.enabledSetters["FamilyId"] {
-		params["family_id"] = options.FamilyId
-	}
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.FamilyVariants{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.FamilyVariants
-	parsed, ok := resp.Result.(models.FamilyVariants)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// ProductsMeasurementFamiliesList
-func (srv *Products) ProductsMeasurementFamiliesList()(*interface{}, error) {
-	path := "/v1/products/measurement_families"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsMeasurementFamiliesCreateOptions struct {
-	Labels interface{}
-	Units interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsMeasurementFamiliesCreateOptions) New() *ProductsMeasurementFamiliesCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"Labels": false,
-		"Units": false,
-	}
-	return &options
-}
-type ProductsMeasurementFamiliesCreateOption func(*ProductsMeasurementFamiliesCreateOptions)
-func (srv *Products) WithProductsMeasurementFamiliesCreateLabels(v interface{}) ProductsMeasurementFamiliesCreateOption {
-	return func(o *ProductsMeasurementFamiliesCreateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-func (srv *Products) WithProductsMeasurementFamiliesCreateUnits(v interface{}) ProductsMeasurementFamiliesCreateOption {
-	return func(o *ProductsMeasurementFamiliesCreateOptions) {
-		o.Units = v
-		o.enabledSetters["Units"] = true
-	}
-}
-					
-// ProductsMeasurementFamiliesCreate
-func (srv *Products) ProductsMeasurementFamiliesCreate(Code string, StandardUnit string, optionalSetters ...ProductsMeasurementFamiliesCreateOption)(*models.MeasurementFamilies, error) {
-	path := "/v1/products/measurement_families"
-	options := ProductsMeasurementFamiliesCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["code"] = Code
-	params["standard_unit"] = StandardUnit
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	if options.enabledSetters["Units"] {
-		params["units"] = options.Units
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.MeasurementFamilies{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.MeasurementFamilies
-	parsed, ok := resp.Result.(models.MeasurementFamilies)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsMeasurementFamiliesDelete
-func (srv *Products) ProductsMeasurementFamiliesDelete(Id string)(*interface{}, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/measurement_families/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsMeasurementFamiliesGet
-func (srv *Products) ProductsMeasurementFamiliesGet(Id string)(*models.MeasurementFamilies, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/measurement_families/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.MeasurementFamilies{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.MeasurementFamilies
-	parsed, ok := resp.Result.(models.MeasurementFamilies)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsMeasurementFamiliesUpdateOptions struct {
-	Code string
-	Labels interface{}
-	StandardUnit string
-	Units interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsMeasurementFamiliesUpdateOptions) New() *ProductsMeasurementFamiliesUpdateOptions {
-	options.enabledSetters = map[string]bool{
-		"Code": false,
-		"Labels": false,
-		"StandardUnit": false,
-		"Units": false,
-	}
-	return &options
-}
-type ProductsMeasurementFamiliesUpdateOption func(*ProductsMeasurementFamiliesUpdateOptions)
-func (srv *Products) WithProductsMeasurementFamiliesUpdateCode(v string) ProductsMeasurementFamiliesUpdateOption {
-	return func(o *ProductsMeasurementFamiliesUpdateOptions) {
-		o.Code = v
-		o.enabledSetters["Code"] = true
-	}
-}
-func (srv *Products) WithProductsMeasurementFamiliesUpdateLabels(v interface{}) ProductsMeasurementFamiliesUpdateOption {
-	return func(o *ProductsMeasurementFamiliesUpdateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-func (srv *Products) WithProductsMeasurementFamiliesUpdateStandardUnit(v string) ProductsMeasurementFamiliesUpdateOption {
-	return func(o *ProductsMeasurementFamiliesUpdateOptions) {
-		o.StandardUnit = v
-		o.enabledSetters["StandardUnit"] = true
-	}
-}
-func (srv *Products) WithProductsMeasurementFamiliesUpdateUnits(v interface{}) ProductsMeasurementFamiliesUpdateOption {
-	return func(o *ProductsMeasurementFamiliesUpdateOptions) {
-		o.Units = v
-		o.enabledSetters["Units"] = true
-	}
-}
-			
-// ProductsMeasurementFamiliesUpdate
-func (srv *Products) ProductsMeasurementFamiliesUpdate(Id string, optionalSetters ...ProductsMeasurementFamiliesUpdateOption)(*models.MeasurementFamilies, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/measurement_families/{id}")
-	options := ProductsMeasurementFamiliesUpdateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["id"] = Id
-	if options.enabledSetters["Code"] {
-		params["code"] = options.Code
-	}
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	if options.enabledSetters["StandardUnit"] {
-		params["standard_unit"] = options.StandardUnit
-	}
-	if options.enabledSetters["Units"] {
-		params["units"] = options.Units
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.MeasurementFamilies{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.MeasurementFamilies
-	parsed, ok := resp.Result.(models.MeasurementFamilies)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// ProductsProductAssociationsList
-func (srv *Products) ProductsProductAssociationsList()(*interface{}, error) {
+// ProductsProductAssociationsList one relation from one product to another,
+// of a declared type: this drill's accessories, this bundle's parts, this
+// article's cross-sells. `quantity` is the number in "this bundle contains 4
+// casters" and is meaningful only when the association type carries
+// `is_quantified`. This relational surface is the one this app serves; the
+// `products.quantified_associations` column is an importer's blob that no
+// route here reads or writes.
+// 
+// Every column of `product_associations` is an exact-match query parameter,
+// `order` sorts by one column, and `limit`/`offset` page through
+// `page.total`. A query key that is NOT a column is dropped rather than
+// refused, and the `filter` object echoes the ones that were understood —
+// that echo is the only way to tell an unfiltered answer from an empty one.
+// It reads rows exactly as they are stored: no join is resolved, no jsonb
+// value is unpacked.
+// 
+// Answered from the gateway's tenant cache for up to 30 minutes and dropped
+// the moment this entity is written, because the data model changes weekly at
+// most and every product page asks the same question.
+func (srv *Products) ProductsProductAssociationsList(optionalSetters ...ProductsProductAssociationsListOption)(*interface{}, error) {
 	path := "/v1/products/product_associations"
+	options := ProductsProductAssociationsListOptions{}.New()
+	for _, opt := range optionalSetters {
+		opt(options)
+	}
 	params := map[string]interface{}{}
+	if options.enabledSetters["Limit"] {
+		params["limit"] = options.Limit
+	}
+	if options.enabledSetters["Offset"] {
+		params["offset"] = options.Offset
+	}
+	if options.enabledSetters["Order"] {
+		params["order"] = options.Order
+	}
+	if options.enabledSetters["Id"] {
+		params["id"] = options.Id
+	}
+	if options.enabledSetters["ProductId"] {
+		params["product_id"] = options.ProductId
+	}
+	if options.enabledSetters["AssociationTypeId"] {
+		params["association_type_id"] = options.AssociationTypeId
+	}
+	if options.enabledSetters["TargetProductId"] {
+		params["target_product_id"] = options.TargetProductId
+	}
+	if options.enabledSetters["Quantity"] {
+		params["quantity"] = options.Quantity
+	}
+	if options.enabledSetters["Position"] {
+		params["position"] = options.Position
+	}
+	if options.enabledSetters["CreatedAt"] {
+		params["created_at"] = options.CreatedAt
+	}
 	headers := map[string]interface{}{
 	}
 
@@ -3505,8 +949,23 @@ func (srv *Products) WithProductsProductAssociationsCreateQuantity(v float64) Pr
 	}
 }
 							
-// ProductsProductAssociationsCreate
-func (srv *Products) ProductsProductAssociationsCreate(AssociationTypeId string, ProductId string, TargetProductId string, optionalSetters ...ProductsProductAssociationsCreateOption)(*models.ProductAssociations, error) {
+// ProductsProductAssociationsCreate creates one product association and
+// answers 201 with the stored row, including the id and the timestamps the
+// database filled in — a client never sends an id, it reads one back and
+// uses it in the path of every later call.
+// 
+// One relation from one product to another, of a declared type: this drill's
+// accessories, this bundle's parts, this article's cross-sells. `quantity` is
+// the number in "this bundle contains 4 casters" and is meaningful only when
+// the association type carries `is_quantified`. This relational surface is
+// the one this app serves; the `products.quantified_associations` column is
+// an importer's blob that no route here reads or writes.
+// 
+// `product_id`, `association_type_id`, `target_product_id` are the only
+// columns the database refuses the row without; everything else has a default
+// or is nullable. A second row with the same `product_id`,
+// `association_type_id`, `target_product_id` answers 409.
+func (srv *Products) ProductsProductAssociationsCreate(AssociationTypeId string, ProductId string, TargetProductId string, optionalSetters ...ProductsProductAssociationsCreateOption)(*models.Error, error) {
 	path := "/v1/products/product_associations"
 	options := ProductsProductAssociationsCreateOptions{}.New()
 	for _, opt := range optionalSetters {
@@ -3533,7 +992,7 @@ func (srv *Products) ProductsProductAssociationsCreate(AssociationTypeId string,
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.ProductAssociations{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -3542,8 +1001,8 @@ func (srv *Products) ProductsProductAssociationsCreate(AssociationTypeId string,
 
 		return parsed, nil
 	}
-	var parsed models.ProductAssociations
-	parsed, ok := resp.Result.(models.ProductAssociations)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -3551,8 +1010,16 @@ func (srv *Products) ProductsProductAssociationsCreate(AssociationTypeId string,
 
 }
 	
-// ProductsProductAssociationsDelete
-func (srv *Products) ProductsProductAssociationsDelete(Id string)(*interface{}, error) {
+// ProductsProductAssociationsDelete deletes one product association by id. It
+// is a hard delete — the row is gone, and the answer is a confirmation
+// rather than a result to branch on.
+// 
+// Nothing in this schema references it, so nothing else changes.
+// 
+// An id no product association of this tenant carries answers 404; there is
+// no 409, because every foreign key pointing at this entity resolves itself
+// on delete rather than blocking one.
+func (srv *Products) ProductsProductAssociationsDelete(Id string)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/products/product_associations/{id}")
 	params := map[string]interface{}{}
@@ -3567,16 +1034,17 @@ func (srv *Products) ProductsProductAssociationsDelete(Id string)(*interface{}, 
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		var parsed interface{}
+		parsed := models.Error{}.New(bytes)
 
-		err = json.Unmarshal(bytes, &parsed)
+		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
 			return nil, err
 		}
-		return &parsed, nil
+
+		return parsed, nil
 	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -3584,8 +1052,25 @@ func (srv *Products) ProductsProductAssociationsDelete(Id string)(*interface{}, 
 
 }
 	
-// ProductsProductAssociationsGet
-func (srv *Products) ProductsProductAssociationsGet(Id string)(*models.ProductAssociations, error) {
+// ProductsProductAssociationsGet reads one product association by its id —
+// the whole row, every column, as it is stored.
+// 
+// One relation from one product to another, of a declared type: this drill's
+// accessories, this bundle's parts, this article's cross-sells. `quantity` is
+// the number in "this bundle contains 4 casters" and is meaningful only when
+// the association type carries `is_quantified`. This relational surface is
+// the one this app serves; the `products.quantified_associations` column is
+// an importer's blob that no route here reads or writes.
+// 
+// An id no product association of this tenant carries answers 404, and so
+// does one belonging to another tenant: row-level security makes that row
+// invisible rather than forbidden. A malformed id answers 400 before the
+// route is reached.
+// 
+// Answered from the gateway's tenant cache for up to 30 minutes and dropped
+// the moment this entity is written, because the data model changes weekly at
+// most and every product page asks the same question.
+func (srv *Products) ProductsProductAssociationsGet(Id string)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/products/product_associations/{id}")
 	params := map[string]interface{}{}
@@ -3600,7 +1085,7 @@ func (srv *Products) ProductsProductAssociationsGet(Id string)(*models.ProductAs
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.ProductAssociations{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -3609,8 +1094,8 @@ func (srv *Products) ProductsProductAssociationsGet(Id string)(*models.ProductAs
 
 		return parsed, nil
 	}
-	var parsed models.ProductAssociations
-	parsed, ok := resp.Result.(models.ProductAssociations)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -3667,8 +1152,22 @@ func (srv *Products) WithProductsProductAssociationsUpdateTargetProductId(v stri
 	}
 }
 			
-// ProductsProductAssociationsUpdate
-func (srv *Products) ProductsProductAssociationsUpdate(Id string, optionalSetters ...ProductsProductAssociationsUpdateOption)(*models.ProductAssociations, error) {
+// ProductsProductAssociationsUpdate updates one product association by id. A
+// partial patch: the body names only the columns to change and every column
+// it leaves out keeps its current value, so there is no read-modify-write and
+// no way to blank a field by forgetting it.
+// 
+// One relation from one product to another, of a declared type: this drill's
+// accessories, this bundle's parts, this article's cross-sells. `quantity` is
+// the number in "this bundle contains 4 casters" and is meaningful only when
+// the association type carries `is_quantified`. This relational surface is
+// the one this app serves; the `products.quantified_associations` column is
+// an importer's blob that no route here reads or writes.
+// 
+// A body that names nothing writable is refused with 400 rather than answered
+// as a no-op, an id nobody carries answers 404, and a value that collides on
+// `product_id`, `association_type_id`, `target_product_id` answers 409.
+func (srv *Products) ProductsProductAssociationsUpdate(Id string, optionalSetters ...ProductsProductAssociationsUpdateOption)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/products/product_associations/{id}")
 	options := ProductsProductAssociationsUpdateOptions{}.New()
@@ -3703,7 +1202,7 @@ func (srv *Products) ProductsProductAssociationsUpdate(Id string, optionalSetter
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.ProductAssociations{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -3712,8 +1211,8 @@ func (srv *Products) ProductsProductAssociationsUpdate(Id string, optionalSetter
 
 		return parsed, nil
 	}
-	var parsed models.ProductAssociations
-	parsed, ok := resp.Result.(models.ProductAssociations)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -3721,9 +1220,19 @@ func (srv *Products) ProductsProductAssociationsUpdate(Id string, optionalSetter
 
 }
 
-// ProductsProductCategoriesList
-func (srv *Products) ProductsProductCategoriesList()(*interface{}, error) {
-	path := "/v1/products/product_categories"
+// ProductsVocabulariesList the index of the enums this app ENFORCES —
+// `product-kinds`, `membership-sources`, `rule-matches`, `asset-sources` —
+// served by the app that owns the CHECK constraint each one is parsed out of,
+// so a UI never has to keep its own copy of a status map and watch it drift.
+// Names and titles only: fetch one by name for its values, badge tones and
+// descriptions.
+// 
+// The set is a fixed property of this app rather than tenant data, so it is
+// the same list for every tenant. `attributes.type` is deliberately absent:
+// it carries no CHECK, because the whole point of an attribute-driven PIM is
+// that the type list is data an integrator extends.
+func (srv *Products) ProductsVocabulariesList()(*interface{}, error) {
+	path := "/v1/products/vocabularies"
 	params := map[string]interface{}{}
 	headers := map[string]interface{}{
 	}
@@ -3751,105 +1260,18 @@ func (srv *Products) ProductsProductCategoriesList()(*interface{}, error) {
 	return &parsed, nil
 
 }
-type ProductsProductCategoriesCreateOptions struct {
-	Position int
-	enabledSetters map[string]bool
-}
-func (options ProductsProductCategoriesCreateOptions) New() *ProductsProductCategoriesCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"Position": false,
-	}
-	return &options
-}
-type ProductsProductCategoriesCreateOption func(*ProductsProductCategoriesCreateOptions)
-func (srv *Products) WithProductsProductCategoriesCreatePosition(v int) ProductsProductCategoriesCreateOption {
-	return func(o *ProductsProductCategoriesCreateOptions) {
-		o.Position = v
-		o.enabledSetters["Position"] = true
-	}
-}
-					
-// ProductsProductCategoriesCreate
-func (srv *Products) ProductsProductCategoriesCreate(CategoryId string, ProductId string, optionalSetters ...ProductsProductCategoriesCreateOption)(*models.ProductCategories, error) {
-	path := "/v1/products/product_categories"
-	options := ProductsProductCategoriesCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["category_id"] = CategoryId
-	params["product_id"] = ProductId
-	if options.enabledSetters["Position"] {
-		params["position"] = options.Position
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.ProductCategories{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.ProductCategories
-	parsed, ok := resp.Result.(models.ProductCategories)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
 	
-// ProductsProductCategoriesDelete
-func (srv *Products) ProductsProductCategoriesDelete(Id string)(*interface{}, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/product_categories/{id}")
+// ProductsVocabulariesGet one vocabulary with every value it admits, each
+// with a title, a description and the badge tone a UI should paint it in. The
+// value set is parsed out of the CHECK constraint in schema.json, so what is
+// served IS what is enforced. Labels are curated on top and can only add
+// words and colour — a permitted value nobody labelled still appears,
+// titled from its own key.
+func (srv *Products) ProductsVocabulariesGet(Name string)(*models.Error, error) {
+	r := strings.NewReplacer("{name}", Name)
+	path := r.Replace("/v1/products/vocabularies/{name}")
 	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsProductCategoriesGet
-func (srv *Products) ProductsProductCategoriesGet(Id string)(*models.ProductCategories, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/product_categories/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
+	params["name"] = Name
 	headers := map[string]interface{}{
 	}
 
@@ -3860,7 +1282,7 @@ func (srv *Products) ProductsProductCategoriesGet(Id string)(*models.ProductCate
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.ProductCategories{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -3869,189 +1291,8 @@ func (srv *Products) ProductsProductCategoriesGet(Id string)(*models.ProductCate
 
 		return parsed, nil
 	}
-	var parsed models.ProductCategories
-	parsed, ok := resp.Result.(models.ProductCategories)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsProductCategoriesUpdateOptions struct {
-	CategoryId string
-	Position int
-	ProductId string
-	enabledSetters map[string]bool
-}
-func (options ProductsProductCategoriesUpdateOptions) New() *ProductsProductCategoriesUpdateOptions {
-	options.enabledSetters = map[string]bool{
-		"CategoryId": false,
-		"Position": false,
-		"ProductId": false,
-	}
-	return &options
-}
-type ProductsProductCategoriesUpdateOption func(*ProductsProductCategoriesUpdateOptions)
-func (srv *Products) WithProductsProductCategoriesUpdateCategoryId(v string) ProductsProductCategoriesUpdateOption {
-	return func(o *ProductsProductCategoriesUpdateOptions) {
-		o.CategoryId = v
-		o.enabledSetters["CategoryId"] = true
-	}
-}
-func (srv *Products) WithProductsProductCategoriesUpdatePosition(v int) ProductsProductCategoriesUpdateOption {
-	return func(o *ProductsProductCategoriesUpdateOptions) {
-		o.Position = v
-		o.enabledSetters["Position"] = true
-	}
-}
-func (srv *Products) WithProductsProductCategoriesUpdateProductId(v string) ProductsProductCategoriesUpdateOption {
-	return func(o *ProductsProductCategoriesUpdateOptions) {
-		o.ProductId = v
-		o.enabledSetters["ProductId"] = true
-	}
-}
-			
-// ProductsProductCategoriesUpdate
-func (srv *Products) ProductsProductCategoriesUpdate(Id string, optionalSetters ...ProductsProductCategoriesUpdateOption)(*models.ProductCategories, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/product_categories/{id}")
-	options := ProductsProductCategoriesUpdateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["id"] = Id
-	if options.enabledSetters["CategoryId"] {
-		params["category_id"] = options.CategoryId
-	}
-	if options.enabledSetters["Position"] {
-		params["position"] = options.Position
-	}
-	if options.enabledSetters["ProductId"] {
-		params["product_id"] = options.ProductId
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.ProductCategories{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.ProductCategories
-	parsed, ok := resp.Result.(models.ProductCategories)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// ProductsReferenceEntitiesList
-func (srv *Products) ProductsReferenceEntitiesList()(*interface{}, error) {
-	path := "/v1/products/reference_entities"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsReferenceEntitiesCreateOptions struct {
-	Image string
-	Labels interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsReferenceEntitiesCreateOptions) New() *ProductsReferenceEntitiesCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"Image": false,
-		"Labels": false,
-	}
-	return &options
-}
-type ProductsReferenceEntitiesCreateOption func(*ProductsReferenceEntitiesCreateOptions)
-func (srv *Products) WithProductsReferenceEntitiesCreateImage(v string) ProductsReferenceEntitiesCreateOption {
-	return func(o *ProductsReferenceEntitiesCreateOptions) {
-		o.Image = v
-		o.enabledSetters["Image"] = true
-	}
-}
-func (srv *Products) WithProductsReferenceEntitiesCreateLabels(v interface{}) ProductsReferenceEntitiesCreateOption {
-	return func(o *ProductsReferenceEntitiesCreateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-			
-// ProductsReferenceEntitiesCreate
-func (srv *Products) ProductsReferenceEntitiesCreate(Code string, optionalSetters ...ProductsReferenceEntitiesCreateOption)(*models.ReferenceEntities, error) {
-	path := "/v1/products/reference_entities"
-	options := ProductsReferenceEntitiesCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["code"] = Code
-	if options.enabledSetters["Image"] {
-		params["image"] = options.Image
-	}
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.ReferenceEntities{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.ReferenceEntities
-	parsed, ok := resp.Result.(models.ReferenceEntities)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -4059,416 +1300,22 @@ func (srv *Products) ProductsReferenceEntitiesCreate(Code string, optionalSetter
 
 }
 	
-// ProductsReferenceEntitiesDelete
-func (srv *Products) ProductsReferenceEntitiesDelete(Id string)(*interface{}, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/reference_entities/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsReferenceEntitiesGet
-func (srv *Products) ProductsReferenceEntitiesGet(Id string)(*models.ReferenceEntities, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/reference_entities/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.ReferenceEntities{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.ReferenceEntities
-	parsed, ok := resp.Result.(models.ReferenceEntities)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsReferenceEntitiesUpdateOptions struct {
-	Code string
-	Image string
-	Labels interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsReferenceEntitiesUpdateOptions) New() *ProductsReferenceEntitiesUpdateOptions {
-	options.enabledSetters = map[string]bool{
-		"Code": false,
-		"Image": false,
-		"Labels": false,
-	}
-	return &options
-}
-type ProductsReferenceEntitiesUpdateOption func(*ProductsReferenceEntitiesUpdateOptions)
-func (srv *Products) WithProductsReferenceEntitiesUpdateCode(v string) ProductsReferenceEntitiesUpdateOption {
-	return func(o *ProductsReferenceEntitiesUpdateOptions) {
-		o.Code = v
-		o.enabledSetters["Code"] = true
-	}
-}
-func (srv *Products) WithProductsReferenceEntitiesUpdateImage(v string) ProductsReferenceEntitiesUpdateOption {
-	return func(o *ProductsReferenceEntitiesUpdateOptions) {
-		o.Image = v
-		o.enabledSetters["Image"] = true
-	}
-}
-func (srv *Products) WithProductsReferenceEntitiesUpdateLabels(v interface{}) ProductsReferenceEntitiesUpdateOption {
-	return func(o *ProductsReferenceEntitiesUpdateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-			
-// ProductsReferenceEntitiesUpdate
-func (srv *Products) ProductsReferenceEntitiesUpdate(Id string, optionalSetters ...ProductsReferenceEntitiesUpdateOption)(*models.ReferenceEntities, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/reference_entities/{id}")
-	options := ProductsReferenceEntitiesUpdateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["id"] = Id
-	if options.enabledSetters["Code"] {
-		params["code"] = options.Code
-	}
-	if options.enabledSetters["Image"] {
-		params["image"] = options.Image
-	}
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.ReferenceEntities{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.ReferenceEntities
-	parsed, ok := resp.Result.(models.ReferenceEntities)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-
-// ProductsReferenceEntityRecordsList
-func (srv *Products) ProductsReferenceEntityRecordsList()(*interface{}, error) {
-	path := "/v1/products/reference_entity_records"
-	params := map[string]interface{}{}
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsReferenceEntityRecordsCreateOptions struct {
-	AttributeValues interface{}
-	Labels interface{}
-	enabledSetters map[string]bool
-}
-func (options ProductsReferenceEntityRecordsCreateOptions) New() *ProductsReferenceEntityRecordsCreateOptions {
-	options.enabledSetters = map[string]bool{
-		"AttributeValues": false,
-		"Labels": false,
-	}
-	return &options
-}
-type ProductsReferenceEntityRecordsCreateOption func(*ProductsReferenceEntityRecordsCreateOptions)
-func (srv *Products) WithProductsReferenceEntityRecordsCreateAttributeValues(v interface{}) ProductsReferenceEntityRecordsCreateOption {
-	return func(o *ProductsReferenceEntityRecordsCreateOptions) {
-		o.AttributeValues = v
-		o.enabledSetters["AttributeValues"] = true
-	}
-}
-func (srv *Products) WithProductsReferenceEntityRecordsCreateLabels(v interface{}) ProductsReferenceEntityRecordsCreateOption {
-	return func(o *ProductsReferenceEntityRecordsCreateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-					
-// ProductsReferenceEntityRecordsCreate
-func (srv *Products) ProductsReferenceEntityRecordsCreate(Code string, ReferenceEntityId string, optionalSetters ...ProductsReferenceEntityRecordsCreateOption)(*models.ReferenceEntityRecords, error) {
-	path := "/v1/products/reference_entity_records"
-	options := ProductsReferenceEntityRecordsCreateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["code"] = Code
-	params["reference_entity_id"] = ReferenceEntityId
-	if options.enabledSetters["AttributeValues"] {
-		params["attribute_values"] = options.AttributeValues
-	}
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("POST", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.ReferenceEntityRecords{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.ReferenceEntityRecords
-	parsed, ok := resp.Result.(models.ReferenceEntityRecords)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsReferenceEntityRecordsDelete
-func (srv *Products) ProductsReferenceEntityRecordsDelete(Id string)(*interface{}, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/reference_entity_records/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("DELETE", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		var parsed interface{}
-
-		err = json.Unmarshal(bytes, &parsed)
-		if err != nil {
-			return nil, err
-		}
-		return &parsed, nil
-	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsReferenceEntityRecordsGet
-func (srv *Products) ProductsReferenceEntityRecordsGet(Id string)(*models.ReferenceEntityRecords, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/reference_entity_records/{id}")
-	params := map[string]interface{}{}
-	params["id"] = Id
-	headers := map[string]interface{}{
-	}
-
-	resp, err := srv.client.Call("GET", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.ReferenceEntityRecords{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.ReferenceEntityRecords
-	parsed, ok := resp.Result.(models.ReferenceEntityRecords)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-type ProductsReferenceEntityRecordsUpdateOptions struct {
-	AttributeValues interface{}
-	Code string
-	Labels interface{}
-	ReferenceEntityId string
-	enabledSetters map[string]bool
-}
-func (options ProductsReferenceEntityRecordsUpdateOptions) New() *ProductsReferenceEntityRecordsUpdateOptions {
-	options.enabledSetters = map[string]bool{
-		"AttributeValues": false,
-		"Code": false,
-		"Labels": false,
-		"ReferenceEntityId": false,
-	}
-	return &options
-}
-type ProductsReferenceEntityRecordsUpdateOption func(*ProductsReferenceEntityRecordsUpdateOptions)
-func (srv *Products) WithProductsReferenceEntityRecordsUpdateAttributeValues(v interface{}) ProductsReferenceEntityRecordsUpdateOption {
-	return func(o *ProductsReferenceEntityRecordsUpdateOptions) {
-		o.AttributeValues = v
-		o.enabledSetters["AttributeValues"] = true
-	}
-}
-func (srv *Products) WithProductsReferenceEntityRecordsUpdateCode(v string) ProductsReferenceEntityRecordsUpdateOption {
-	return func(o *ProductsReferenceEntityRecordsUpdateOptions) {
-		o.Code = v
-		o.enabledSetters["Code"] = true
-	}
-}
-func (srv *Products) WithProductsReferenceEntityRecordsUpdateLabels(v interface{}) ProductsReferenceEntityRecordsUpdateOption {
-	return func(o *ProductsReferenceEntityRecordsUpdateOptions) {
-		o.Labels = v
-		o.enabledSetters["Labels"] = true
-	}
-}
-func (srv *Products) WithProductsReferenceEntityRecordsUpdateReferenceEntityId(v string) ProductsReferenceEntityRecordsUpdateOption {
-	return func(o *ProductsReferenceEntityRecordsUpdateOptions) {
-		o.ReferenceEntityId = v
-		o.enabledSetters["ReferenceEntityId"] = true
-	}
-}
-			
-// ProductsReferenceEntityRecordsUpdate
-func (srv *Products) ProductsReferenceEntityRecordsUpdate(Id string, optionalSetters ...ProductsReferenceEntityRecordsUpdateOption)(*models.ReferenceEntityRecords, error) {
-	r := strings.NewReplacer("{id}", Id)
-	path := r.Replace("/v1/products/reference_entity_records/{id}")
-	options := ProductsReferenceEntityRecordsUpdateOptions{}.New()
-	for _, opt := range optionalSetters {
-		opt(options)
-	}
-	params := map[string]interface{}{}
-	params["id"] = Id
-	if options.enabledSetters["AttributeValues"] {
-		params["attribute_values"] = options.AttributeValues
-	}
-	if options.enabledSetters["Code"] {
-		params["code"] = options.Code
-	}
-	if options.enabledSetters["Labels"] {
-		params["labels"] = options.Labels
-	}
-	if options.enabledSetters["ReferenceEntityId"] {
-		params["reference_entity_id"] = options.ReferenceEntityId
-	}
-	headers := map[string]interface{}{
-		"content-type": "application/json",
-	}
-
-	resp, err := srv.client.Call("PUT", path, headers, params)
-	if err != nil {
-		return nil, err
-	}
-	if strings.HasPrefix(resp.Type, "application/json") {
-		bytes := []byte(resp.Result.(string))
-
-		parsed := models.ReferenceEntityRecords{}.New(bytes)
-
-		err = json.Unmarshal(bytes, parsed)
-		if err != nil {
-			return nil, err
-		}
-
-		return parsed, nil
-	}
-	var parsed models.ReferenceEntityRecords
-	parsed, ok := resp.Result.(models.ReferenceEntityRecords)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return &parsed, nil
-
-}
-	
-// ProductsDelete
-func (srv *Products) ProductsDelete(Id string)(*interface{}, error) {
+// ProductsDelete deletes one product by id. It is a hard delete — the row
+// is gone, and the answer is a confirmation rather than a result to branch
+// on.
+// 
+// It takes what hangs off it: product category memberships (`product_id`),
+// product associations (`product_id` and `target_product_id`) are deleted
+// with it. `products.parent_id` is set to null instead, so the rows that
+// pointed at it survive the delete rather than going with it.
+// 
+// An id no product of this tenant carries answers 404; there is no 409,
+// because every foreign key pointing at this entity resolves itself on delete
+// rather than blocking one. `products.deleted_at` is a SOFT-delete marker
+// that the grid and every category-rule evaluation honour, but no route in
+// this app ever writes it — to soft-delete instead, `PUT /products/{id}`
+// with a `deleted_at`.
+func (srv *Products) ProductsDelete(Id string)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/products/{id}")
 	params := map[string]interface{}{}
@@ -4483,16 +1330,17 @@ func (srv *Products) ProductsDelete(Id string)(*interface{}, error) {
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		var parsed interface{}
+		parsed := models.Error{}.New(bytes)
 
-		err = json.Unmarshal(bytes, &parsed)
+		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
 			return nil, err
 		}
-		return &parsed, nil
+
+		return parsed, nil
 	}
-	var parsed interface{}
-	parsed, ok := resp.Result.(interface{})
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -4500,8 +1348,25 @@ func (srv *Products) ProductsDelete(Id string)(*interface{}, error) {
 
 }
 	
-// ProductsGet
-func (srv *Products) ProductsGet(Id string)(*models.Products, error) {
+// ProductsGet reads one product by its id — the whole row, every column, as
+// it is stored.
+// 
+// The catalog itself. A product row carries only what every product has —
+// SKU, kind, family, enabled, tax class — and everything the tenant
+// modelled lives in the `attribute_values` jsonb document, keyed by attribute
+// CODE inside one of four scope buckets (common, per locale, per channel, per
+// channel and locale). `label` is a generated column, maintained by the
+// database so a grid of twenty thousand rows can sort and filter on a name
+// with no join. `kind` says where the row sits in the variant hierarchy: a
+// `model` carries what its variants share and is never sold itself.
+// 
+// An id no product of this tenant carries answers 404, and so does one
+// belonging to another tenant: row-level security makes that row invisible
+// rather than forbidden. A malformed id answers 400 before the route is
+// reached. Nothing is resolved for you here — for the display name, the
+// family code and the grid attributes already unpacked, use `GET
+// /products/grid` or `POST /products/labels`.
+func (srv *Products) ProductsGet(Id string)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/products/{id}")
 	params := map[string]interface{}{}
@@ -4516,7 +1381,7 @@ func (srv *Products) ProductsGet(Id string)(*models.Products, error) {
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.Products{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -4525,8 +1390,8 @@ func (srv *Products) ProductsGet(Id string)(*models.Products, error) {
 
 		return parsed, nil
 	}
-	var parsed models.Products
-	parsed, ok := resp.Result.(models.Products)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}
@@ -4631,8 +1496,26 @@ func (srv *Products) WithProductsUpdateTaxClass(v string) ProductsUpdateOption {
 	}
 }
 			
-// ProductsUpdate
-func (srv *Products) ProductsUpdate(Id string, optionalSetters ...ProductsUpdateOption)(*models.Products, error) {
+// ProductsUpdate updates one product by id. A partial patch: the body names
+// only the columns to change and every column it leaves out keeps its current
+// value, so there is no read-modify-write and no way to blank a field by
+// forgetting it.
+// 
+// The catalog itself. A product row carries only what every product has —
+// SKU, kind, family, enabled, tax class — and everything the tenant
+// modelled lives in the `attribute_values` jsonb document, keyed by attribute
+// CODE inside one of four scope buckets (common, per locale, per channel, per
+// channel and locale). `label` is a generated column, maintained by the
+// database so a grid of twenty thousand rows can sort and filter on a name
+// with no join. `kind` says where the row sits in the variant hierarchy: a
+// `model` carries what its variants share and is never sold itself.
+// 
+// A body that names nothing writable is refused with 400 rather than answered
+// as a no-op, an id nobody carries answers 404, and a value that collides on
+// `sku` answers 409. `label` is a generated column: naming it is dropped
+// rather than refused, and `completeness` is written by the two metadata
+// routes, not here.
+func (srv *Products) ProductsUpdate(Id string, optionalSetters ...ProductsUpdateOption)(*models.Error, error) {
 	r := strings.NewReplacer("{id}", Id)
 	path := r.Replace("/v1/products/{id}")
 	options := ProductsUpdateOptions{}.New()
@@ -4685,7 +1568,7 @@ func (srv *Products) ProductsUpdate(Id string, optionalSetters ...ProductsUpdate
 	if strings.HasPrefix(resp.Type, "application/json") {
 		bytes := []byte(resp.Result.(string))
 
-		parsed := models.Products{}.New(bytes)
+		parsed := models.Error{}.New(bytes)
 
 		err = json.Unmarshal(bytes, parsed)
 		if err != nil {
@@ -4694,8 +1577,125 @@ func (srv *Products) ProductsUpdate(Id string, optionalSetters ...ProductsUpdate
 
 		return parsed, nil
 	}
-	var parsed models.Products
-	parsed, ok := resp.Result.(models.Products)
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
+	if !ok {
+		return nil, errors.New("unexpected response type")
+	}
+	return &parsed, nil
+
+}
+			
+// ProductsCompleteness how much of what its family REQUIRES does this product
+// actually carry — the number a merchandiser works down.
+// products.completeness is jsonb that nothing had ever written. This computes
+// it from family_attributes (is_required) against the product's own scoped
+// attribute_values and stores the result. A product with no family answers
+// 400 rather than an invented 0 % — it has nothing to be measured against.
+func (srv *Products) ProductsCompleteness(Id string, Data interface{})(*models.Error, error) {
+	r := strings.NewReplacer("{id}", Id)
+	path := r.Replace("/v1/products/{id}/completeness")
+	params := map[string]interface{}{}
+	params["id"] = Id
+	params["data"] = Data
+	headers := map[string]interface{}{
+		"content-type": "application/json",
+	}
+
+	resp, err := srv.client.Call("POST", path, headers, params)
+	if err != nil {
+		return nil, err
+	}
+	if strings.HasPrefix(resp.Type, "application/json") {
+		bytes := []byte(resp.Result.(string))
+
+		parsed := models.Error{}.New(bytes)
+
+		err = json.Unmarshal(bytes, parsed)
+		if err != nil {
+			return nil, err
+		}
+
+		return parsed, nil
+	}
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
+	if !ok {
+		return nil, errors.New("unexpected response type")
+	}
+	return &parsed, nil
+
+}
+type ProductsFamilyAssignOptions struct {
+	FamilyCode string
+	FamilyId string
+	enabledSetters map[string]bool
+}
+func (options ProductsFamilyAssignOptions) New() *ProductsFamilyAssignOptions {
+	options.enabledSetters = map[string]bool{
+		"FamilyCode": false,
+		"FamilyId": false,
+	}
+	return &options
+}
+type ProductsFamilyAssignOption func(*ProductsFamilyAssignOptions)
+func (srv *Products) WithProductsFamilyAssignFamilyCode(v string) ProductsFamilyAssignOption {
+	return func(o *ProductsFamilyAssignOptions) {
+		o.FamilyCode = v
+		o.enabledSetters["FamilyCode"] = true
+	}
+}
+func (srv *Products) WithProductsFamilyAssignFamilyId(v string) ProductsFamilyAssignOption {
+	return func(o *ProductsFamilyAssignOptions) {
+		o.FamilyId = v
+		o.enabledSetters["FamilyId"] = true
+	}
+}
+			
+// ProductsFamilyAssign names the family in the body — by `family_id` or by
+// `family_code`, whichever the caller holds — and computes the product's
+// completeness in the same call. The step every family-driven surface waits
+// on: a product with no family has no required attributes, so its
+// completeness cannot be computed and its family's label attribute never
+// resolves. Assigning the family recomputes and STORES products.completeness
+// immediately, so the metadata cannot go stale between the two operations.
+func (srv *Products) ProductsFamilyAssign(Id string, optionalSetters ...ProductsFamilyAssignOption)(*models.Error, error) {
+	r := strings.NewReplacer("{id}", Id)
+	path := r.Replace("/v1/products/{id}/family")
+	options := ProductsFamilyAssignOptions{}.New()
+	for _, opt := range optionalSetters {
+		opt(options)
+	}
+	params := map[string]interface{}{}
+	params["id"] = Id
+	if options.enabledSetters["FamilyCode"] {
+		params["family_code"] = options.FamilyCode
+	}
+	if options.enabledSetters["FamilyId"] {
+		params["family_id"] = options.FamilyId
+	}
+	headers := map[string]interface{}{
+		"content-type": "application/json",
+	}
+
+	resp, err := srv.client.Call("POST", path, headers, params)
+	if err != nil {
+		return nil, err
+	}
+	if strings.HasPrefix(resp.Type, "application/json") {
+		bytes := []byte(resp.Result.(string))
+
+		parsed := models.Error{}.New(bytes)
+
+		err = json.Unmarshal(bytes, parsed)
+		if err != nil {
+			return nil, err
+		}
+
+		return parsed, nil
+	}
+	var parsed models.Error
+	parsed, ok := resp.Result.(models.Error)
 	if !ok {
 		return nil, errors.New("unexpected response type")
 	}

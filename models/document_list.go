@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// DocumentsList Model
+// DocumentList Documents List
 type DocumentList struct {
     // List of documents.
     Documents []Document `json:"documents"`

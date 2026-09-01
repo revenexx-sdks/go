@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// AttributeMediumtext Model
+// AttributeMediumtext AttributeMediumtext
 type AttributeMediumtext struct {
     // Attribute creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

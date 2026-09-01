@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Headers Model
+// Headers Headers
 type Headers struct {
     // Header name.
     Name string `json:"name"`

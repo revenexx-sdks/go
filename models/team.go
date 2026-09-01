@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Team Model
+// Team Team
 type Team struct {
     // Team creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

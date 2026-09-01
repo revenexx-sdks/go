@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// HealthCertificate Model
+// HealthCertificate Health Certificate
 type HealthCertificate struct {
     // Issuer organisation
     IssuerOrganisation string `json:"issuerOrganisation"`

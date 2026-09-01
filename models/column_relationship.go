@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// ColumnRelationship Model
+// ColumnRelationship ColumnRelationship
 type ColumnRelationship struct {
     // Column creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

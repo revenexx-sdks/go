@@ -8,8 +8,9 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := apps.New(client)
@@ -17,8 +18,8 @@ service := apps.New(client)
 response, error := service.AppsListTemplates(
     apps.WithAppsListTemplatesRuntimes([]interface{}{}),
     apps.WithAppsListTemplatesUseCases([]interface{}{}),
-    apps.WithAppsListTemplatesLimit(0),
-    apps.WithAppsListTemplatesOffset(0),
-    apps.WithAppsListTemplatesTotal(false),
+    apps.WithAppsListTemplatesLimit(1),
+    apps.WithAppsListTemplatesOffset(1),
+    apps.WithAppsListTemplatesTotal(true),
 )
 ```

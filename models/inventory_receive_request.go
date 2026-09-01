@@ -5,14 +5,29 @@ import (
     "errors"
 )
 
-// Model
+// InventoryReceiveRequest model.
 type InventoryReceiveRequest struct {
-    // The inbound items (at most 200).
+    // The goods that arrived, at most 200 in one call — a delivery, a
+    // production batch, an opening balance.
     Items []InventoryStockItem `json:"items"`
-    // Receiving location (default 'main').
+    // Which location took the delivery. Omitted, the `default_location_code`
+    // setting decides; a code no location carries is answered 400 rather than
+    // booked somewhere else.
     LocationCode string `json:"location_code"`
-    // Ledger note (e.g. delivery note number).
+    // Inline single-item form: the product to move, instead of a one-entry
+    // `items` array. The two forms are equivalent — nothing downstream knows
+    // which arrived.
+    ProductId string `json:"product_id"`
+    // Inline single-item form: how many arrived. Positive.
+    Quantity float64 `json:"quantity"`
+    // What the ledger should record about this receipt — a delivery note
+    // number, a production order. Owed only when `movement_reason_required` is
+    // 'all'; the contract does not require it, because whether it is owed is the
+    // tenant's setting and not this route's rule.
     Reason string `json:"reason"`
+    // Inline single-item form: the article number to move (instead of
+    // `product_id`).
+    Sku string `json:"sku"`
 
     // Used by Decode() method
     data []byte

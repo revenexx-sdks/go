@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Preferences Model
+// Preferences Preferences
 type Preferences struct {
 
     // Used by Decode() method

@@ -8,8 +8,9 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := orders.New(client)
@@ -17,6 +18,6 @@ service := orders.New(client)
 response, error := service.OrdersReturnsComplete(
     "",
     "",
-    orders.WithOrdersReturnsCompleteResolution(""),
+    orders.WithOrdersReturnsCompleteResolution("refund"),
 )
 ```

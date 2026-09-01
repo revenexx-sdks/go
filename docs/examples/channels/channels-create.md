@@ -8,19 +8,24 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := channels.New(client)
 
 response, error := service.ChannelsCreate(
-    "",
-    "",
-    channels.WithChannelsCreateIsDefault(false),
-    channels.WithChannelsCreateLabels(map[string]interface{}{}),
-    channels.WithChannelsCreatePosition(0),
-    channels.WithChannelsCreateStatus(""),
-    channels.WithChannelsCreateType(""),
+    "shop",
+    "Shop",
+    channels.WithChannelsCreateIsDefault(true),
+    channels.WithChannelsCreateLabels(map[string]interface{}{
+        "de": "Shop",
+        "en": "Shop"
+    }),
+    channels.WithChannelsCreatePosition(1),
+    channels.WithChannelsCreateStatus("active"),
+    channels.WithChannelsCreateType("storefront"),
+    channels.WithChannelsCreateUnassignedVisibility("inherit"),
 )
 ```

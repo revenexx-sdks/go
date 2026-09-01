@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Model
+// SyncHistory model.
 type SyncHistory struct {
     // 
     BytesSynced int `json:"bytes_synced"`

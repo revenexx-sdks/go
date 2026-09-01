@@ -8,16 +8,20 @@ import (
 )
 
 client := client.New(
-    client.WithEndpoint("https://api.revenexx.com")
-    client.WithApiKeyAuth("<API_KEY>")
+    client.WithEndpoint("https://api.revenexx.com"),
+    client.WithTenant("<TENANT_SLUG>"),
+    client.WithApiKeyAuth("<API_KEY>"),
 )
 
 service := orders.New(client)
 
 response, error := service.OrdersReturn(
     "",
-    []interface{}{},
-    orders.WithOrdersReturnMetadata(map[string]interface{}{}),
-    orders.WithOrdersReturnReason(""),
+    orders.WithOrdersReturnMetadata(map[string]interface{}{
+        "rma_portal_case": "C-2026-0917"
+    }),
+    orders.WithOrdersReturnPositions([]interface{}{}),
+    orders.WithOrdersReturnReason("Damaged on arrival"),
+    orders.WithOrdersReturnRestock(true),
 )
 ```

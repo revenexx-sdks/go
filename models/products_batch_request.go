@@ -5,11 +5,14 @@ import (
     "errors"
 )
 
-// Model
+// ProductsBatchRequest Name the products either way, or both ways. Send at
+// least one non-empty list; the two are unioned and a product named twice
+// comes back once.
 type ProductsBatchRequest struct {
-    // 
+    // Product ids, when the caller already holds them.
     Ids []string `json:"ids"`
-    // 
+    // Product SKUs — the identifier a foreign system carries, which is why this
+    // route exists at all.
     Skus []string `json:"skus"`
 
     // Used by Decode() method

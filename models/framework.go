@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Framework Model
+// Framework Framework
 type Framework struct {
     // List of supported adapters.
     Adapters []FrameworkAdapter `json:"adapters"`

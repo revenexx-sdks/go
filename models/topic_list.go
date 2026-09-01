@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// TopicList Model
+// TopicList Topic list
 type TopicList struct {
     // List of topics.
     Topics []Topic `json:"topics"`

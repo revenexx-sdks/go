@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// ColumnEnum Model
+// ColumnEnum ColumnEnum
 type ColumnEnum struct {
     // Column creation date in ISO 8601 format.
     CreatedAt string `json:"$createdAt"`

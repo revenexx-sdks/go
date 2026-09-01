@@ -5,7 +5,7 @@ import (
     "errors"
 )
 
-// Model
+// SyncRuleResource model.
 type SyncRuleResource struct {
     // 
     CreatedAt string `json:"created_at"`

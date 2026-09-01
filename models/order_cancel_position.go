@@ -5,10 +5,12 @@ import (
     "errors"
 )
 
-// APositionQuantityToCancelGuardedAgainstTheOpenUnshippedUncancelledQuantity
-// Model
+// OrderCancelPosition A position quantity to cancel — guarded against the
+// open (unshipped, uncancelled) quantity.
 type OrderCancelPosition struct {
-    // The order item (position) to act on.
+    // The order item (position) to act on. Read the ids from GET /orders/{id}
+    // (items[].id) or GET /orders/{id}/shippable (positions[].order_item_id) —
+    // an id this order does not carry is a 400.
     OrderItemId string `json:"order_item_id"`
     // Defaults to the full remaining quantity of the position.
     Quantity float64 `json:"quantity"`
